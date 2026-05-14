@@ -38,48 +38,48 @@ Step 2 = **Phase 1 dari roadmap Source List** (lihat [source-list-kajian.md → 
 ## 🚀 Step 2 Deliverables
 
 ### D1 — Backend: Telegram Health Checker (cron)
-- [ ] Script `scripts/check-telegram.ts` (Node TS)
+- [x] Script `scripts/check-telegram.ts` (Node TS)
   - Input: list of TG channels dari `data/sources.json` (di-commit di repo)
   - Untuk tiap channel: fetch `https://t.me/s/{handle}` → parse HTML
   - Extract: `subscribers, last_post_date, last_post_preview`
   - Output: append snapshot ke `data/health/YYYY-MM-DD.json`
-- [ ] **GitHub Actions cron** (`.github/workflows/health-check.yml`)
+- [x] **GitHub Actions cron** (`.github/workflows/health-check.yml`)
   - Schedule: daily `00:01 WIB` (`17:01 UTC`)
   - Auto-commit hasil ke branch `data` (atau push langsung ke main)
-- [ ] Compute `reliability_score` (rumus dari roadmap utama)
-- [ ] Output juga `data/latest.json` (denormalized, mudah di-fetch dari frontend)
+- [x] Compute `reliability_score` (rumus dari roadmap utama)
+- [x] Output juga `data/latest.json` (denormalized, mudah di-fetch dari frontend)
 
 **Stack**: Node 20 + `cheerio` (HTML parse) + native `fetch`. Zero external service.
 
 ### D2 — Frontend: Dashboard Publik
-- [ ] Replace landing page placeholder dengan **dashboard kajian source**
-- [ ] Sections:
+- [x] Replace landing page placeholder dengan **dashboard kajian source**
+- [x] Sections:
   - Hero: "Source List Kajian Sunnah Indonesia — Live Health Monitor"
   - Stats summary: total sources, % active, last check timestamp
   - **Top 10 most reliable** (cards: nama, platform, score, last update, link)
   - **Recently stale** (yang turun dari active)
   - "How it works" 3-step diagram
   - Footer: link ke GitHub repo + roadmap doc
-- [ ] Fetch `data/latest.json` di build time (Static Site Generation, no DB needed)
-- [ ] Responsive mobile-first
-- [ ] Filter sederhana: by platform (TG / Web / IG)
+- [x] Fetch `data/latest.json` di build time (Static Site Generation, no DB needed)
+- [x] Responsive mobile-first
+- [x] Filter sederhana: by platform (TG / Web / IG)
 
 ### D3 — Data Seed (Phase 0 mini)
-- [ ] `data/sources.json` minimal **20 sources** untuk demo:
+- [x] `data/sources.json` minimal **20 sources** untuk demo:
   - 10 Telegram channel (mix active/stale untuk tunjukin variansi score)
   - 5 website (portalkajian, jadwalkajian, forumkajian, cintasedekah, hsi.id)
   - 5 IG handle (HSI ecosystem, untuk Phase 2 placeholder, mark `not_yet_monitored`)
-- [ ] Kolom: `id, name, platform, url, handle, category, region, priority, added_at`
+- [x] Kolom: `id, name, platform, url, handle, category, region, priority, added_at`
 
 ### D4 — Documentation
-- [ ] Update `README.md` dengan:
+- [x] Update `README.md` dengan:
   - Project pitch (1 paragraf)
   - Demo screenshot
   - Link ke deployed Netlify URL
   - Link ke roadmap doc
   - Cara contribute (submit source via PR ke `data/sources.json`)
-- [ ] `CONTRIBUTING.md` minimal
-- [ ] `LICENSE` — MIT (code) + CC-BY-SA (data)
+- [x] `CONTRIBUTING.md` minimal
+- [x] `LICENSE` — MIT (code) + CC-BY-SA (data)
 
 ### D5 — Demo & Showcase
 - [ ] Deploy ke Netlify (auto dari push ke main)
@@ -195,8 +195,8 @@ Step 2 dianggap sukses kalau:
 2. ✅ Minimal 20 source ter-list, minimal 10 punya health metric terupdate
 3. ✅ GitHub Actions cron sudah jalan minimal 1x manual run sukses
 4. ✅ README jelas + ada link kontribusi via PR
-5. ✅ Deploy ke Netlify auto dari push ke main
-6. ✅ Demo recording 60-90s siap di-submit ke vibathon
+5. ⏳ Deploy ke Netlify auto dari push ke main (perlu verifikasi URL final)
+6. ⏳ Demo recording 60-90s siap di-submit ke vibathon (belum dibuat)
 7. ✅ Score computation TERLIHAT (variansi: ada yang skor tinggi, ada yang rendah)
 8. ✅ Mobile-friendly (di-test via Chrome DevTools responsive mode)
 

@@ -258,18 +258,18 @@ notes: "Akun resmi HSI Media"
 
 ---
 
-### Phase 1 — MVP Health Check (1 weekend, hackathon-able) ⏳ PLANNED
+### Phase 1 — MVP Health Check (1 weekend, hackathon-able) 🟡 IN PROGRESS
 **Goal**: working demo health check otomatis untuk 1 platform.
 
 **Pilihan platform pertama: Telegram** (paling mudah, paling reliable, no auth needed).
 
-- [ ] Script Python: `health_check_telegram.py`
-  - Input: list of telegram channels (dari Google Sheet via gspread, atau YAML)
+- [x] Script checker Telegram (implementasi Node TS): `scripts/check-telegram.ts`
+  - Input: list channel dari `data/sources.json`
   - Untuk tiap channel: fetch `https://t.me/s/{channel}` → parse HTML
   - Extract: subscribers count, last post date, last post preview
-  - Output: append row ke sheet `health_log` (tanggal, source_id, metrics)
-- [ ] Setup GitHub Actions cron: daily `00:01 WIB` (`17:01 UTC`)
-- [ ] Compute `reliability_score` per source (rumus di atas)
+  - Output: write snapshot ke `data/health/YYYY-MM-DD.json` + `data/latest.json`
+- [x] Setup GitHub Actions cron: daily `00:01 WIB` (`17:01 UTC`)
+- [x] Compute `reliability_score` per source (freshness-based MVP)
 - [ ] Generate report harian: `reports/YYYY-MM-DD.md` (top 10 paling aktif, top 10 stale, dead sources)
 - [ ] Notif ke Telegram channel `@kajian_health_daily` (opsional)
 
@@ -398,5 +398,5 @@ Repo `HSI_Vibathon/codebase/vibathon-2026` bisa jadi **Layer 3 showcase**:
 2. **Mining isi thread Telegram** `t.me/c/sijadwalkajian/192` → Sheet (~1-2 jam, manual copy atau export JSON via Telegram Desktop)
 3. **Buat repo GitHub publik** + README visi + link ke Sheet (~15 menit)
 4. **Tulis brief kolaborasi 1 halaman** (~1 jam) — tahan dulu publish sampai Phase 1 ada demo
-5. **Phase 1 prototype**: Telegram health checker + GitHub Actions cron (~1 weekend, AI-assisted)
+5. ✅ **Phase 1 prototype**: Telegram health checker + GitHub Actions cron (~1 weekend, AI-assisted)
 6. **Tunda IG/FB scraping** sampai Phase 1 stabil 7 hari

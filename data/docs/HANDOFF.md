@@ -108,15 +108,15 @@ Vibathon scope = Phase 1 di-bundle jadi web app deployable.
 - ✅ Netlify auto-deploy should be triggered (verify on dashboard)
 
 ### What's broken / pending
-- 🟥 **`npm run lint` fails** with 1 error + 1 warning di `CronPanel.tsx` — Next 16's `react-hooks/set-state-in-effect` rule. Pattern is correct (localStorage hydration), needs proper fix (probably switch to `useSyncExternalStore` or `useState` initializer with `typeof window`)
-- ⚠️ **CronPanel commit not yet pushed** — workflow YAML, CronPanel.tsx, and AppTab.tsx changes are still local
-- ⚠️ **GitHub Actions workflow untested** — needs first push + manual trigger to verify it works on CI runner (especially `git push` with default `GITHUB_TOKEN` permissions)
-- ⚠️ Vibathon **belum mulai** (start 14 Mei 09:00 WIB) — work done is "pre-event spec/starter", panitia OK per user
+- ⚠️ **README + contribution docs** sebelumnya belum update (sudah diperbarui: README, CONTRIBUTING, LICENSE)
+- ⚠️ **GitHub Actions workflow runtime** masih perlu verifikasi manual run di GitHub UI
+- ⚠️ **Netlify URL final** perlu dipastikan dan diisi ke README
+- ⚠️ **Demo recording 60–90 detik** belum dibuat
 
 ### Repo state
 - **Branch**: `main`
-- **Last pushed commit**: `e02f9be` — feat: source list kajian + telegram health check + dual-tab UI
-- **Uncommitted local changes**: `.github/workflows/health-check.yml`, `src/app/components/CronPanel.tsx`, `src/app/components/AppTab.tsx`, `roadmaps/HANDOFF.md` (this file)
+- **Latest pushed commit**: `15e6ef7` — implement should-do 8/9/10 + dashboard polish
+- **Working tree**: lihat status terbaru via `git status` sebelum lanjut task berikutnya
 
 ---
 
@@ -124,14 +124,10 @@ Vibathon scope = Phase 1 di-bundle jadi web app deployable.
 
 Pilihan ordered berdasarkan urgency:
 
-1. **Fix lint error di CronPanel.tsx** (5 menit)
-   - Pattern: replace `useEffect` localStorage read dengan proper SSR-safe init OR `useSyncExternalStore`. Simplest: gunakan `useState` initializer fn dengan `typeof window !== "undefined"` check.
-2. **Commit + push CronPanel + workflow YAML** (2 menit)
-3. **Verify Netlify deploy** sukses dan UI render benar di production URL
-4. **Test GitHub Actions workflow_dispatch** — trigger manual via GitHub UI, pastikan auto-commit snapshot kembali jalan
-5. **Kalau cron auto-commit gagal** karena `GITHUB_TOKEN` permission — switch pakai `actions/checkout@v4` dengan `persist-credentials: true` atau setup deploy key
-6. **Update `data/docs/HANDOFF.md`** — copy file ini ke folder docs supaya muncul juga di Tab 01 app
-7. **Polish for showcase** — recording 60-90s demo, test mobile responsive, verify dark mode (kalau perlu)
+1. **Verify Netlify deploy** sukses dan isi URL final ke README
+2. **Test GitHub Actions workflow_dispatch** — trigger manual via GitHub UI, pastikan auto-commit snapshot kembali jalan
+3. **Update `data/docs/HANDOFF.md`** — sinkronkan file ini ke app docs tab
+4. **Polish for showcase** — recording 60-90s demo, final QA mobile
 
 ### Optional stretch (kalau ada waktu sebelum/selama vibathon)
 - Buat dataset publish ke Hugging Face Datasets
