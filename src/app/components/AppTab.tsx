@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { HealthStatus, LatestSummary, Platform, Snapshot, Source } from "../lib/data";
+import { CronPanel } from "./CronPanel";
 
 const STATUS_META: Record<
   HealthStatus,
@@ -72,6 +73,9 @@ export function AppTab({
           </div>
         )}
       </section>
+
+      {/* Cron trigger panel */}
+      <CronPanel lastRunAt={latest?.generated_at ?? null} />
 
       {/* Filter */}
       <div className="mb-5 flex items-center gap-2 flex-wrap">

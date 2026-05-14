@@ -1,0 +1,38 @@
+name: Telegram Health Check
+
+on:
+  workflow_dispatch:        # tombol "Run workflow" di GitHub UI + via REST API
+  schedule:
+    - cron: "1 17 * * *"    # daily 17:01 UTC = 00:01 WIB
+
+permissions:
+  contents: write           # commit hasil snapshot ke repo
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run Telegram health check
+        run: npm run check:telegram
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/latest.json data/health/*.json
+          if git diff --staged --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "chore(data): daily health check snapshot [skip ci]"
+            git push
+          fi

@@ -65,7 +65,7 @@ export async function loadDocs(): Promise<DocFile[]> {
     return [];
   }
 
-  const order = ["vibathon-steps.md", "source-list-kajian.md"];
+  const order = ["HANDOFF.md", "vibathon-steps.md", "source-list-kajian.md"];
   const sorted = entries
     .filter((f) => f.endsWith(".md"))
     .sort((a, b) => {
