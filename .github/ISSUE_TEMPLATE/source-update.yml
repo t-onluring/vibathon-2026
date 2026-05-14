@@ -1,0 +1,38 @@
+name: Source Update Request
+description: Usulkan perubahan data untuk source yang sudah ada
+title: "[source-update] <id source>"
+labels: ["source-update", "needs-validation"]
+body:
+  - type: input
+    id: source_id
+    attributes:
+      label: ID source
+      placeholder: tg-jadwalkajiansunnah
+    validations:
+      required: true
+
+  - type: textarea
+    id: field_changes
+    attributes:
+      label: Field yang ingin diubah
+      placeholder: |
+        Contoh:
+        - priority: medium -> high
+        - notes: update deskripsi
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Alasan perubahan
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Bukti / referensi
+      placeholder: Link source, screenshot, atau data pendukung
+    validations:
+      required: true

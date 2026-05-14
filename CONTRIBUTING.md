@@ -2,39 +2,56 @@
 
 Terima kasih sudah mau kontribusi 🙌
 
-## Cara kontribusi tercepat
+## Open Contribution Flow (PR-based)
 
-1. Fork repo
-2. Buat branch baru
-3. Ubah data di `data/sources.json`
+1. Buat issue dari template:
+   - **Source Add Request** untuk sumber baru
+   - **Source Update Request** untuk update sumber existing
+2. Fork repo dan buat branch: `contrib/<ringkas-perubahan>`
+3. Edit `data/sources.json`
 4. Jalankan validasi lokal:
+   - `npm run validate:sources`
    - `npm run lint`
    - `npm run build`
-5. Buat Pull Request
+5. Push branch dan buka Pull Request
+6. Isi checklist + evidence pada PR template
 
-## Format source data
+## Contract Data Source
 
-Setiap entri source minimal punya:
+Setiap entri source minimal wajib memiliki:
 
-- `id`
+- `id` (unik)
 - `name`
-- `platform`
-- `url`
+- `platform` (`telegram`/`instagram`/`facebook`/`whatsapp`/`website`/`youtube`)
+- `url` (http/https valid)
 - `handle`
-- `category`
+- `category` (array string, tidak boleh kosong)
 - `region`
-- `priority`
-- `added_at`
+- `priority` (`high`/`medium`/`low`/`archived`)
+- `added_at` (format `YYYY-MM-DD`)
 
-## Aturan
+## Rules Review
 
-- Jangan scrape endpoint yang dilarang robots.txt.
-- Jangan masukkan data private/non-public.
-- Utamakan source resmi dan sertakan catatan jika status belum pasti.
+PR akan ditahan bila:
+- `id` duplikat
+- `url` duplikat
+- kombinasi `handle+platform` duplikat
+- format URL/tanggal tidak valid
+- tidak ada bukti source aktif
 
-## Issue labels (saran)
+## Governance
 
-- `source-add`
-- `source-update`
-- `bug-scraper`
-- `ui`
+- Owner data: lihat `CODEOWNERS`
+- Target review awal: **maks. 48 jam**
+- Label yang dipakai:
+  - `source-add`
+  - `source-update`
+  - `needs-validation`
+  - `needs-proof`
+  - `ready-to-merge`
+
+## Safety
+
+- Jangan scrape endpoint yang melarang akses (cek robots/policy)
+- Jangan masukkan data private/non-public
+- Utamakan source resmi dan berikan catatan jika status belum pasti

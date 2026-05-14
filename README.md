@@ -52,9 +52,18 @@ npm run check:telegram
 
 ## Kontribusi
 
-Lihat [CONTRIBUTING.md](./CONTRIBUTING.md).
+- Panduan utama: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Quick path non-teknis: [docs/CONTRIBUTOR_GUIDE.md](./docs/CONTRIBUTOR_GUIDE.md)
+- Gunakan issue templates untuk **Source Add** / **Source Update** lalu buka PR.
+- Validator otomatis di PR: `.github/workflows/validate-sources.yml`
 
-Untuk menambah source baru, buka PR yang mengubah `data/sources.json`.
+Validasi lokal sebelum PR:
+
+```bash
+npm run validate:sources
+npm run lint
+npm run build
+```
 
 ## License
 

@@ -1,0 +1,9 @@
+# Default reviewers
+* @t-onluring
+
+# Source registry and contribution process
+/data/sources.json @t-onluring
+/CONTRIBUTING.md @t-onluring
+/.github/PULL_REQUEST_TEMPLATE.md @t-onluring
+/.github/ISSUE_TEMPLATE/* @t-onluring
+/.github/workflows/validate-sources.yml @t-onluring

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check:telegram": "tsx scripts/check-telegram.ts"
+    "check:telegram": "tsx scripts/check-telegram.ts",
+    "validate:sources": "node scripts/validate-sources.mjs"
   },
   "dependencies": {
     "cheerio": "^1.0.0",

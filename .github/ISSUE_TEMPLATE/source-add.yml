@@ -1,0 +1,50 @@
+name: Source Add Request
+description: Usulkan source baru untuk dimasukkan ke registry
+title: "[source-add] <nama source>"
+labels: ["source-add", "needs-validation"]
+body:
+  - type: input
+    id: source_name
+    attributes:
+      label: Nama Source
+      placeholder: Contoh: Kajian Sunnah Bandung
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - telegram
+        - instagram
+        - facebook
+        - whatsapp
+        - website
+        - youtube
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: URL publik
+      placeholder: https://t.me/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Kenapa source ini penting?
+      placeholder: Jelaskan nilai source ini untuk ekosistem kajian
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Bukti source aktif
+      placeholder: Link post terbaru, screenshot, atau referensi lain
+    validations:
+      required: true

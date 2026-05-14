@@ -14,6 +14,7 @@
 | Date | Version | Change | By |
 |---|---|---|---|
 | 2026-05-11 | v0.1 | Initial step 2 plan | tehaer + Amp |
+| 2026-05-14 | v0.2 | Added Phase 3 open-contribution (PR-based) flow and CI validation guardrail | tehaer + Craft Agent |
 
 ---
 
