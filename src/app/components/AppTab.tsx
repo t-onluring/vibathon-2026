@@ -70,6 +70,23 @@ export function AppTab({
     return groups;
   }, [filteredMonitored]);
 
+  const oldestDeadLabel = useMemo(() => {
+    if (!latest) return "lama";
+
+    const refTime = new Date(latest.generated_at).getTime();
+    const agesMs = latest.snapshots
+      .filter((s) => s.status === "dead" || s.status === "stale")
+      .map((s) => s.metrics?.last_post_at)
+      .filter((v): v is string => Boolean(v))
+      .map((iso) => refTime - new Date(iso).getTime())
+      .filter((ms) => Number.isFinite(ms) && ms > 0);
+
+    if (agesMs.length === 0) return "lama";
+    const maxMs = Math.max(...agesMs);
+    const years = Math.max(1, Math.round(maxMs / (1000 * 60 * 60 * 24 * 365)));
+    return `${years} tahun`;
+  }, [latest]);
+
   return (
     <div className="mx-auto max-w-[1180px] px-8 py-10">
       {/* Stats hero */}
@@ -78,7 +95,7 @@ export function AppTab({
         <h2 className="font-serif text-[clamp(28px,3.6vw,40px)] leading-tight text-[var(--slate)] max-w-[22ch]">
           Sumber kajian bukan sekadar daftar — ada yang{" "}
           <em className="italic text-[var(--clay)]">aktif</em>, ada yang{" "}
-          <em className="italic text-[var(--clay)]">mati 4 tahun</em>.
+          <em className="italic text-[var(--clay)]">mati {oldestDeadLabel}</em>.
         </h2>
         <p className="mt-4 text-[var(--g700)] max-w-[640px]">
           {latest
