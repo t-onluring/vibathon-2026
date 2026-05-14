@@ -67,6 +67,11 @@ export function DocsTab({ docs }: { docs: DocFile[] }) {
                 {children}
               </h3>
             ),
+            table: ({ children, ...props }) => (
+              <div className="overflow-x-auto">
+                <table {...props}>{children}</table>
+              </div>
+            ),
           }}
         >
           {active.content}

@@ -48,6 +48,28 @@ export function AppTab({
       });
   }, [sources, snapshotMap, filter]);
 
+  const hasData = latest !== null && latest.snapshots.length > 0;
+  const filteredMonitored = rows.filter((r) => r.snapshot);
+  const filteredUnmonitored = rows.filter((r) => !r.snapshot);
+
+  const groupedByStatus = useMemo(() => {
+    const groups: Record<HealthStatus, typeof filteredMonitored> = {
+      active: [],
+      stale: [],
+      dead: [],
+      blocked: [],
+      error: [],
+      unmonitored: [],
+    };
+    for (const row of filteredMonitored) {
+      const status = row.snapshot?.status ?? "unmonitored";
+      if (status in groups) {
+        groups[status].push(row);
+      }
+    }
+    return groups;
+  }, [filteredMonitored]);
+
   return (
     <div className="mx-auto max-w-[1180px] px-8 py-10">
       {/* Stats hero */}
@@ -61,7 +83,7 @@ export function AppTab({
         <p className="mt-4 text-[var(--g700)] max-w-[640px]">
           {latest
             ? `Snapshot terakhir: ${formatDateTime(latest.generated_at)} WIB. Daily cron via GitHub Actions akan refresh otomatis tiap 00:01 WIB.`
-            : `Belum ada snapshot. Jalankan: npm run check:telegram`}
+            : `Belum ada snapshot. Trigger health check untuk generate data pertama kali.`}
         </p>
 
         {latest && (
@@ -72,42 +94,154 @@ export function AppTab({
             <Stat label="Errors" value={latest.by_status.error} accent="g500" />
           </div>
         )}
+
+        <ScoreExplainer />
+
       </section>
 
       {/* Cron trigger panel */}
       <CronPanel lastRunAt={latest?.generated_at ?? null} />
 
-      {/* Filter */}
-      <div className="mb-5 flex items-center gap-2 flex-wrap">
-        <span className="eyebrow !text-[10.5px]">Filter</span>
-        {PLATFORM_FILTERS.map((f) => (
-          <button
-            key={f.key}
-            type="button"
-            onClick={() => setFilter(f.key)}
-            className={[
-              "px-3 py-1.5 rounded-full text-[12.5px] font-medium border transition",
-              filter === f.key
-                ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
-                : "bg-[var(--paper)] text-[var(--g700)] border-[var(--g300)] hover:border-[var(--slate)]",
-            ].join(" ")}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Source list */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {rows.map(({ source, snapshot }) => (
-          <SourceCard key={source.id} source={source} snapshot={snapshot} />
-        ))}
-        {rows.length === 0 && (
-          <p className="text-[var(--g500)] py-10 text-center col-span-full">
-            Tidak ada source untuk filter ini.
+      {!hasData && (
+        <section className="mb-10 rounded-xl border border-[var(--g200)] bg-[var(--ivory)] p-8 text-center">
+          <p className="eyebrow mb-2 justify-center">Getting Started</p>
+          <h3 className="font-serif text-[20px] text-[var(--slate)] mb-3">
+            Belum ada data monitoring
+          </h3>
+          <p className="text-[var(--g700)] max-w-[600px] mx-auto mb-5">
+            Gunakan tombol &quot;Trigger&quot; di atas untuk menjalankan health check pertama kali. Sistem akan memindai semua channel Telegram di registry dan generate skor keaktifan.
           </p>
-        )}
-      </div>
+          <p className="text-[12px] text-[var(--g500)]">
+            Setelah itu, cron otomatis akan refresh data setiap hari pukul 00:01 WIB.
+          </p>
+        </section>
+      )}
+
+      {hasData && (
+        <>
+          {/* Filter */}
+          <div className="mb-5 flex items-center gap-2 flex-wrap">
+            <span className="eyebrow !text-[10.5px]">Filter</span>
+            {PLATFORM_FILTERS.map((f) => (
+              <button
+                key={f.key}
+                type="button"
+                onClick={() => setFilter(f.key)}
+                className={[
+                  "px-3 py-1.5 rounded-full text-[12.5px] font-medium border transition",
+                  filter === f.key
+                    ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
+                    : "bg-[var(--paper)] text-[var(--g700)] border-[var(--g300)] hover:border-[var(--slate)]",
+                ].join(" ")}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Monitored sources grouped by status */}
+          {filteredMonitored.length > 0 && (
+            <div className="mb-10 space-y-10">
+              {(["active", "stale", "dead", "blocked", "error"] as const).map((status) => {
+                const group = groupedByStatus[status];
+                if (group.length === 0) return null;
+                const meta = STATUS_META[status];
+                const count = group.length;
+                return (
+                  <div key={status}>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10.5px] font-mono ${meta.bg} ${meta.fg}`}
+                      >
+                        <span className={`size-1.5 rounded-full ${meta.dot}`} />
+                        {meta.label}
+                      </span>
+                      <span className="font-mono text-[11px] text-[var(--g500)]">
+                        {count} {count === 1 ? "source" : "sources"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {group.map(({ source, snapshot }) => (
+                        <SourceCard key={source.id} source={source} snapshot={snapshot} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Unmonitored sources (if shown) */}
+          {filteredUnmonitored.length > 0 && (
+            <div>
+              <p className="eyebrow mb-3 text-[var(--g500)]">
+                {filter === "all" ? "Not Yet Monitored (Phase 2)" : "Not Yet Monitored"}
+              </p>
+              <p className="text-[13px] text-[var(--g500)] mb-3 max-w-[640px]">
+                {filter === "all"
+                  ? "Instagram dan website sources menunggu implementasi scraper. Follow GitHub roadmap untuk updates."
+                  : `${filter === "instagram" ? "Instagram" : "Website"} sources belum dimonitor di Phase 1. Check back di Phase 2.`}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {filteredUnmonitored.map(({ source, snapshot }) => (
+                  <SourceCard key={source.id} source={source} snapshot={snapshot} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* No results for filter */}
+          {rows.length === 0 && (
+            <div className="rounded-xl border border-[var(--g300)] bg-[var(--g100)] p-8 text-center">
+              <p className="text-[var(--g500)]">
+                Tidak ada source untuk filter &quot;{PLATFORM_FILTERS.find((f) => f.key === filter)?.label}&quot;.
+              </p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+const SCORE_TIERS = [
+  { range: "≥ 80", label: "Last post < 7 hari", color: "text-[var(--olive)]", dot: "bg-[var(--olive)]" },
+  { range: "50–79", label: "Last post 7–14 hari", color: "text-[var(--clay)]", dot: "bg-[var(--clay)]" },
+  { range: "1–49", label: "Last post 14–30 hari", color: "text-[var(--clay-d)]", dot: "bg-[var(--clay-d)]" },
+  { range: "0", label: "Last post > 30 hari atau error", color: "text-[var(--g400)]", dot: "bg-[var(--g400)]" },
+];
+
+function ScoreExplainer() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-5">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="text-[12px] text-[var(--g500)] hover:text-[var(--clay)] underline decoration-[var(--oat)] underline-offset-4 transition-colors"
+      >
+        {open ? "▾ Sembunyikan cara hitung skor" : "▸ Bagaimana skor dihitung?"}
+      </button>
+      {open && (
+        <div className="mt-3 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-4 max-w-[520px]">
+          <p className="eyebrow !text-[10px] mb-3">Reliability Score · Phase 1 (MVP)</p>
+          <p className="text-[12.5px] text-[var(--g700)] mb-4 leading-relaxed">
+            Skor saat ini dihitung murni dari <strong>freshness</strong> — seberapa baru postingan terakhir.
+            Di Phase 2, akan ditambah sinyal konsistensi, volume, dan engagement.
+          </p>
+          <div className="flex flex-col gap-2">
+            {SCORE_TIERS.map((t) => (
+              <div key={t.range} className="flex items-center gap-3">
+                <span className={`font-serif text-[22px] leading-none w-12 text-right ${t.color}`}>
+                  {t.range}
+                </span>
+                <span className={`size-2 rounded-full shrink-0 ${t.dot}`} />
+                <span className="text-[12px] text-[var(--g700)]">{t.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

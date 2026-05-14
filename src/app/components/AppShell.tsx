@@ -22,12 +22,22 @@ export function AppShell({
     <div className="flex flex-1 flex-col">
       <nav className="sticky top-0 z-30 bg-[var(--ivory)]/95 backdrop-blur border-b border-[var(--g300)]">
         <div className="mx-auto max-w-[1180px] px-8">
-          <div className="flex items-end gap-1">
-            <TabButton active={tab === "docs"} onClick={() => setTab("docs")}>
+          <div className="flex items-end gap-1" role="tablist" aria-label="Main sections">
+            <TabButton
+              id="tab-docs"
+              controls="panel-docs"
+              active={tab === "docs"}
+              onClick={() => setTab("docs")}
+            >
               <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">01</span>
               Plan &amp; Roadmap
             </TabButton>
-            <TabButton active={tab === "app"} onClick={() => setTab("app")}>
+            <TabButton
+              id="tab-app"
+              controls="panel-app"
+              active={tab === "app"}
+              onClick={() => setTab("app")}
+            >
               <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">02</span>
               Live Dashboard
               {latest && (
@@ -42,7 +52,22 @@ export function AppShell({
       </nav>
 
       <main className="flex-1">
-        {tab === "docs" ? <DocsTab docs={docs} /> : <AppTab sources={sources} latest={latest} />}
+        <div
+          role="tabpanel"
+          id="panel-docs"
+          aria-labelledby="tab-docs"
+          hidden={tab !== "docs"}
+        >
+          <DocsTab docs={docs} />
+        </div>
+        <div
+          role="tabpanel"
+          id="panel-app"
+          aria-labelledby="tab-app"
+          hidden={tab !== "app"}
+        >
+          <AppTab sources={sources} latest={latest} />
+        </div>
       </main>
 
       <footer className="border-t border-[var(--g300)] bg-[var(--ivory)]">
@@ -61,17 +86,26 @@ export function AppShell({
 }
 
 function TabButton({
+  id,
+  controls,
   active,
   onClick,
   children,
 }: {
+  id: string;
+  controls: string;
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
 }) {
   return (
     <button
+      id={id}
+      role="tab"
       type="button"
+      aria-selected={active}
+      aria-controls={controls}
+      tabIndex={active ? 0 : -1}
       onClick={onClick}
       className={[
         "relative px-5 py-3.5 text-[14px] font-medium transition-colors",

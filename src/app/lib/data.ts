@@ -1,33 +1,13 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
+import type { Platform, HealthStatus, Source } from "../../shared/types";
 
 const ROOT = process.cwd();
 const DOCS_DIR = join(ROOT, "data", "docs");
 const SOURCES_PATH = join(ROOT, "data", "sources.json");
 const LATEST_PATH = join(ROOT, "data", "latest.json");
 
-export type Platform = "telegram" | "instagram" | "facebook" | "whatsapp" | "website" | "youtube";
-export type HealthStatus = "active" | "stale" | "dead" | "blocked" | "error" | "unmonitored";
-export type Priority = "high" | "medium" | "low" | "archived";
-
-export interface Source {
-  id: string;
-  name: string;
-  platform: Platform;
-  url: string;
-  handle: string;
-  category: string[];
-  region: string;
-  language: string;
-  priority: Priority;
-  tags: string[];
-  verified: boolean;
-  added_at: string;
-  notes?: string;
-  partnership_status?: string;
-  has_api?: boolean;
-  monitor_status?: "not_yet_monitored";
-}
+export type { Platform, HealthStatus, Priority, Source } from "../../shared/types";
 
 export interface Snapshot {
   source_id: string;
@@ -79,21 +59,29 @@ export async function loadDocs(): Promise<DocFile[]> {
 
   const docs: DocFile[] = [];
   for (const filename of sorted) {
-    const content = await readFile(join(DOCS_DIR, filename), "utf-8");
-    const titleMatch = content.match(/^#\s+(.+)$/m);
-    docs.push({
-      slug: filename.replace(/\.md$/, ""),
-      title: titleMatch ? titleMatch[1].trim() : filename,
-      content,
-    });
+    try {
+      const content = await readFile(join(DOCS_DIR, filename), "utf-8");
+      const titleMatch = content.match(/^#\s+(.+)$/m);
+      docs.push({
+        slug: filename.replace(/\.md$/, ""),
+        title: titleMatch ? titleMatch[1].trim() : filename,
+        content,
+      });
+    } catch {
+      continue;
+    }
   }
   return docs;
 }
 
 export async function loadSources(): Promise<Source[]> {
-  const raw = await readFile(SOURCES_PATH, "utf-8");
-  const json = JSON.parse(raw) as { sources: Source[] };
-  return json.sources;
+  try {
+    const raw = await readFile(SOURCES_PATH, "utf-8");
+    const json = JSON.parse(raw) as { sources: Source[] };
+    return json.sources;
+  } catch {
+    return [];
+  }
 }
 
 export async function loadLatest(): Promise<LatestSummary | null> {
