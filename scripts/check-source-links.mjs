@@ -41,15 +41,35 @@ async function main() {
 
   console.log(`Checking ${sources.length} source links (warning-only)...`);
 
+  const rows = [];
   let failed = 0;
+
   for (const s of sources) {
     const result = await probe(s.url);
+    const statusText = result.status || result.error || "unknown";
+
+    rows.push({
+      id: s.id,
+      platform: s.platform,
+      status: result.ok ? "OK" : "WARN",
+      code: String(statusText),
+      method: result.method ?? "HEAD",
+      url: s.url,
+    });
+
     if (result.ok) {
       console.log(`✅ ${s.id} ${s.url} -> ${result.status} (${result.method ?? "HEAD"})`);
     } else {
       failed += 1;
-      console.log(`⚠️ ${s.id} ${s.url} -> failed (${result.status || result.error || "unknown"})`);
+      console.log(`⚠️ ${s.id} ${s.url} -> failed (${statusText})`);
     }
+  }
+
+  console.log("\n--- Link Check Summary ---");
+  console.log("| id | platform | status | code/error | method | url |");
+  console.log("|---|---|---|---|---|---|");
+  for (const r of rows) {
+    console.log(`| ${r.id} | ${r.platform} | ${r.status} | ${r.code} | ${r.method} | ${r.url} |`);
   }
 
   if (failed > 0) {
