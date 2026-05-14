@@ -27,47 +27,47 @@ const NODES: NodeDef[] = [
   {
     id: "sources",
     label: "Source Channels",
-    sub: "Telegram · Instagram · Facebook · WhatsApp · Web",
-    xDesktop: 130,
-    yDesktop: 140,
+    sub: "Telegram · Instagram ·\nFacebook · WhatsApp · Web",
+    xDesktop: 380,
+    yDesktop: 40,
     xMobile: 200,
-    yMobile: 80,
+    yMobile: 40,
   },
   {
     id: "registry",
     label: "Open Registry",
     sub: "Source metadata + health status",
     xDesktop: 380,
-    yDesktop: 140,
+    yDesktop: 130,
     xMobile: 200,
-    yMobile: 190,
+    yMobile: 130,
   },
   {
     id: "monitor",
     label: "Reliability Monitoring",
     sub: "Automated freshness scoring",
-    xDesktop: 630,
-    yDesktop: 140,
+    xDesktop: 380,
+    yDesktop: 220,
     xMobile: 200,
-    yMobile: 300,
+    yMobile: 220,
   },
   {
     id: "dataset",
     label: "Dataset / API Output",
     sub: "latest.json + historical snapshots",
     xDesktop: 380,
-    yDesktop: 300,
+    yDesktop: 310,
     xMobile: 200,
-    yMobile: 410,
+    yMobile: 310,
   },
   {
     id: "consumers",
     label: "Aggregator & Consumer Apps",
     sub: "Layer 2 / Layer 3 ecosystem",
-    xDesktop: 630,
-    yDesktop: 300,
+    xDesktop: 380,
+    yDesktop: 400,
     xMobile: 200,
-    yMobile: 520,
+    yMobile: 400,
   },
 ];
 
@@ -80,11 +80,11 @@ const EDGES: EdgeDef[] = [
 ];
 
 const STEPS: StepDef[] = [
-  { title: "Fase A", detail: "Source platforms dikonsolidasikan ke open registry", durationMs: 1100 },
-  { title: "Fase B", detail: "Monitoring otomatis menghitung reliability score", durationMs: 1100 },
-  { title: "Fase C", detail: "Output menjadi dataset/API untuk ecosystem", durationMs: 1100 },
-  { title: "Layering", detail: "Aggregator & consumer app consume data yang sama", durationMs: 1100 },
-  { title: "Positioning", detail: "Kita data supplier, bukan kompetitor existing player", durationMs: 1100 },
+  { title: "Fase A", detail: "Source platforms dikonsolidasikan ke open registry", durationMs: 2000 },
+  { title: "Fase B", detail: "Monitoring otomatis menghitung reliability score", durationMs: 2000 },
+  { title: "Fase C", detail: "Output menjadi dataset/API untuk ecosystem", durationMs: 2000 },
+  { title: "Layering", detail: "Aggregator & consumer app consume data yang sama", durationMs: 2000 },
+  { title: "Positioning", detail: "Kita data supplier, bukan kompetitor existing player", durationMs: 2000 },
 ];
 
 const BOX_W = 220;
@@ -181,13 +181,16 @@ export function ArchitectureTab() {
       </section>
 
       <section className="rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-5">
-        <svg viewBox="0 0 760 600" className="w-full h-auto" role="img" aria-label="Layer 1 architecture flow animation">
+        <svg viewBox="0 0 760 470" className="w-full h-auto" role="img" aria-label="Layer 1 architecture flow animation">
           <defs>
-            <marker id="arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0,0 L0,8 L8,4 z" fill="var(--clay)" />
+            <marker id="arrow-muted" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.8" refY="5" orient="auto">
+              <path d="M0,0 L0,10 L10,5 z" fill="var(--g300)" />
             </marker>
-            <marker id="arrow-olive" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0,0 L0,8 L8,4 z" fill="var(--olive)" />
+            <marker id="arrow-clay" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.8" refY="5" orient="auto">
+              <path d="M0,0 L0,10 L10,5 z" fill="var(--clay)" />
+            </marker>
+            <marker id="arrow-olive" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.8" refY="5" orient="auto">
+              <path d="M0,0 L0,10 L10,5 z" fill="var(--olive)" />
             </marker>
           </defs>
 
@@ -198,16 +201,28 @@ export function ArchitectureTab() {
             const active = phase >= edge.phase;
             const color = edge.accent === "olive" ? "var(--olive)" : "var(--clay)";
 
+            const fromCenterX = from.x;
+            const fromCenterY = from.y + BOX_H / 2;
+            const toCenterX = to.x;
+            const toCenterY = to.y + BOX_H / 2;
+
+            const vertical = Math.abs(toCenterY - fromCenterY) >= Math.abs(toCenterX - fromCenterX);
+
+            const x1 = vertical ? fromCenterX : fromCenterX + BOX_W / 2 - 14;
+            const y1 = vertical ? from.y + BOX_H : fromCenterY;
+            const x2 = vertical ? toCenterX : toCenterX - BOX_W / 2 + 14;
+            const y2 = vertical ? to.y : toCenterY;
+
             return (
               <line
                 key={`${edge.from}-${edge.to}`}
-                x1={from.x + BOX_W / 2 - 14}
-                y1={from.y + BOX_H / 2}
-                x2={to.x - BOX_W / 2 + 14}
-                y2={to.y + BOX_H / 2}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
                 stroke={active ? color : "var(--g300)"}
-                strokeWidth={active ? 3 : 2}
-                markerEnd={active ? `url(#${edge.accent === "olive" ? "arrow-olive" : "arrow-clay"})` : undefined}
+                strokeWidth={active ? 2.5 : 1.8}
+                markerEnd={`url(#${active ? (edge.accent === "olive" ? "arrow-olive" : "arrow-clay") : "arrow-muted"})`}
               />
             );
           })}
@@ -231,8 +246,12 @@ export function ArchitectureTab() {
                 <text x={node.x} y={node.y + 25} textAnchor="middle" className="fill-[var(--slate)]" style={{ fontSize: 13, fontWeight: 600 }}>
                   {node.label}
                 </text>
-                <text x={node.x} y={node.y + 44} textAnchor="middle" className="fill-[var(--g500)]" style={{ fontSize: 10 }}>
-                  {node.sub}
+                <text x={node.x} y={node.y + 41} textAnchor="middle" className="fill-[var(--g500)]" style={{ fontSize: 10 }}>
+                  {(node.sub ?? "").split("\n").map((line, idx) => (
+                    <tspan key={`${n.id}-${idx}`} x={node.x} dy={idx === 0 ? 0 : 12}>
+                      {line}
+                    </tspan>
+                  ))}
                 </text>
               </g>
             );
@@ -268,7 +287,7 @@ export function ArchitectureTab() {
           ))}
         </div>
 
-        <div className="mt-5 flex items-center gap-2">
+        <div className="mt-1 flex items-center gap-2">
           <button
             type="button"
             onClick={onPlay}
