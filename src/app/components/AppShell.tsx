@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { DocsTab } from "./DocsTab";
 import { AppTab } from "./AppTab";
+import { ArchitectureTab } from "./ArchitectureTab";
 import type { DocFile, LatestSummary, Source } from "../lib/data";
 
-type TabKey = "docs" | "app";
+type TabKey = "docs" | "app" | "architecture";
 
 export function AppShell({
   docs,
@@ -47,6 +48,15 @@ export function AppShell({
                 </span>
               )}
             </TabButton>
+            <TabButton
+              id="tab-architecture"
+              controls="panel-architecture"
+              active={tab === "architecture"}
+              onClick={() => setTab("architecture")}
+            >
+              <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">03</span>
+              Architecture Animation
+            </TabButton>
           </div>
         </div>
       </nav>
@@ -67,6 +77,14 @@ export function AppShell({
           hidden={tab !== "app"}
         >
           <AppTab sources={sources} latest={latest} />
+        </div>
+        <div
+          role="tabpanel"
+          id="panel-architecture"
+          aria-labelledby="tab-architecture"
+          hidden={tab !== "architecture"}
+        >
+          <ArchitectureTab />
         </div>
       </main>
 
