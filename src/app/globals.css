@@ -1,26 +1,155 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ivory:  #FAF9F5;
+  --paper:  #FFFFFF;
+  --slate:  #141413;
+  --clay:   #D97757;
+  --clay-d: #B85C3E;
+  --oat:    #E3DACC;
+  --olive:  #788C5D;
+  --g100:   #F0EEE6;
+  --g200:   #E6E3DA;
+  --g300:   #D1CFC5;
+  --g500:   #87867F;
+  --g700:   #3D3D3A;
+
+  --font-serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+  --font-sans-stack: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono-stack: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ivory: var(--ivory);
+  --color-paper: var(--paper);
+  --color-slate-ink: var(--slate);
+  --color-clay: var(--clay);
+  --color-clay-d: var(--clay-d);
+  --color-oat: var(--oat);
+  --color-olive: var(--olive);
+  --color-g100: var(--g100);
+  --color-g200: var(--g200);
+  --color-g300: var(--g300);
+  --color-g500: var(--g500);
+  --color-g700: var(--g700);
+
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--ivory);
+  color: var(--slate);
+  font-family: var(--font-sans-stack);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Markdown rendering (.prose-doc) ====================================== */
+.prose-doc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--g700);
+}
+.prose-doc h1, .prose-doc h2, .prose-doc h3, .prose-doc h4 {
+  font-family: var(--font-serif);
+  color: var(--slate);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  margin: 2.2em 0 0.6em;
+  scroll-margin-top: 96px;
+}
+.prose-doc h1 {
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.1;
+  margin-top: 0.4em;
+  border-bottom: 1.5px solid var(--g300);
+  padding-bottom: 0.4em;
+}
+.prose-doc h2 { font-size: 26px; }
+.prose-doc h3 { font-size: 20px; color: var(--g700); }
+.prose-doc h4 { font-size: 17px; font-family: var(--font-sans-stack); text-transform: uppercase; letter-spacing: 0.08em; color: var(--g500); }
+.prose-doc p { margin: 0.9em 0; }
+.prose-doc a { color: var(--clay); text-decoration: underline; text-decoration-color: var(--oat); text-underline-offset: 3px; }
+.prose-doc a:hover { text-decoration-color: var(--clay); }
+.prose-doc strong { color: var(--slate); font-weight: 600; }
+.prose-doc em { font-style: italic; }
+.prose-doc ul, .prose-doc ol { margin: 0.9em 0; padding-left: 1.6em; }
+.prose-doc li { margin: 0.35em 0; }
+.prose-doc li input[type="checkbox"] { margin-right: 0.4em; }
+.prose-doc blockquote {
+  border-left: 3px solid var(--clay);
+  padding: 0.4em 0 0.4em 1em;
+  margin: 1.2em 0;
+  background: var(--g100);
+  color: var(--g700);
+  font-style: italic;
+}
+.prose-doc code {
+  font-family: var(--font-mono-stack);
+  font-size: 0.88em;
+  background: var(--g100);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  color: var(--slate);
+}
+.prose-doc pre {
+  background: var(--slate);
+  color: var(--ivory);
+  padding: 1em 1.2em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.2em 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.prose-doc pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+.prose-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  font-size: 14.5px;
+}
+.prose-doc th, .prose-doc td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--g200);
+  vertical-align: top;
+}
+.prose-doc th {
+  background: var(--g100);
+  font-weight: 600;
+  color: var(--slate);
+  font-family: var(--font-sans-stack);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.prose-doc hr { border: 0; border-top: 1.5px solid var(--g300); margin: 2.4em 0; }
+.prose-doc img { max-width: 100%; border-radius: 8px; }
+
+/* eyebrow helper used in masthead */
+.eyebrow {
+  font-family: var(--font-mono-stack);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--g500);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: "";
+  width: 24px; height: 1.5px;
+  background: var(--clay);
 }
