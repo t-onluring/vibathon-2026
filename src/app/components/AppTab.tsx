@@ -480,6 +480,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("score");
   const [loading, setLoading] = useState(true);
+  const [filterOpen, setFilterOpen] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -610,6 +611,22 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
               className="w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] py-2.5 pl-9 pr-3 text-[13.5px] text-[var(--slate)] outline-none focus:border-[var(--clay)] transition-colors"
             />
           </div>
+
+          {/* Mobile: Filters toggle button */}
+          <button
+            type="button"
+            onClick={() => setFilterOpen((v) => !v)}
+            className="sm:hidden inline-flex items-center gap-2 rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2.5 text-[13px] font-mono text-[var(--g700)] relative"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Filters
+            {hasActiveFilters && (
+              <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[var(--clay)]" />
+            )}
+          </button>
+
           {/* Sort */}
           <select
             value={sortBy} onChange={(e) => setSortBy(e.target.value as SortKey)}
@@ -621,38 +638,41 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
           </select>
         </div>
 
-        {/* Status filter pills */}
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="eyebrow !text-[9.5px] min-w-[52px]">Status</span>
-          {STATUS_FILTER_KEYS.map(({ key, label }) => (
-            <button key={key} type="button" onClick={() => setStatusFilter(key)}
-              className={[
-                "px-3 py-1 rounded-full text-[11.5px] font-mono border transition-all duration-150",
-                statusFilter === key
-                  ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
-                  : "bg-transparent text-[var(--g700)] border-[var(--g300)] hover:border-[var(--g500)]",
-              ].join(" ")}>
-              {label}
-              <span className="ml-1.5 opacity-60 text-[10px]">{statusCounts[key] ?? 0}</span>
-            </button>
-          ))}
-        </div>
+        {/* Filter rows — always visible on ≥sm, toggleable on mobile */}
+        <div className={["sm:block", filterOpen ? "block" : "hidden"].join(" ")}>
+          {/* Status filter pills */}
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="eyebrow !text-[9.5px] min-w-[52px]">Status</span>
+            {STATUS_FILTER_KEYS.map(({ key, label }) => (
+              <button key={key} type="button" onClick={() => setStatusFilter(key)}
+                className={[
+                  "px-3 py-1 rounded-full text-[11.5px] font-mono border transition-all duration-150",
+                  statusFilter === key
+                    ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
+                    : "bg-transparent text-[var(--g700)] border-[var(--g300)] hover:border-[var(--g500)]",
+                ].join(" ")}>
+                {label}
+                <span className="ml-1.5 opacity-60 text-[10px]">{statusCounts[key] ?? 0}</span>
+              </button>
+            ))}
+          </div>
 
-        {/* Platform filter pills */}
-        <div className="mb-6 flex flex-wrap items-center gap-2">
-          <span className="eyebrow !text-[9.5px] min-w-[52px]">Platform</span>
-          {PLATFORM_FILTER_KEYS.map(({ key, label }) => (
-            <button key={key} type="button" onClick={() => setPlatformFilter(key)}
-              className={[
-                "px-3 py-1 rounded-full text-[11.5px] font-mono border transition-all duration-150",
-                platformFilter === key
-                  ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
-                  : "bg-transparent text-[var(--g700)] border-[var(--g300)] hover:border-[var(--g500)]",
-              ].join(" ")}>
-              {label}
-              <span className="ml-1.5 opacity-60 text-[10px]">{platformCounts[key] ?? 0}</span>
-            </button>
-          ))}
+          {/* Platform filter pills */}
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="eyebrow !text-[9.5px] min-w-[52px]">Platform</span>
+            {PLATFORM_FILTER_KEYS.map(({ key, label }) => (
+              <button key={key} type="button" onClick={() => setPlatformFilter(key)}
+                className={[
+                  "px-3 py-1 rounded-full text-[11.5px] font-mono border transition-all duration-150",
+                  platformFilter === key
+                    ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
+                    : "bg-transparent text-[var(--g700)] border-[var(--g300)] hover:border-[var(--g500)]",
+                ].join(" ")}>
+                {label}
+                <span className="ml-1.5 opacity-60 text-[10px]">{platformCounts[key] ?? 0}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Active filters summary */}

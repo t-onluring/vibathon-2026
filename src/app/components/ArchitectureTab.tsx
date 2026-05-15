@@ -1,315 +1,265 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-type RunState = "idle" | "playing" | "done";
-
-type NodeDef = {
-  id: string;
-  label: string;
-  sub?: string;
-  xDesktop: number;
-  yDesktop: number;
-  xMobile: number;
-  yMobile: number;
-};
-
-type EdgeDef = {
-  from: string;
-  to: string;
-  phase: number;
-  accent?: "clay" | "olive";
-};
-
-type StepDef = { title: string; detail: string; durationMs: number };
-
-const NODES: NodeDef[] = [
+const LAYERS = [
   {
     id: "sources",
-    label: "Source Channels",
-    sub: "Telegram · Instagram ·\nFacebook · WhatsApp · Web",
-    xDesktop: 380,
-    yDesktop: 40,
-    xMobile: 200,
-    yMobile: 40,
+    num: "L0",
+    label: "Sources",
+    desc: "Telegram, Instagram, Facebook, WhatsApp, Website, YouTube — platform kajian yang dipantau.",
+    color: "var(--clay)",
+    colorRaw: "#D97757",
+  },
+  {
+    id: "checker",
+    num: "L1",
+    label: "Health Checker",
+    desc: "GitHub Actions cron — fetch + parse dengan 3× retry, 5s stagger, deteksi last post & subscriber count.",
+    color: "var(--olive)",
+    colorRaw: "#788C5D",
   },
   {
     id: "registry",
-    label: "Open Registry",
-    sub: "Source metadata + health status",
-    xDesktop: 380,
-    yDesktop: 130,
-    xMobile: 200,
-    yMobile: 130,
+    num: "L2",
+    label: "Source Registry",
+    desc: "JSON-in-Git — sources.json (metadata) + latest.json (snapshot kesehatan terbaru). Open, versionable, auditable.",
+    color: "#5B8FB9",
+    colorRaw: "#5B8FB9",
   },
   {
-    id: "monitor",
-    label: "Reliability Monitoring",
-    sub: "Automated freshness scoring",
-    xDesktop: 380,
-    yDesktop: 220,
-    xMobile: 200,
-    yMobile: 220,
-  },
-  {
-    id: "dataset",
-    label: "Dataset / API Output",
-    sub: "latest.json + historical snapshots",
-    xDesktop: 380,
-    yDesktop: 310,
-    xMobile: 200,
-    yMobile: 310,
+    id: "api",
+    num: "L3",
+    label: "Static API",
+    desc: "Netlify CDN — zero-auth, zero-cost, global edge. /v1/sources.json, /v1/latest.json, /v1/active.json.",
+    color: "var(--clay)",
+    colorRaw: "#D97757",
   },
   {
     id: "consumers",
-    label: "Aggregator & Consumer Apps",
-    sub: "Layer 2 / Layer 3 ecosystem",
-    xDesktop: 380,
-    yDesktop: 400,
-    xMobile: 200,
-    yMobile: 400,
+    num: "L4",
+    label: "Consumers",
+    desc: "Aggregator, finder kajian, aplikasi rekomendasi, researcher NLP, dataset Hugging Face — semua consume API yang sama.",
+    color: "var(--olive)",
+    colorRaw: "#788C5D",
   },
 ];
 
-const EDGES: EdgeDef[] = [
-  { from: "sources", to: "registry", phase: 0, accent: "clay" },
-  { from: "registry", to: "monitor", phase: 1, accent: "clay" },
-  { from: "monitor", to: "dataset", phase: 2, accent: "olive" },
-  { from: "dataset", to: "consumers", phase: 3, accent: "olive" },
-  { from: "registry", to: "dataset", phase: 4, accent: "olive" },
-];
-
-const STEPS: StepDef[] = [
-  { title: "Fase A", detail: "Source platforms dikonsolidasikan ke open registry", durationMs: 2000 },
-  { title: "Fase B", detail: "Monitoring otomatis menghitung reliability score", durationMs: 2000 },
-  { title: "Fase C", detail: "Output menjadi dataset/API untuk ecosystem", durationMs: 2000 },
-  { title: "Layering", detail: "Aggregator & consumer app consume data yang sama", durationMs: 2000 },
-  { title: "Positioning", detail: "Kita data supplier, bukan kompetitor existing player", durationMs: 2000 },
-];
-
-const BOX_W = 220;
-const BOX_H = 64;
-
 export function ArchitectureTab() {
-  const [runState, setRunState] = useState<RunState>("idle");
-  const [phase, setPhase] = useState(-1);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const timerRefs = useRef<number[]>([]);
+  const [activeLayer, setActiveLayer] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updateReduced = () => setReducedMotion(mql.matches);
-    const updateMobile = () => setIsMobile(window.innerWidth <= 640);
-
-    updateReduced();
-    updateMobile();
-
-    mql.addEventListener("change", updateReduced);
-    window.addEventListener("resize", updateMobile);
-
-    return () => {
-      mql.removeEventListener("change", updateReduced);
-      window.removeEventListener("resize", updateMobile);
-      clearTimers();
-    };
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.15 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
   }, []);
-
-  const phaseText = phase >= 0 ? STEPS[Math.min(phase, STEPS.length - 1)] : null;
-
-  const nodeMap = useMemo(() => {
-    const map = new Map<string, { x: number; y: number; label: string; sub?: string }>();
-    for (const n of NODES) {
-      map.set(n.id, {
-        x: isMobile ? n.xMobile : n.xDesktop,
-        y: isMobile ? n.yMobile : n.yDesktop,
-        label: n.label,
-        sub: n.sub,
-      });
-    }
-    return map;
-  }, [isMobile]);
-
-  function clearTimers() {
-    for (const t of timerRefs.current) window.clearTimeout(t);
-    timerRefs.current = [];
-  }
-
-  function onPlay() {
-    if (runState === "playing") return;
-
-    clearTimers();
-    if (reducedMotion) {
-      setPhase(STEPS.length - 1);
-      setRunState("done");
-      return;
-    }
-
-    setPhase(-1);
-    setRunState("playing");
-
-    let delay = 120;
-    for (let i = 0; i < STEPS.length; i++) {
-      const timer = window.setTimeout(() => {
-        setPhase(i);
-        if (i === STEPS.length - 1) setRunState("done");
-      }, delay);
-      timerRefs.current.push(timer);
-      delay += STEPS[i].durationMs;
-    }
-  }
-
-  function onReset() {
-    clearTimers();
-    setPhase(-1);
-    setRunState("idle");
-  }
 
   return (
     <div className="mx-auto max-w-[1180px] px-8 py-10">
-      <section className="mb-6 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-6">
-        <p className="eyebrow mb-3">Architecture Story · Layer 1</p>
-        <h2 className="font-serif text-[clamp(28px,3.2vw,40px)] leading-tight text-[var(--slate)] max-w-[24ch]">
-          Open registry sumber kajian dengan automated reliability monitoring.
+      {/* Header */}
+      <div className="mb-10">
+        <p className="eyebrow mb-2">03 · Layer 1 Infrastructure</p>
+        <h2 className="font-serif text-[clamp(28px,3.4vw,40px)] leading-tight text-[var(--slate)] mb-3">
+          Architecture
         </h2>
-        <p className="mt-3 max-w-[840px] text-[14px] text-[var(--g700)] leading-relaxed">
-          Layer 1 infrastructure agar siapapun bisa membangun aggregator atau aplikasi konsumen di atasnya.
-          <strong className="text-[var(--clay-d)]"> Bukan kompetitor existing player, tapi data supplier.</strong>
+        <p className="text-[15px] text-[var(--g700)] max-w-[480px] leading-relaxed">
+          Five-layer stack. Hover untuk detail tiap layer.
         </p>
-      </section>
+      </div>
 
-      <section className="rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-5">
-        <svg viewBox="0 0 760 470" className="w-full h-auto" role="img" aria-label="Layer 1 architecture flow animation">
-          <defs>
-            <marker id="arrow-muted" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.8" refY="5" orient="auto">
-              <path d="M0,0 L0,10 L10,5 z" fill="var(--g300)" />
-            </marker>
-            <marker id="arrow-clay" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.8" refY="5" orient="auto">
-              <path d="M0,0 L0,10 L10,5 z" fill="var(--clay)" />
-            </marker>
-            <marker id="arrow-olive" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8.8" refY="5" orient="auto">
-              <path d="M0,0 L0,10 L10,5 z" fill="var(--olive)" />
-            </marker>
-          </defs>
-
-          {EDGES.map((edge) => {
-            const from = nodeMap.get(edge.from);
-            const to = nodeMap.get(edge.to);
-            if (!from || !to) return null;
-            const active = phase >= edge.phase;
-            const color = edge.accent === "olive" ? "var(--olive)" : "var(--clay)";
-
-            const fromCenterX = from.x;
-            const fromCenterY = from.y + BOX_H / 2;
-            const toCenterX = to.x;
-            const toCenterY = to.y + BOX_H / 2;
-
-            const vertical = Math.abs(toCenterY - fromCenterY) >= Math.abs(toCenterX - fromCenterX);
-
-            const x1 = vertical ? fromCenterX : fromCenterX + BOX_W / 2 - 14;
-            const y1 = vertical ? from.y + BOX_H : fromCenterY;
-            const x2 = vertical ? toCenterX : toCenterX - BOX_W / 2 + 14;
-            const y2 = vertical ? to.y : toCenterY;
-
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10 items-start">
+        {/* Layer stack */}
+        <div ref={ref} className="flex flex-col gap-2 max-w-[700px]">
+          {LAYERS.map((layer, i) => {
+            const isActive = activeLayer === layer.id;
             return (
-              <line
-                key={`${edge.from}-${edge.to}`}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke={active ? color : "var(--g300)"}
-                strokeWidth={active ? 2.5 : 1.8}
-                markerEnd={`url(#${active ? (edge.accent === "olive" ? "arrow-olive" : "arrow-clay") : "arrow-muted"})`}
-              />
+              <div
+                key={layer.id}
+                onMouseEnter={() => setActiveLayer(layer.id)}
+                onMouseLeave={() => setActiveLayer(null)}
+                className="flex items-center gap-4 rounded-xl border px-5 py-4 cursor-default transition-all duration-250"
+                style={{
+                  background: isActive ? `${layer.colorRaw}10` : "var(--paper)",
+                  borderColor: isActive ? `${layer.colorRaw}40` : "var(--g300)",
+                  transform: isActive ? "translateX(8px) scale(1.01)" : "none",
+                  opacity: visible ? 1 : 0,
+                  animation: visible
+                    ? `card-enter 0.5s ${i * 80}ms cubic-bezier(0.16,1,0.3,1) both`
+                    : "none",
+                }}
+              >
+                {/* Layer badge */}
+                <div
+                  className="flex size-9 shrink-0 items-center justify-center rounded-lg border font-mono text-[12px] font-bold transition-all duration-250"
+                  style={{
+                    background: isActive ? layer.colorRaw : "var(--g100)",
+                    borderColor: isActive ? layer.colorRaw : "var(--g300)",
+                    color: isActive ? "#fff" : "var(--g500)",
+                  }}
+                >
+                  {layer.num}
+                </div>
+
+                {/* Label + expandable desc */}
+                <div className="flex-1 min-w-0">
+                  <div
+                    className="text-[14.5px] font-semibold transition-colors duration-200"
+                    style={{ color: isActive ? "var(--slate)" : "var(--slate)" }}
+                  >
+                    {layer.label}
+                  </div>
+                  <div
+                    className="text-[12.5px] text-[var(--g600)] leading-relaxed overflow-hidden transition-all duration-300"
+                    style={{
+                      maxHeight: isActive ? "60px" : "0px",
+                      opacity: isActive ? 1 : 0,
+                      marginTop: isActive ? "4px" : "0px",
+                    }}
+                  >
+                    {layer.desc}
+                  </div>
+                </div>
+
+                {/* Arrow chevron */}
+                <svg
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  className="shrink-0 transition-all duration-200"
+                  style={{
+                    opacity: isActive ? 0.6 : 0.15,
+                    color: isActive ? layer.colorRaw : "currentColor",
+                  }}
+                >
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
             );
           })}
 
-          {NODES.map((n) => {
-            const node = nodeMap.get(n.id);
-            if (!node) return null;
-            const active = phase >= Math.max(0, NODES.findIndex((x) => x.id === n.id) - 1);
-            return (
-              <g key={n.id}>
-                <rect
-                  x={node.x - BOX_W / 2}
-                  y={node.y}
-                  width={BOX_W}
-                  height={BOX_H}
-                  rx={10}
-                  fill={active ? "var(--ivory)" : "var(--paper)"}
-                  stroke={active ? "var(--clay)" : "var(--g300)"}
-                  strokeWidth={active ? 2 : 1.5}
-                />
-                <text x={node.x} y={node.y + 25} textAnchor="middle" className="fill-[var(--slate)]" style={{ fontSize: 13, fontWeight: 600 }}>
-                  {node.label}
-                </text>
-                <text x={node.x} y={node.y + 41} textAnchor="middle" className="fill-[var(--g500)]" style={{ fontSize: 10 }}>
-                  {(node.sub ?? "").split("\n").map((line, idx) => (
-                    <tspan key={`${n.id}-${idx}`} x={node.x} dy={idx === 0 ? 0 : 12}>
-                      {line}
-                    </tspan>
-                  ))}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-
-        <div className="mt-4 rounded-md border border-[var(--g200)] bg-[var(--ivory)] p-3">
-          {phaseText ? (
-            <p className="text-[13px] text-[var(--g700)]">
-              <span className="font-mono text-[11px] text-[var(--clay-d)] mr-2">{phaseText.title}</span>
-              {phaseText.detail}
-            </p>
-          ) : (
-            <p className="text-[13px] text-[var(--g500)]">Klik Play untuk mulai narasi arsitektur.</p>
-          )}
+          {/* Flow indicator */}
+          <div className="mt-3 flex items-center gap-2 pl-1 font-mono text-[11px] text-[var(--g500)] tracking-[0.04em]">
+            <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+              <path d="M6 1v10M3 8l3 4 3-4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Data flow: sources → checker → registry → API → consumers
+          </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {STEPS.map((s, idx) => (
-            <span
-              key={s.title}
-              className={[
-                "rounded-full border px-2.5 py-1 text-[11px] font-mono",
-                phase === idx
-                  ? "border-[var(--clay)] bg-[var(--clay)]/10 text-[var(--clay-d)]"
-                  : phase > idx
-                    ? "border-[var(--olive)] bg-[var(--olive)]/10 text-[var(--olive)]"
-                    : "border-[var(--g300)] text-[var(--g500)]",
-              ].join(" ")}
-            >
-              {phase > idx ? "✓" : idx + 1} {s.title}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-1 flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onPlay}
-            disabled={runState === "playing"}
-            className="rounded-md bg-[var(--slate)] px-4 py-2 text-[13px] font-medium text-[var(--ivory)] disabled:opacity-50"
+        {/* Detail panel (desktop) */}
+        <div className="hidden lg:block sticky top-[80px]">
+          <div
+            className="rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-5 transition-all duration-300"
+            style={{
+              opacity: activeLayer ? 1 : 0.35,
+              transform: activeLayer ? "translateY(0)" : "translateY(6px)",
+            }}
           >
-            {runState === "playing" ? "Playing..." : runState === "done" ? "Replay" : "Play"}
-          </button>
-          <button
-            type="button"
-            onClick={onReset}
-            className="rounded-md border border-[var(--g300)] bg-[var(--paper)] px-4 py-2 text-[13px] font-medium text-[var(--g700)]"
-          >
-            Reset
-          </button>
-          {reducedMotion && (
-            <span className="text-[11px] text-[var(--g500)]">
-              Reduced motion aktif, animasi ditampilkan sebagai state final.
-            </span>
-          )}
+            {activeLayer ? (
+              (() => {
+                const l = LAYERS.find((x) => x.id === activeLayer)!;
+                return (
+                  <>
+                    <div className="mb-4 flex items-center gap-3">
+                      <div
+                        className="flex size-10 items-center justify-center rounded-lg font-mono text-[13px] font-bold text-white"
+                        style={{ background: l.colorRaw }}
+                      >
+                        {l.num}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-[15px] text-[var(--slate)]">{l.label}</div>
+                        <div className="font-mono text-[10.5px] text-[var(--g500)] mt-0.5">Layer {l.num.slice(1)}</div>
+                      </div>
+                    </div>
+                    <p className="text-[13.5px] text-[var(--g700)] leading-relaxed mb-5">{l.desc}</p>
+                    <div className="rounded-lg bg-[var(--g100)] border border-[var(--g200)] p-3">
+                      <LayerDetail id={activeLayer} />
+                    </div>
+                  </>
+                );
+              })()
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="mb-3 opacity-20">
+                  <rect x="1" y="1" width="26" height="6" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <rect x="1" y="11" width="26" height="6" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <rect x="1" y="21" width="26" height="6" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+                <p className="text-[12.5px] text-[var(--g400)]">Hover salah satu layer untuk detail</p>
+              </div>
+            )}
+          </div>
+
+          {/* Architecture note */}
+          <div className="mt-4 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-4 text-[12.5px] text-[var(--g700)] leading-relaxed">
+            <span className="font-semibold text-[var(--clay-d)]">Positioning:</span>{" "}
+            Kita Layer 1 — bukan kompetitor existing agregator (L2/L3), tapi{" "}
+            <strong>data supplier</strong> yang memungkinkan mereka dibangun.
+          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
+}
+
+// ===== Per-layer detail snippets ================================
+
+function LayerDetail({ id }: { id: string }) {
+  const details: Record<string, React.ReactNode> = {
+    sources: (
+      <div className="space-y-1.5 font-mono text-[11px]">
+        {[
+          ["telegram", "Grup & channel kajian", "var(--olive)"],
+          ["instagram", "Akun dakwah sunnah", "var(--clay)"],
+          ["website", "Blog & portal kajian", "#5B8FB9"],
+          ["youtube", "Channel video — Phase 2", "var(--g400)"],
+        ].map(([p, d, c]) => (
+          <div key={String(p)} className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: String(c) }} />
+            <span style={{ color: String(c) }}>{String(p)}</span>
+            <span className="text-[var(--g500)]">·</span>
+            <span className="text-[var(--g600)]">{String(d)}</span>
+          </div>
+        ))}
+      </div>
+    ),
+    checker: (
+      <div className="space-y-1 font-mono text-[11px] text-[var(--g600)]">
+        <div>⏰ cron: <span className="text-[var(--olive)]">0 17 * * *</span> (00:01 WIB)</div>
+        <div>🔁 retry: <span className="text-[var(--olive)]">3×</span> dengan 5s stagger</div>
+        <div>📊 score: freshness → reliability_score</div>
+        <div>🏃 runtime: <span className="text-[var(--olive)]">GitHub Actions</span></div>
+      </div>
+    ),
+    registry: (
+      <div className="space-y-1 font-mono text-[11px] text-[var(--g600)]">
+        <div>📄 <span className="text-[#5B8FB9]">sources.json</span> — metadata</div>
+        <div>📊 <span className="text-[#5B8FB9]">latest.json</span> — snapshots</div>
+        <div>🔖 versioned via <span className="text-[#5B8FB9]">git history</span></div>
+        <div>✅ validated by CI on PR</div>
+      </div>
+    ),
+    api: (
+      <div className="space-y-1 font-mono text-[11px] text-[var(--g600)]">
+        <div><span className="text-[var(--clay)]">GET</span> /v1/sources.json</div>
+        <div><span className="text-[var(--clay)]">GET</span> /v1/latest.json</div>
+        <div><span className="text-[var(--clay)]">GET</span> /v1/active.json</div>
+        <div>🌐 Netlify CDN — zero-auth</div>
+      </div>
+    ),
+    consumers: (
+      <div className="space-y-1.5 font-mono text-[11px] text-[var(--g600)]">
+        <div>🏗️ Aggregator platform</div>
+        <div>📱 Kajian finder apps</div>
+        <div>🔬 NLP researchers</div>
+        <div>📦 Hugging Face dataset — Phase 4</div>
+      </div>
+    ),
+  };
+
+  return details[id] ?? null;
 }

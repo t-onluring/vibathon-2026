@@ -1,0 +1,51 @@
+name: "🐛 Bug Report"
+description: "Report bug di dashboard atau health checker"
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih sudah report bug! Isi selengkap mungkin supaya bisa cepat di-fix.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: "Bagian mana yang bermasalah?"
+      options:
+        - Dashboard UI
+        - Health Checker
+        - API / Data
+        - GitHub Actions / CI
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Deskripsi Bug
+      description: "Apa yang terjadi vs apa yang seharusnya terjadi?"
+      placeholder: |
+        **Actual**: Score tampil NaN untuk channel xyz
+        **Expected**: Score tampil angka 0-100
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: "Langkah-langkah untuk reproduce bug"
+      placeholder: |
+        1. Buka dashboard
+        2. Filter by "Error"
+        3. Lihat card "HSI AbdullahRoy"
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & Device (opsional)
+      placeholder: "contoh: Chrome 126 / macOS"

@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { DocsTab } from "./DocsTab";
+import { OverviewTab } from "./OverviewTab";
+import { RoadmapSection } from "./RoadmapSection";
 import { AppTab } from "./AppTab";
 import { ArchitectureTab } from "./ArchitectureTab";
 import { OpenContributionTab } from "./OpenContributionTab";
 import { DocsDrawer } from "./DocsDrawer";
 import type { DocFile, LatestSummary, Source } from "../lib/data";
 
-type TabKey = "docs" | "architecture" | "app" | "contribution";
+type TabKey = "overview" | "roadmap" | "architecture" | "app" | "contribution";
 
 export function AppShell({
   docs,
@@ -19,7 +20,7 @@ export function AppShell({
   sources: Source[];
   latest: LatestSummary | null;
 }) {
-  const [tab, setTab] = useState<TabKey>("docs");
+  const [tab, setTab] = useState<TabKey>("overview");
   const [docsOpen, setDocsOpen] = useState(false);
 
   return (
@@ -27,17 +28,21 @@ export function AppShell({
       <nav className="sticky top-0 z-30 bg-[var(--ivory)]/95 backdrop-blur border-b border-[var(--g300)]">
         <div className="mx-auto max-w-[1180px] px-8">
           <div className="flex items-end gap-1 justify-between" role="tablist" aria-label="Main sections">
-            <div className="flex items-end gap-1">
-              <TabButton id="tab-docs" controls="panel-docs" active={tab === "docs"} onClick={() => setTab("docs")}>
+            <div className="flex items-end gap-1 overflow-x-auto">
+              <TabButton id="tab-overview" controls="panel-overview" active={tab === "overview"} onClick={() => setTab("overview")}>
                 <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">01</span>
+                Overview
+              </TabButton>
+              <TabButton id="tab-roadmap" controls="panel-roadmap" active={tab === "roadmap"} onClick={() => setTab("roadmap")}>
+                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">02</span>
                 Plan &amp; Roadmap
               </TabButton>
               <TabButton id="tab-architecture" controls="panel-architecture" active={tab === "architecture"} onClick={() => setTab("architecture")}>
-                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">02</span>
-                Architecture Animation
+                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">03</span>
+                Architecture
               </TabButton>
               <TabButton id="tab-app" controls="panel-app" active={tab === "app"} onClick={() => setTab("app")}>
-                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">03</span>
+                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">04</span>
                 Live Dashboard
                 {latest && (
                   <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-[var(--olive)]/15 px-2 py-0.5 text-[10.5px] font-mono text-[var(--olive)]">
@@ -47,8 +52,8 @@ export function AppShell({
                 )}
               </TabButton>
               <TabButton id="tab-contribution" controls="panel-contribution" active={tab === "contribution"} onClick={() => setTab("contribution")}>
-                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">04</span>
-                Open Contribution
+                <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">05</span>
+                Contribute
               </TabButton>
             </div>
 
@@ -71,8 +76,13 @@ export function AppShell({
       </nav>
 
       <main className="flex-1">
-        <div role="tabpanel" id="panel-docs" aria-labelledby="tab-docs" hidden={tab !== "docs"}>
-          <DocsTab docs={docs} />
+        <div role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" hidden={tab !== "overview"}>
+          <OverviewTab sources={sources} latest={latest} onNavigate={(t) => setTab(t as TabKey)} />
+        </div>
+        <div role="tabpanel" id="panel-roadmap" aria-labelledby="tab-roadmap" hidden={tab !== "roadmap"}>
+          <div className="mx-auto max-w-[1180px] px-8 py-10">
+            <RoadmapSection />
+          </div>
         </div>
         <div role="tabpanel" id="panel-architecture" aria-labelledby="tab-architecture" hidden={tab !== "architecture"}>
           <ArchitectureTab />
@@ -125,7 +135,7 @@ function TabButton({
       tabIndex={active ? 0 : -1}
       onClick={onClick}
       className={[
-        "relative px-5 py-3.5 text-[14px] font-medium transition-colors",
+        "relative px-4 py-3.5 text-[13.5px] font-medium transition-colors whitespace-nowrap shrink-0",
         "border-b-2 -mb-[1.5px]",
         active
           ? "border-[var(--clay)] text-[var(--slate)]"

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { DocFile } from "../lib/data";
+import { RoadmapSection } from "./RoadmapSection";
 
 export function DocsTab({ docs }: { docs: DocFile[] }) {
   const [activeSlug, setActiveSlug] = useState(docs[0]?.slug ?? "");
@@ -20,7 +21,9 @@ export function DocsTab({ docs }: { docs: DocFile[] }) {
   }
 
   return (
-    <div className="mx-auto max-w-[1180px] px-8 py-10 grid grid-cols-1 lg:grid-cols-[240px_1fr_220px] gap-10">
+    <div className="mx-auto max-w-[1180px] px-8 py-10">
+      <RoadmapSection />
+      <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_220px] gap-10">
       {/* Doc list (left) */}
       <aside className="lg:sticky lg:top-[72px] lg:self-start">
         <p className="eyebrow mb-4">Dokumen</p>
@@ -97,6 +100,7 @@ export function DocsTab({ docs }: { docs: DocFile[] }) {
           ))}
         </ul>
       </aside>
+    </div>
     </div>
   );
 }
