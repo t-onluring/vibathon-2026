@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <>
-      <Masthead />
+      <Masthead sources={sources} latest={latest} />
       <AppShell docs={docs} sources={sources} latest={latest} />
     </>
   );
