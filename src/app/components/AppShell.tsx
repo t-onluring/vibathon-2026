@@ -7,6 +7,7 @@ import { AppTab } from "./AppTab";
 import { ArchitectureTab } from "./ArchitectureTab";
 import { OpenContributionTab } from "./OpenContributionTab";
 import { DocsDrawer } from "./DocsDrawer";
+import { FeedbackFAB } from "./FeedbackFAB";
 import type { DocFile, LatestSummary, Source } from "../lib/data";
 
 type TabKey = "overview" | "roadmap" | "architecture" | "app" | "contribution";
@@ -100,14 +101,26 @@ export function AppShell({
           <p className="font-mono">
             <span className="text-[var(--clay)]">●</span> kajian-source-list · v0.1 (vibathon-2026)
           </p>
-          <p>
-            Data: <code className="text-[var(--g700)]">CC-BY-SA 4.0</code> · Code:{" "}
-            <code className="text-[var(--g700)]">MIT</code>
-          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <a
+              href="https://forms.gle/e7yQcpawniKtmffc9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-[var(--clay)] hover:opacity-70 transition-opacity"
+            >
+              📝 Beri Feedback
+            </a>
+            <span className="text-[var(--g300)]">·</span>
+            <p>
+              Data: <code className="text-[var(--g700)]">CC-BY-SA 4.0</code> · Code:{" "}
+              <code className="text-[var(--g700)]">MIT</code>
+            </p>
+          </div>
         </div>
       </footer>
 
       <DocsDrawer docs={docs} isOpen={docsOpen} onClose={() => setDocsOpen(false)} />
+      <FeedbackFAB />
     </div>
   );
 }
