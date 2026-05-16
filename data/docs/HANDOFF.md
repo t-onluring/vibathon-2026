@@ -1,7 +1,7 @@
 # HANDOFF — Source List Kajian Sunnah (Vibathon 2026)
 
 > **Generated**: 2026-05-14
-> **Project root**: `/var/home/tehaer/projects/HSI_Vibathon/`
+> **Project root**: `/projects/HSI_Vibathon/`
 > **Codebase**: `codebase/vibathon-2026/`
 > **Repo**: [github.com/t-onluring/vibathon-2026](https://github.com/t-onluring/vibathon-2026)
 > **Vibathon window**: 14 Mei 09:00 → 16 Mei 09:00 WIB · Showcase 16 Mei 20:00 WIB
@@ -54,14 +54,14 @@ Vibathon scope = Phase 1 di-bundle jadi web app deployable.
 
 ## 📂 FILES TOUCHED
 
-### Roadmap docs (di `/var/home/tehaer/projects/HSI_Vibathon/roadmaps/`)
+### Roadmap docs (di `/projects/HSI_Vibathon/roadmaps/`)
 | File | Status | Nature |
 |---|---|---|
 | `source-list-kajian.md` | created v0.3 | Vision, schema, anti-ban, 5-phase roadmap, existing-players landscape scan |
 | `vibathon-steps.md` | created v0.1 | 48h timeline, 5 deliverables, success criteria, pitch |
 | `HANDOFF.md` | **this file** | Conversation summary |
 
-### Codebase (di `/var/home/tehaer/projects/HSI_Vibathon/codebase/vibathon-2026/`)
+### Codebase (di `/projects/HSI_Vibathon/codebase/vibathon-2026/`)
 
 **New — data layer**
 - `data/sources.json` — 20 source seed (10 Telegram, 5 web, 5 IG HSI ecosystem)
@@ -166,7 +166,7 @@ Pilihan ordered berdasarkan urgency:
 - Confirmed dengan panitia: code pre-event OK sebagai starter (per user 14 Mei chat)
 
 ### Repo path quirk
-- Workspace root vs codebase root beda — roadmap docs di `/var/home/tehaer/projects/HSI_Vibathon/roadmaps/`, codebase di `/var/home/tehaer/projects/HSI_Vibathon/codebase/vibathon-2026/`
+- Workspace root vs codebase root beda — roadmap docs di `/projects/HSI_Vibathon/roadmaps/`, codebase di `/projects/HSI_Vibathon/codebase/vibathon-2026/`
 - Untuk in-app rendering, `.md` file harus di-copy ke `vibathon-2026/data/docs/` (Netlify build hanya akses files dalam repo)
 
 ### Things NOT to do
