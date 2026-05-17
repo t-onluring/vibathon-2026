@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type PhaseStatus = "done" | "current" | "next" | "upcoming";
+type PhaseStatus = "done" | "current" | "next" | "queued";
 
 interface Phase {
   id: string;
@@ -21,20 +21,20 @@ const PHASES: Phase[] = [
   {
     id: "1",
     label: "Phase 1: Vibathon Scope",
-    desc: "Open registry + automated health monitoring Telegram. Dashboard publik dengan reliability score. Daily cron via GitHub Actions.",
+    desc: "Roadmap inti Telegram. Dipecah internal menjadi 1.5 (parent-child sources), 2 (text extraction), 3 (vision extraction), dan 4 (pipeline hardening).",
     status: "current",
   },
   {
     id: "1.5",
-    label: "Phase 1.5: API Publishing",
-    desc: "Formalisasi static JSON sebagai public API (/v1/sources.json). Tambah schema docs, CORS headers, versioning, dan update frequency commitment untuk aggregator.",
+    label: "Phase 1.5: Parent-Child Sources",
+    desc: "Model source parent/topic, region filtering dashboard, dan checker strategy refactor sebagai fondasi ekstraksi event.",
     status: "next",
   },
   {
     id: "2",
     label: "Phase 2: Multi-Platform",
-    desc: "Extend monitoring ke Instagram, YouTube, Facebook, dan website. Unified schema lintas platform.",
-    status: "upcoming",
+    desc: "Ekspansi ke Instagram, YouTube, Facebook, dan website setelah milestone internal Phase 1 stabil.",
+    status: "queued",
   },
   {
     id: "3",
@@ -46,7 +46,7 @@ const PHASES: Phase[] = [
     id: "4",
     label: "Phase 4: Public Dataset",
     desc: "Export ke Hugging Face dataset format. Historical snapshots tersedia untuk riset NLP dan analisis konten Islam.",
-    status: "upcoming",
+    status: "queued",
   },
 ];
 
@@ -67,12 +67,10 @@ export function RoadmapSection() {
     <div ref={ref} className="mb-10 rounded-2xl border border-[var(--g300)] bg-[var(--paper)] p-6">
       <p className="eyebrow mb-2">Peta Jalan</p>
       <h2 className="font-serif text-[clamp(22px,2.8vw,30px)] leading-tight text-[var(--slate)] mb-6">
-        Enam fase dari konsolidasi hingga public dataset.
+        Fase utama tetap 0-4, dengan detail internal di Phase 1.
       </h2>
 
-      {/* Timeline */}
       <div className="relative max-w-[680px]">
-        {/* Vertical line */}
         <div className="absolute left-[19px] top-2 bottom-2 w-px bg-[var(--g300)]" />
 
         <div className="flex flex-col">
@@ -80,6 +78,7 @@ export function RoadmapSection() {
             const isDone = phase.status === "done";
             const isCurrent = phase.status === "current";
             const isNext = phase.status === "next";
+            const isQueued = phase.status === "queued";
 
             return (
               <div
@@ -91,7 +90,6 @@ export function RoadmapSection() {
                   transitionDelay: `${i * 90}ms`,
                 }}
               >
-                {/* Node circle */}
                 <div
                   className="relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full"
                   style={{
@@ -117,15 +115,12 @@ export function RoadmapSection() {
                       className="font-mono font-bold"
                       style={{
                         fontSize: phase.id.length > 1 ? 10 : 13,
-                        color: isCurrent ? "var(--clay)"
-                          : isNext ? "var(--clay)"
-                          : "var(--g500)",
+                        color: isCurrent || isNext ? "var(--clay)" : "var(--g500)",
                       }}
                     >
                       {phase.id}
                     </span>
                   )}
-                  {/* Pulse ring for current */}
                   {isCurrent && (
                     <div
                       className="absolute inset-[-5px] rounded-full border-2 border-[var(--clay)]/30"
@@ -134,7 +129,6 @@ export function RoadmapSection() {
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="flex-1 pb-1 pt-1.5">
                   <div className="mb-1 flex flex-wrap items-center gap-2">
                     <h3
@@ -155,7 +149,12 @@ export function RoadmapSection() {
                     )}
                     {isNext && (
                       <span className="rounded border border-dashed border-[var(--clay)]/40 px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] bg-[var(--clay)]/8 text-[var(--clay)]">
-                        Next ↑
+                        Next
+                      </span>
+                    )}
+                    {isQueued && (
+                      <span className="rounded px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] bg-[var(--g100)] text-[var(--g500)]">
+                        Queued
                       </span>
                     )}
                   </div>
@@ -167,6 +166,14 @@ export function RoadmapSection() {
             );
           })}
         </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--g500)]">Status:</span>
+        <span className="rounded px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] bg-[var(--olive)]/12 text-[var(--olive)]">Done</span>
+        <span className="rounded px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] bg-[var(--clay)]/12 text-[var(--clay)]">Current</span>
+        <span className="rounded border border-dashed border-[var(--clay)]/40 px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] bg-[var(--clay)]/8 text-[var(--clay)]">Next</span>
+        <span className="rounded px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] bg-[var(--g100)] text-[var(--g500)]">Queued</span>
       </div>
     </div>
   );
