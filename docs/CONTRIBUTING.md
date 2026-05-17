@@ -1,8 +1,8 @@
 # Contributing
 
-Terima kasih sudah mau kontribusi 🙌
+Dokumen ini adalah sumber utama kontribusi untuk project Vibathon.
 
-## Open Contribution Flow (PR-based)
+## Quick Path
 
 1. Buat issue dari template:
    - **Source Add Request** untuk sumber baru
@@ -16,7 +16,9 @@ Terima kasih sudah mau kontribusi 🙌
 5. Push branch dan buka Pull Request
 6. Isi checklist + evidence pada PR template
 
-## Contract Data Source
+## Full Guide
+
+### Contract Data Source
 
 Setiap entri source minimal wajib memiliki:
 
@@ -30,16 +32,17 @@ Setiap entri source minimal wajib memiliki:
 - `priority` (`high`/`medium`/`low`/`archived`)
 - `added_at` (format `YYYY-MM-DD`)
 
-## Rules Review
+### Rules Review
 
 PR akan ditahan bila:
+
 - `id` duplikat
 - `url` duplikat
 - kombinasi `handle+platform` duplikat
 - format URL/tanggal tidak valid
 - tidak ada bukti source aktif
 
-## Governance
+### Governance
 
 - Owner data: lihat `CODEOWNERS`
 - Target review awal: **maks. 48 jam**
@@ -50,7 +53,7 @@ PR akan ditahan bila:
   - `needs-proof`
   - `ready-to-merge`
 
-## Safety
+### Safety
 
 - Jangan scrape endpoint yang melarang akses (cek robots/policy)
 - Jangan masukkan data private/non-public

@@ -45,17 +45,9 @@ export async function loadDocs(): Promise<DocFile[]> {
     return [];
   }
 
-  const order = ["HANDOFF.md", "vibathon-steps.md", "source-list-kajian.md"];
   const sorted = entries
     .filter((f) => f.endsWith(".md"))
-    .sort((a, b) => {
-      const ai = order.indexOf(a);
-      const bi = order.indexOf(b);
-      if (ai !== -1 && bi !== -1) return ai - bi;
-      if (ai !== -1) return -1;
-      if (bi !== -1) return 1;
-      return a.localeCompare(b);
-    });
+    .sort((a, b) => a.localeCompare(b));
 
   const docs: DocFile[] = [];
   for (const filename of sorted) {

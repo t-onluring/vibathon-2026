@@ -11,6 +11,7 @@ export function DocsTab({ docs }: { docs: DocFile[] }) {
   const active = docs.find((d) => d.slug === activeSlug) ?? docs[0];
 
   const toc = useMemo(() => extractToc(active?.content ?? ""), [active]);
+  const groupedDocs = useMemo(() => groupDocs(docs), [docs]);
 
   if (!active) {
     return (
@@ -27,27 +28,36 @@ export function DocsTab({ docs }: { docs: DocFile[] }) {
       {/* Doc list (left) */}
       <aside className="lg:sticky lg:top-[72px] lg:self-start">
         <p className="eyebrow mb-4">Dokumen</p>
-        <ul className="flex flex-col gap-1">
-          {docs.map((d) => (
-            <li key={d.slug}>
-              <button
-                type="button"
-                onClick={() => setActiveSlug(d.slug)}
-                className={[
-                  "w-full text-left text-[13.5px] leading-snug px-3 py-2 rounded-md transition-colors",
-                  d.slug === activeSlug
-                    ? "bg-[var(--paper)] text-[var(--slate)] border border-[var(--g300)] shadow-sm"
-                    : "text-[var(--g700)] hover:bg-[var(--g100)]",
-                ].join(" ")}
-              >
-                <span className="font-mono text-[10px] text-[var(--g500)] block mb-0.5">
-                  {d.slug}.md
-                </span>
-                {d.title}
-              </button>
-            </li>
+        <div className="flex flex-col gap-3">
+          {groupedDocs.map((group) => (
+            <div key={group.label}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--g500)] mb-1.5 px-1">
+                {group.label}
+              </p>
+              <ul className="flex flex-col gap-1">
+                {group.docs.map((d) => (
+                  <li key={d.slug}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSlug(d.slug)}
+                      className={[
+                        "w-full text-left text-[13.5px] leading-snug px-3 py-2 rounded-md transition-colors",
+                        d.slug === activeSlug
+                          ? "bg-[var(--paper)] text-[var(--slate)] border border-[var(--g300)] shadow-sm"
+                          : "text-[var(--g700)] hover:bg-[var(--g100)]",
+                      ].join(" ")}
+                    >
+                      <span className="font-mono text-[10px] text-[var(--g500)] block mb-0.5">
+                        {d.slug}.md
+                      </span>
+                      {d.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </aside>
 
       {/* Markdown content (center) */}
@@ -103,6 +113,31 @@ export function DocsTab({ docs }: { docs: DocFile[] }) {
     </div>
     </div>
   );
+}
+
+function groupDocs(docs: DocFile[]): { label: string; docs: DocFile[] }[] {
+  const groups = new Map<string, DocFile[]>();
+  const order = ["Start Here", "Build & Operate", "Collab & Decisions", "Other"];
+
+  for (const doc of docs) {
+    const section = getDocSection(doc.slug);
+    const existing = groups.get(section) ?? [];
+    existing.push(doc);
+    groups.set(section, existing);
+  }
+
+  return order
+    .map((label) => ({ label, docs: groups.get(label) ?? [] }))
+    .filter((group) => group.docs.length > 0);
+}
+
+function getDocSection(slug: string): string {
+  if (slug.startsWith("00-") || slug.startsWith("01-")) return "Start Here";
+  if (["02-", "03-", "04-", "05-", "06-"].some((prefix) => slug.startsWith(prefix))) {
+    return "Build & Operate";
+  }
+  if (slug.startsWith("07-") || slug.startsWith("08-")) return "Collab & Decisions";
+  return "Other";
 }
 
 function extractToc(md: string): { id: string; text: string; level: 2 | 3 }[] {
