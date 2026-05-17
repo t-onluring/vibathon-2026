@@ -3,6 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DocFile } from "../lib/data";
 
+const DEFAULT_OPEN_GROUPS: Record<string, boolean> = {
+  "Start Here": true,
+  "Build & Operate": true,
+  "Collab & Decisions": true,
+  Other: false,
+};
+
 export function DocsDrawer({
   docs,
   isOpen,
@@ -13,6 +20,7 @@ export function DocsDrawer({
   onClose: () => void;
 }) {
   const [activeSlug, setActiveSlug] = useState<string>(docs[0]?.slug ?? "");
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(DEFAULT_OPEN_GROUPS);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -85,30 +93,40 @@ export function DocsDrawer({
 
         {/* Doc groups */}
         <div className="overflow-y-auto border-b border-[var(--g300)] px-4 py-3 shrink-0 max-h-[42vh]">
-          {groupedDocs.map((group) => (
-            <div key={group.label} className="mb-3 last:mb-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--g500)] mb-1.5 px-1">
-                {group.label}
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {group.docs.map((d) => (
-                  <button
-                    key={d.slug}
-                    type="button"
-                    onClick={() => setActiveSlug(d.slug)}
-                    className={[
-                      "shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 font-mono text-[11.5px] border transition-all duration-150",
-                      activeSlug === d.slug
-                        ? "border-[var(--clay)] bg-[var(--clay)]/8 text-[var(--clay)] font-semibold"
-                        : "border-transparent text-[var(--g500)] hover:text-[var(--slate)]",
-                    ].join(" ")}
-                  >
-                    {d.title}
-                  </button>
-                ))}
+          {groupedDocs.map((group) => {
+            const isOpen = openGroups[group.label] ?? false;
+            return (
+              <div key={group.label} className="mb-3 last:mb-0">
+                <button
+                  type="button"
+                  onClick={() => setOpenGroups((prev) => ({ ...prev, [group.label]: !isOpen }))}
+                  className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--g500)] mb-1.5 px-1"
+                >
+                  <span>{group.label}</span>
+                  <span className="text-[11px]">{isOpen ? "−" : "+"}</span>
+                </button>
+                {isOpen && (
+                  <div className="flex flex-wrap gap-1">
+                    {group.docs.map((d) => (
+                      <button
+                        key={d.slug}
+                        type="button"
+                        onClick={() => setActiveSlug(d.slug)}
+                        className={[
+                          "shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 font-mono text-[11.5px] border transition-all duration-150",
+                          activeSlug === d.slug
+                            ? "border-[var(--clay)] bg-[var(--clay)]/8 text-[var(--clay)] font-semibold"
+                            : "border-transparent text-[var(--g500)] hover:text-[var(--slate)]",
+                        ].join(" ")}
+                      >
+                        {d.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Content */}
