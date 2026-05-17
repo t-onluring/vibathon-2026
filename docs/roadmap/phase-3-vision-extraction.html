@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 3 — Vision Extraction | Vibathon 2026</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5; --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--ivory);
+  color: var(--slate);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px 140px;
+}
+
+/* Masthead */
+.masthead {
+  padding: 80px 0 48px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--clay);
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(38px, 5.4vw, 62px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: var(--slate);
+}
+
+h1 em {
+  color: var(--clay);
+  font-style: italic;
+}
+
+.intro {
+  font-size: 18px;
+  color: var(--g700);
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 48px 0;
+}
+
+.stat-card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--slate);
+}
+
+/* TOC */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 40px 0 64px;
+}
+
+.toc a {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--g700);
+  border: 1.5px solid var(--g300);
+  border-radius: 999px;
+  padding: 8px 18px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.toc a:hover {
+  border-color: var(--clay);
+  color: var(--clay);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 72px;
+}
+
+.section-number {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--clay);
+  margin-bottom: 8px;
+}
+
+.section h2 {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--slate);
+}
+
+/* Architecture diagram */
+.arch-diagram {
+  background: var(--g100);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 40px;
+  margin: 24px 0;
+}
+
+.arch-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.arch-box {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-family: var(--mono);
+  font-size: 13px;
+  text-align: center;
+  min-width: 180px;
+}
+
+.arch-box--highlight {
+  border-color: var(--clay);
+  color: var(--clay);
+  font-weight: 600;
+}
+
+.arch-line {
+  width: 1.5px;
+  height: 28px;
+  background: var(--g300);
+}
+
+.arch-line--h {
+  width: 60px;
+  height: 1.5px;
+  background: var(--g300);
+}
+
+.arch-split {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  position: relative;
+}
+
+.arch-split::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 180px);
+  height: 1.5px;
+  background: var(--g300);
+}
+
+.arch-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.arch-merge {
+  position: relative;
+}
+
+.arch-merge::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 180px);
+  height: 1.5px;
+  background: var(--g300);
+}
+
+/* Card grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.type-card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.type-card h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.type-card p {
+  color: var(--g700);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: var(--paper);
+}
+
+.badge--easy { background: var(--olive); }
+.badge--medium { background: var(--clay); }
+.badge--hard { background: var(--clay-d); }
+
+.freq {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g500);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 24px 0;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 1.5px;
+  background: var(--g300);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+  padding: 20px 24px;
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -29px;
+  top: 26px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--clay);
+  border: 2px solid var(--ivory);
+}
+
+.timeline-item h3 {
+  font-family: var(--serif);
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+.timeline-item p {
+  color: var(--g700);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--g500);
+  border: 1px solid var(--g300);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin-right: 6px;
+  margin-top: 4px;
+}
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--g500);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1.5px solid var(--g300);
+}
+
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--g200);
+  vertical-align: top;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.cost-table {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.cost-table table {
+  margin: 0;
+}
+
+/* Risk severity */
+.severity { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.severity--high { color: var(--clay-d); }
+.severity--medium { color: var(--clay); }
+
+.risk-table {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.risk-table table { margin: 0; }
+
+/* Code blocks */
+code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--g100);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .arch-split {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .arch-split::before {
+    display: none;
+  }
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+  .wrap {
+    padding: 0 20px 100px;
+  }
+  .masthead {
+    padding: 48px 0 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-bar {
+    grid-template-columns: 1fr;
+  }
+  .toc {
+    gap: 8px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="eyebrow">Implementation Plan &middot; Vibathon 2026</div>
+    <h1>Phase 3 &mdash; <em>Vision</em> Extraction</h1>
+    <p class="intro">Extend the event extraction pipeline with vision/OCR capabilities to parse kajian information from image posters &mdash; the second most common content format in @sijadwalkajian topics, covering weekly schedule posters, tabligh akbar flyers, and masjid announcements.</p>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Effort</div>
+      <div class="stat-value">~2 weeks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">New Files</div>
+      <div class="stat-value">6</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Monthly Cost</div>
+      <div class="stat-value">$60-255</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Image Types</div>
+      <div class="stat-value">5</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <a href="#architecture">Architecture</a>
+    <a href="#image-types">Image Content Types</a>
+    <a href="#pipeline-steps">Pipeline Steps</a>
+    <a href="#costs">Costs</a>
+    <a href="#risks">Risks</a>
+  </nav>
+
+  <!-- Section 01: Architecture -->
+  <section class="section" id="architecture">
+    <div class="section-number">01</div>
+    <h2>Architecture</h2>
+    <p>The content router classifies incoming messages and splits them into text or image processing paths, merging results into the unified events store.</p>
+
+    <div class="arch-diagram">
+      <div class="arch-flow">
+        <div class="arch-box">Telegram Bot API</div>
+        <div class="arch-line"></div>
+        <div class="arch-box">Ingestion (existing)</div>
+        <div class="arch-line"></div>
+        <div class="arch-box arch-box--highlight">Router (text / image)</div>
+        <div class="arch-line"></div>
+        <div class="arch-split">
+          <div class="arch-branch">
+            <div class="arch-line"></div>
+            <div class="arch-box">Text Extractor<br><span style="font-size:11px;color:var(--g500)">(Phase 2)</span></div>
+          </div>
+          <div class="arch-branch">
+            <div class="arch-line"></div>
+            <div class="arch-box">Vision LLM<br><span style="font-size:11px;color:var(--g500)">(image to text) + Extractor</span></div>
+          </div>
+        </div>
+        <div class="arch-line"></div>
+        <div class="arch-box arch-box--highlight">events.json</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 02: Image Content Types -->
+  <section class="section" id="image-types">
+    <div class="section-number">02</div>
+    <h2>Image Content Types</h2>
+
+    <div class="card-grid">
+      <div class="type-card">
+        <div class="freq">Frequency: High</div>
+        <h3>Weekly Schedule Poster</h3>
+        <p>Masjid Al Amanah-style agenda with 5-7 entries in structured table layout.</p>
+        <span class="badge badge--medium">Medium</span>
+      </div>
+      <div class="type-card">
+        <div class="freq">Frequency: Medium</div>
+        <h3>Single Event Flyer</h3>
+        <p>Tabligh akbar announcement with prominent text, ustadz name, and schedule.</p>
+        <span class="badge badge--easy">Easy</span>
+      </div>
+      <div class="type-card">
+        <div class="freq">Frequency: Medium</div>
+        <h3>Forwarded Poster</h3>
+        <p>Forwarded from other masjid channels (e.g., "Forwarded from KAMIS Channel").</p>
+        <span class="badge badge--easy">Easy</span>
+      </div>
+      <div class="type-card">
+        <div class="freq">Frequency: Low</div>
+        <h3>Photo of Physical Banner</h3>
+        <p>Captured from masjid entrance. Variable quality, angle, and lighting conditions.</p>
+        <span class="badge badge--hard">Hard</span>
+      </div>
+      <div class="type-card">
+        <div class="freq">Frequency: Low</div>
+        <h3>Composite Image</h3>
+        <p>Multiple events collaged into a single image. Multiple extraction targets required.</p>
+        <span class="badge badge--hard">Hard</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 03: Pipeline Steps -->
+  <section class="section" id="pipeline-steps">
+    <div class="section-number">03</div>
+    <h2>Pipeline Steps</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <h3>Step 1: Content Type Router</h3>
+        <p>Classify incoming messages as text, image, video, or mixed. Route to appropriate extractor.</p>
+        <span class="tag">content-router.ts</span>
+        <span class="tag">classification</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 2: Image Downloader + Preprocessor</h3>
+        <p>Download images via Telegram Bot API <code>getFile</code>. Resize large images to reduce LLM API costs. Store originals in <code>data/images/</code>.</p>
+        <span class="tag">image-downloader.ts</span>
+        <span class="tag">preprocessing</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 3: Vision Extraction with LLM</h3>
+        <p>Send images to vision-capable LLM with structured extraction prompt. Handle multi-event posters containing 5-7 events per image. Includes few-shot examples for Indonesian Islamic lecture posters.</p>
+        <span class="tag">vision-extractor.ts</span>
+        <span class="tag">llm</span>
+        <span class="tag">prompt engineering</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 4: Multi-Event Poster Handling</h3>
+        <p>Weekly schedule posters contain multiple events. Extract each as a separate KajianEvent with shared masjid/address fields.</p>
+        <span class="tag">multi-event-splitter.ts</span>
+        <span class="tag">parsing</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 5: Caption + Image Fusion</h3>
+        <p>Fuse extracted data from both image and caption text. Caption often contains address/location not visible in poster.</p>
+        <span class="tag">caption-fusion.ts</span>
+        <span class="tag">data merge</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 6: Confidence Calibration</h3>
+        <p>Compare vision extraction results against text extraction for messages that have both. Build confidence calibration model.</p>
+        <span class="tag">confidence-calibrator.ts</span>
+        <span class="tag">validation</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 7: Update Ingestion Workflow</h3>
+        <p>Modify GitHub Actions to include image download + vision extraction steps. Add cost monitoring for vision API calls (10-20x more expensive than text).</p>
+        <span class="tag">github actions</span>
+        <span class="tag">cost monitoring</span>
+      </div>
+      <div class="timeline-item">
+        <h3>Step 8: Dashboard Image Preview</h3>
+        <p>Show poster thumbnail in event card on dashboard. Click to expand full image.</p>
+        <span class="tag">frontend</span>
+        <span class="tag">ux</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 04: Costs -->
+  <section class="section" id="costs">
+    <div class="section-number">04</div>
+    <h2>Costs</h2>
+    <p style="margin-bottom:20px;">Comparison of Phase 2 (text-only) costs versus Phase 3 (text + vision) combined costs.</p>
+
+    <div class="cost-table">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Phase 2 (Text Only)</th>
+              <th>Phase 3 (Text + Vision)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Per-message cost</td>
+              <td>~$0.002-0.01</td>
+              <td>~$0.05-0.20/image</td>
+            </tr>
+            <tr>
+              <td>Daily estimate (9 topics)</td>
+              <td>~$0.50-1.50</td>
+              <td>~$1.50-6.00 (vision only)</td>
+            </tr>
+            <tr>
+              <td>Monthly estimate</td>
+              <td>~$15-45</td>
+              <td>~$60-255 (combined)</td>
+            </tr>
+            <tr>
+              <td>Storage</td>
+              <td>Negligible</td>
+              <td>&lt; 100MB/month</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 05: Risks -->
+  <section class="section" id="risks">
+    <div class="section-number">05</div>
+    <h2>Risks</h2>
+
+    <div class="risk-table">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Risk</th>
+              <th>Severity</th>
+              <th>Mitigation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Vision LLM hallucinates event details</td>
+              <td><span class="severity severity--high">High</span></td>
+              <td>Confidence threshold, human review queue</td>
+            </tr>
+            <tr>
+              <td>Low-quality photos unreadable</td>
+              <td><span class="severity severity--medium">Medium</span></td>
+              <td>Skip with low-confidence flag</td>
+            </tr>
+            <tr>
+              <td>Arabic/Hijri text extraction errors</td>
+              <td><span class="severity severity--medium">Medium</span></td>
+              <td>Custom few-shot examples for common patterns</td>
+            </tr>
+            <tr>
+              <td>Cost spike from image-heavy days</td>
+              <td><span class="severity severity--medium">Medium</span></td>
+              <td>Daily cost cap, skip low-priority images</td>
+            </tr>
+            <tr>
+              <td>Multi-event posters split incorrectly</td>
+              <td><span class="severity severity--medium">Medium</span></td>
+              <td>Validate event count against visual layout</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 4 — Full Pipeline | Vibathon 2026</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5; --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--ivory);
+  color: var(--slate);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px 140px;
+}
+
+/* ── Masthead ── */
+.masthead { padding: 72px 0 48px; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 3px;
+  background: var(--clay);
+  border-radius: 2px;
+}
+
+.masthead h1 {
+  font-family: var(--serif);
+  font-size: clamp(38px, 5.4vw, 62px);
+  font-weight: 700;
+  line-height: 1.08;
+  color: var(--slate);
+  margin-bottom: 24px;
+}
+.masthead h1 em {
+  color: var(--clay);
+  font-style: italic;
+}
+
+.masthead .intro {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--g700);
+  max-width: 680px;
+}
+
+/* ── Stats Bar ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 56px;
+}
+.stat-card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+}
+.stat-card .stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 8px;
+}
+.stat-card .stat-value {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--slate);
+}
+
+/* ── TOC ── */
+.toc {
+  margin-bottom: 64px;
+}
+.toc-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 14px;
+}
+.toc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.toc-pills a {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--g700);
+  text-decoration: none;
+  padding: 8px 20px;
+  border: 1.5px solid var(--g300);
+  border-radius: 999px;
+  background: var(--paper);
+  transition: border-color 0.2s, color 0.2s;
+}
+.toc-pills a:hover {
+  border-color: var(--clay);
+  color: var(--clay);
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 72px;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--clay);
+  margin-bottom: 8px;
+}
+.section h2 {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--slate);
+}
+.section p {
+  color: var(--g700);
+  margin-bottom: 16px;
+  max-width: 740px;
+}
+
+/* ── Architecture Diagram ── */
+.arch-diagram {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 48px 32px;
+  overflow-x: auto;
+}
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  min-width: 600px;
+}
+.arch-layer {
+  width: 100%;
+  max-width: 840px;
+}
+.arch-layer-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+.arch-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.arch-box {
+  background: var(--g100);
+  border: 1.5px solid var(--g300);
+  border-radius: 10px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 150px;
+  flex: 0 0 auto;
+}
+.arch-box .box-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate);
+  margin-bottom: 4px;
+}
+.arch-box .box-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g500);
+}
+.arch-box.highlight {
+  border-color: var(--clay);
+  background: #FAF5F1;
+}
+.arch-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  position: relative;
+}
+.arch-arrow::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 20px;
+  background: var(--g300);
+}
+.arch-arrow::before {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--g300);
+}
+.arch-arrow-spread {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  position: relative;
+}
+.arch-arrow-spread::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 20px;
+  background: var(--g300);
+}
+.arch-arrow-spread::before {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--g300);
+}
+
+/* ── Timeline ── */
+.timeline { margin-top: 8px; }
+.timeline-group-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 12px;
+  margin-top: 32px;
+  padding-left: 4px;
+}
+.timeline-group-label:first-child { margin-top: 0; }
+.timeline-item {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.timeline-item .step-num {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--clay);
+  padding-top: 2px;
+}
+.timeline-item .step-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--slate);
+  margin-bottom: 6px;
+}
+.timeline-item .step-desc {
+  font-size: 14px;
+  color: var(--g700);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.timeline-item .step-files {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--g500);
+}
+
+/* ── Tables ── */
+.styled-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+.styled-table thead th {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  background: var(--g100);
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1.5px solid var(--g300);
+}
+.styled-table tbody td {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: var(--g700);
+  border-bottom: 1px solid var(--g200);
+  vertical-align: top;
+}
+.styled-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.styled-table code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--g100);
+  padding: 2px 7px;
+  border-radius: 5px;
+  color: var(--slate);
+}
+
+/* ── Severity Tags ── */
+.tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 5px;
+  display: inline-block;
+  font-weight: 600;
+}
+.tag-high {
+  background: #FCEAE4;
+  color: var(--clay-d);
+}
+.tag-medium {
+  background: #FEF4E4;
+  color: #9A7028;
+}
+.tag-low {
+  background: #E9F0E2;
+  color: #4A6830;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .wrap { padding: 0 20px 100px; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .masthead { padding: 48px 0 32px; }
+  .arch-diagram { padding: 24px 16px; }
+  .timeline-item { grid-template-columns: 40px 1fr; padding: 18px 20px; }
+  .styled-table { font-size: 13px; }
+  .styled-table thead th, .styled-table tbody td { padding: 10px 14px; }
+}
+@media (max-width: 480px) {
+  .stats-bar { grid-template-columns: 1fr; }
+  .toc-pills { gap: 8px; }
+  .arch-row { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="eyebrow">Implementation Plan &middot; Vibathon 2026</div>
+    <h1>Phase 4 — Full <em>Pipeline</em></h1>
+    <p class="intro">Complete the production-grade event aggregation platform with video extraction, cross-source deduplication, near real-time processing, a public API, and multi-platform ingestion. This phase transforms the project from a prototype into a reliable kajian discovery service.</p>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Effort</div>
+      <div class="stat-value">~4 weeks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Monthly Cost</div>
+      <div class="stat-value">$100 &ndash; 335</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">API Endpoints</div>
+      <div class="stat-value">8</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Accuracy Target</div>
+      <div class="stat-value">&gt; 90%</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-label">Contents</div>
+    <div class="toc-pills">
+      <a href="#architecture">Architecture</a>
+      <a href="#pipeline-steps">Pipeline Steps</a>
+      <a href="#api-endpoints">API Endpoints</a>
+      <a href="#costs">Costs</a>
+      <a href="#success-metrics">Success Metrics</a>
+      <a href="#risks">Risks</a>
+    </div>
+  </nav>
+
+  <!-- Section 01: Architecture -->
+  <section class="section" id="architecture">
+    <div class="section-num">01</div>
+    <h2>Architecture</h2>
+    <p>The full pipeline follows a layered flow: ingestion receives raw messages, processing routes and extracts structured events, deduplication merges cross-posted content, and the consumer layer exposes data through an API and dashboard.</p>
+
+    <div class="arch-diagram">
+      <div class="arch-layers">
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">Ingestion</div>
+          <div class="arch-row">
+            <div class="arch-box highlight">
+              <div class="box-title">Telegram Webhook</div>
+              <div class="box-sub">Bot API push</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-arrow"></div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">Processing</div>
+          <div class="arch-row">
+            <div class="arch-box">
+              <div class="box-title">Content Router</div>
+              <div class="box-sub">classify message type</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-arrow"></div>
+
+        <div class="arch-layer">
+          <div class="arch-row">
+            <div class="arch-box">
+              <div class="box-title">Text Extractor</div>
+              <div class="box-sub">~40% of messages</div>
+            </div>
+            <div class="arch-box">
+              <div class="box-title">Image Extractor</div>
+              <div class="box-sub">~45% of messages</div>
+            </div>
+            <div class="arch-box">
+              <div class="box-title">Video Extractor</div>
+              <div class="box-sub">~15% of messages</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-arrow"></div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">Deduplication</div>
+          <div class="arch-row">
+            <div class="arch-box highlight">
+              <div class="box-title">Dedup Engine</div>
+              <div class="box-sub">cross-source fuzzy match</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-arrow"></div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">Storage</div>
+          <div class="arch-row">
+            <div class="arch-box">
+              <div class="box-title">Event Store</div>
+              <div class="box-sub">DB / JSON</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-arrow-spread"></div>
+
+        <div class="arch-layer">
+          <div class="arch-layer-label">Consumer</div>
+          <div class="arch-row">
+            <div class="arch-box">
+              <div class="box-title">Public API</div>
+              <div class="box-sub">REST v1 + OpenAPI</div>
+            </div>
+            <div class="arch-box">
+              <div class="box-title">Dashboard</div>
+              <div class="box-sub">health + verification</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 02: Pipeline Steps -->
+  <section class="section" id="pipeline-steps">
+    <div class="section-num">02</div>
+    <h2>Pipeline Steps</h2>
+    <p>Nine steps organized into three subsystems: extraction for new content types, infrastructure for reliability and performance, and consumer-facing features for API access and quality.</p>
+
+    <div class="timeline">
+
+      <div class="timeline-group-label">Extraction</div>
+
+      <div class="timeline-item">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Video content extraction</div>
+          <div class="step-desc">Extract event info from video thumbnails and captions. Most videos are forwarded lecture recordings with event details in the thumbnail or caption text.</div>
+          <div class="step-files">video-extractor.ts, video-downloader.ts</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Forwarded message tracking</div>
+          <div class="step-desc">Track forward_from and forward_from_chat metadata. Link events back to original source channel. Detect cross-posts across topics.</div>
+          <div class="step-files">forward-tracker.ts</div>
+        </div>
+      </div>
+
+      <div class="timeline-group-label">Infrastructure</div>
+
+      <div class="timeline-item">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Cross-source deduplication engine</div>
+          <div class="step-desc">Deduplicate events appearing in multiple sources. Match by date + masjid + ustadz with fuzzy matching. Keep the richest version with the most populated fields.</div>
+          <div class="step-files">dedup-engine.ts</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Near real-time processing</div>
+          <div class="step-desc">Switch from 6-hour polling to Telegram webhook or 15-minute polling. Process new messages incrementally. Hybrid approach: webhook for primary, hourly cron as safety net.</div>
+          <div class="step-files">webhook-handler.ts</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-num">05</div>
+        <div>
+          <div class="step-title">Database migration</div>
+          <div class="step-desc">Evaluate moving from JSON files to a database. Options include SQLite via Turso/LibSQL, Supabase PostgreSQL, or staying with JSON. Decision hinges on whether consumer apps need dynamic queries.</div>
+          <div class="step-files">migration scripts (if needed)</div>
+        </div>
+      </div>
+
+      <div class="timeline-group-label">Consumer</div>
+
+      <div class="timeline-item">
+        <div class="step-num">06</div>
+        <div>
+          <div class="step-title">Public API with documentation</div>
+          <div class="step-desc">Formalize the API with versioning, rate limiting, and OpenAPI spec. Eight endpoints covering sources, events, health, and metadata.</div>
+          <div class="step-files">generate-api.ts, src/app/api/</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-num">07</div>
+        <div>
+          <div class="step-title">Event verification workflow</div>
+          <div class="step-desc">Allow community members to verify and correct extracted events. Show extracted data alongside raw message for confirm, edit, or reject actions.</div>
+          <div class="step-files">VerifyTab.tsx</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-num">08</div>
+        <div>
+          <div class="step-title">Multi-platform source ingestion</div>
+          <div class="step-desc">Extend beyond Telegram: website scrapers for jadwalkajian.com and portalkajian.online, WhatsApp forward-to-bot bridge, YouTube RSS feeds, Instagram scraping.</div>
+          <div class="step-files">per-platform ingestion modules</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="step-num">09</div>
+        <div>
+          <div class="step-title">Monitoring and alerting</div>
+          <div class="step-desc">Pipeline health dashboard tracking ingestion success rate, extraction accuracy, and event counts. Alerting for disconnections, accuracy drops, and cost overruns.</div>
+          <div class="step-files">monitoring module</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section 03: API Endpoints -->
+  <section class="section" id="api-endpoints">
+    <div class="section-num">03</div>
+    <h2>API Endpoints</h2>
+    <p>Eight versioned REST endpoints providing event discovery, source management, and operational metadata.</p>
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET /api/v1/sources</code></td>
+          <td>List all registered sources</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/sources?region={region}</code></td>
+          <td>Filter sources by region</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/events?date={date}</code></td>
+          <td>Events on a specific date</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/events?region={region}</code></td>
+          <td>Events filtered by region</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/events?ustadz={name}</code></td>
+          <td>Events by speaker name</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/events?lat={lat}&amp;lng={lng}&amp;radius={km}</code></td>
+          <td>Nearby events by geolocation (requires DB)</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/health</code></td>
+          <td>Pipeline health check status</td>
+        </tr>
+        <tr>
+          <td><code>GET /api/v1/meta</code></td>
+          <td>API metadata and aggregate statistics</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Section 04: Costs -->
+  <section class="section" id="costs">
+    <div class="section-num">04</div>
+    <h2>Costs</h2>
+    <p>Monthly operating costs escalate across phases as extraction coverage grows and infrastructure becomes more sophisticated.</p>
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Phase 2</th>
+          <th>Phase 3</th>
+          <th>Phase 4</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LLM extraction (text)</td>
+          <td>~$10 &ndash; 30</td>
+          <td>~$10 &ndash; 30</td>
+          <td>~$10 &ndash; 30</td>
+        </tr>
+        <tr>
+          <td>LLM extraction (image)</td>
+          <td>&mdash;</td>
+          <td>~$50 &ndash; 150</td>
+          <td>~$50 &ndash; 150</td>
+        </tr>
+        <tr>
+          <td>LLM extraction (video)</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+          <td>~$40 &ndash; 120</td>
+        </tr>
+        <tr>
+          <td>Database hosting</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+          <td>~$0 &ndash; 25</td>
+        </tr>
+        <tr>
+          <td>Serverless functions</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+          <td>~$0 &ndash; 10</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; color: var(--slate);">Total monthly</td>
+          <td style="font-weight: 600; color: var(--slate);">~$10 &ndash; 30</td>
+          <td style="font-weight: 600; color: var(--slate);">~$60 &ndash; 180</td>
+          <td style="font-weight: 600; color: var(--slate);">~$100 &ndash; 335</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Section 05: Success Metrics -->
+  <section class="section" id="success-metrics">
+    <div class="section-num">05</div>
+    <h2>Success Metrics</h2>
+    <p>Quantitative targets to evaluate whether Phase 4 delivers on its objectives.</p>
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Event extraction accuracy (text)</td>
+          <td>&gt; 95%</td>
+        </tr>
+        <tr>
+          <td>Event extraction accuracy (image)</td>
+          <td>&gt; 85%</td>
+        </tr>
+        <tr>
+          <td>Cross-source dedup accuracy</td>
+          <td>&gt; 90%</td>
+        </tr>
+        <tr>
+          <td>End-to-end latency (message to API)</td>
+          <td>&lt; 30 minutes</td>
+        </tr>
+        <tr>
+          <td>Events extracted per day</td>
+          <td>&gt; 50</td>
+        </tr>
+        <tr>
+          <td>Consumer apps using API</td>
+          <td>&ge; 2</td>
+        </tr>
+        <tr>
+          <td>Monthly API cost</td>
+          <td>&lt; $200</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Section 06: Risks -->
+  <section class="section" id="risks">
+    <div class="section-num">06</div>
+    <h2>Risks</h2>
+    <p>Key risks ranked by severity, with proposed mitigations for each.</p>
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Risk</th>
+          <th>Severity</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dedup false positives (different events merged)</td>
+          <td><span class="tag tag-high">High</span></td>
+          <td>Conservative matching thresholds, manual review queue</td>
+        </tr>
+        <tr>
+          <td>Webhook hosting complexity</td>
+          <td><span class="tag tag-medium">Medium</span></td>
+          <td>Start with frequent polling, migrate to webhook later</td>
+        </tr>
+        <tr>
+          <td>Multi-platform scrapers break on site changes</td>
+          <td><span class="tag tag-medium">Medium</span></td>
+          <td>Per-source health monitoring, graceful degradation</td>
+        </tr>
+        <tr>
+          <td>Cost escalation with more sources</td>
+          <td><span class="tag tag-medium">Medium</span></td>
+          <td>Tiered processing: high-priority sources only for vision</td>
+        </tr>
+        <tr>
+          <td>Community verification adoption</td>
+          <td><span class="tag tag-low">Low</span></td>
+          <td>Start with admin-only verification</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+</body>
+</html>

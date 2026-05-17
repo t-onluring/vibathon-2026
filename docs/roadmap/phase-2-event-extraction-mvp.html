@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 — Event Extraction MVP | Vibathon 2026</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5; --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--ivory);
+  color: var(--slate);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px 140px;
+}
+
+/* Masthead */
+.masthead {
+  padding: 80px 0 48px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eyebrow::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 3px;
+  background: var(--clay);
+  border-radius: 2px;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(38px, 5.4vw, 62px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  color: var(--slate);
+}
+
+h1 em {
+  color: var(--clay);
+  font-style: italic;
+}
+
+.intro {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--g700);
+  max-width: 680px;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 48px 0;
+}
+
+.stat-card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--g500);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--slate);
+}
+
+/* TOC */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 48px 0 64px;
+}
+
+.toc a {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--g700);
+  background: var(--g100);
+  border: 1.5px solid var(--g300);
+  border-radius: 999px;
+  padding: 8px 18px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.toc a:hover {
+  background: var(--oat);
+  border-color: var(--clay);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 72px;
+}
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--clay);
+  margin-bottom: 8px;
+}
+
+.section h2 {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--slate);
+}
+
+/* Architecture diagram */
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 32px 0;
+}
+
+.arch-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.arch-box {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 10px;
+  padding: 16px 24px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--g700);
+  white-space: nowrap;
+}
+
+.arch-box--highlight {
+  border-color: var(--clay);
+  background: #FDF8F5;
+}
+
+.arch-arrow-h {
+  width: 40px;
+  height: 2px;
+  background: var(--g300);
+  position: relative;
+}
+
+.arch-arrow-h::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: var(--g300);
+}
+
+.arch-arrow-v {
+  width: 2px;
+  height: 32px;
+  background: var(--g300);
+  position: relative;
+}
+
+.arch-arrow-v::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -4px;
+  border: 5px solid transparent;
+  border-top-color: var(--g300);
+}
+
+.arch-source {
+  margin-bottom: 0;
+}
+
+/* Code blocks */
+.code-block {
+  background: var(--g100);
+  border: 1.5px solid var(--g300);
+  border-radius: 10px;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 24px 0;
+}
+
+.code-block .key { color: var(--clay); }
+.code-block .str { color: var(--g700); }
+.code-block .num { color: var(--olive); }
+.code-block .cmt { color: var(--g500); font-style: italic; }
+.code-block .type { color: var(--olive); }
+.code-block .kw { color: var(--clay-d); }
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 32px 0;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--g300);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -28px;
+  top: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--clay);
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--clay);
+}
+
+.timeline-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.timeline-desc {
+  font-size: 14px;
+  color: var(--g700);
+  margin-bottom: 8px;
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--g100);
+  border: 1px solid var(--g300);
+  border-radius: 4px;
+  padding: 3px 8px;
+  color: var(--g700);
+}
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--g500);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1.5px solid var(--g300);
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--g200);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+.severity-low {
+  color: var(--olive);
+  font-weight: 600;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.severity-medium {
+  color: var(--clay);
+  font-weight: 600;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 32px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .arch-row { flex-direction: column; gap: 0; }
+  .arch-arrow-h { width: 2px; height: 24px; }
+  .arch-arrow-h::after {
+    right: auto; top: auto; bottom: 0; left: -4px;
+    border: 5px solid transparent;
+    border-top-color: var(--g300);
+    border-left-color: transparent;
+  }
+  .wrap { padding: 0 20px 100px; }
+  .masthead { padding: 48px 0 32px; }
+}
+
+@media (max-width: 480px) {
+  .stats-bar { grid-template-columns: 1fr; }
+  .toc { gap: 8px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="eyebrow">Implementation Plan &middot; Vibathon 2026</div>
+    <h1>Phase 2 — Event <em>Extraction</em> MVP</h1>
+    <p class="intro">Build the first content ingestion pipeline that extracts structured kajian event data from Telegram messages. Focus exclusively on plain text messages to validate the extraction architecture before investing in vision or OCR capabilities — transforming Vibathon from a source registry into a data platform.</p>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Effort</div>
+      <div class="stat-value">~2 weeks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">New Files</div>
+      <div class="stat-value">9</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Monthly Cost</div>
+      <div class="stat-value">$15-75</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Events/Day</div>
+      <div class="stat-value">~50</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <a href="#architecture">Architecture</a>
+    <a href="#schema">Event Schema</a>
+    <a href="#pipeline">Pipeline Steps</a>
+    <a href="#api">API Response</a>
+    <a href="#costs">Costs</a>
+    <a href="#risks">Risks</a>
+  </nav>
+
+  <!-- Section 01: Architecture -->
+  <section class="section" id="architecture">
+    <div class="section-num">01</div>
+    <h2>Architecture</h2>
+    <p>The extraction pipeline flows from Telegram Bot API through ingestion and parsing stages into a static JSON API served from GitHub Pages.</p>
+    <div class="arch-diagram">
+      <div class="arch-box arch-source">Telegram Bot API</div>
+      <div class="arch-arrow-v"></div>
+      <div class="arch-row">
+        <div class="arch-box">Ingestion<br><span style="font-size:11px;color:var(--g500)">(bot/poll)</span></div>
+        <div class="arch-arrow-h"></div>
+        <div class="arch-box arch-box--highlight">Text Parser<br><span style="font-size:11px;color:var(--g500)">(LLM / NLP)</span></div>
+        <div class="arch-arrow-h"></div>
+        <div class="arch-box">events.json<br><span style="font-size:11px;color:var(--g500)">(structured)</span></div>
+      </div>
+      <div class="arch-arrow-v"></div>
+      <div class="arch-box">Static API<br><span style="font-size:11px;color:var(--g500)">/api/v1/</span></div>
+    </div>
+  </section>
+
+  <!-- Section 02: Event Schema -->
+  <section class="section" id="schema">
+    <div class="section-num">02</div>
+    <h2>Event Schema</h2>
+    <p>The KajianEvent interface defines the structured output produced by the text extraction pipeline.</p>
+    <div class="code-block"><pre><span class="kw">interface</span> <span class="type">KajianEvent</span> {
+  <span class="key">id</span>: <span class="type">string</span>;
+  <span class="key">source_id</span>: <span class="type">string</span>;
+  <span class="key">source_message_id</span>?: <span class="type">number</span>;
+
+  <span class="cmt">// Core</span>
+  <span class="key">title</span>?: <span class="type">string</span>;
+  <span class="key">ustadz</span>: <span class="type">string</span>;
+  <span class="key">tema</span>?: <span class="type">string</span>;
+
+  <span class="cmt">// When</span>
+  <span class="key">date</span>: <span class="type">string</span>;           <span class="cmt">// YYYY-MM-DD</span>
+  <span class="key">time_start</span>?: <span class="type">string</span>;    <span class="cmt">// HH:mm (WIB)</span>
+  <span class="key">time_end</span>?: <span class="type">string</span>;
+  <span class="key">hijri_date</span>?: <span class="type">string</span>;
+
+  <span class="cmt">// Where</span>
+  <span class="key">masjid</span>: <span class="type">string</span>;
+  <span class="key">address</span>?: <span class="type">string</span>;
+  <span class="key">city</span>: <span class="type">string</span>;
+  <span class="key">geolocation</span>?: {
+    <span class="key">lat</span>: <span class="type">number</span>;
+    <span class="key">lng</span>: <span class="type">number</span>;
+    <span class="key">gmaps_url</span>: <span class="type">string</span>;
+  };
+
+  <span class="cmt">// Meta</span>
+  <span class="key">format</span>: <span class="str">"rutin"</span> | <span class="str">"tabligh-akbar"</span> | <span class="str">"daurah"</span> | <span class="str">"online"</span>;
+  <span class="key">gender</span>?: <span class="str">"ikhwan"</span> | <span class="str">"akhwat"</span> | <span class="str">"umum"</span>;
+  <span class="key">contact</span>?: <span class="type">string</span>;
+  <span class="key">extracted_from</span>: <span class="str">"text"</span> | <span class="str">"image"</span> | <span class="str">"video"</span>;
+  <span class="key">extraction_confidence</span>: <span class="type">number</span>;  <span class="cmt">// 0-1</span>
+  <span class="key">raw_text</span>?: <span class="type">string</span>;
+  <span class="key">extracted_at</span>: <span class="type">string</span>;
+  <span class="key">verified</span>: <span class="type">boolean</span>;
+}</pre></div>
+  </section>
+
+  <!-- Section 03: Pipeline Steps -->
+  <section class="section" id="pipeline">
+    <div class="section-num">03</div>
+    <h2>Pipeline Steps</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-title">Step 1: Telegram Bot API integration</div>
+        <div class="timeline-desc">Create bot via @BotFather, add to @sijadwalkajian group (read-only), implement polling or webhook.</div>
+        <span class="tag">scripts/ingest/telegram-bot.ts</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 2: Message ingestion pipeline</div>
+        <div class="timeline-desc">Poll messages from monitored topics. Store raw messages in data/messages/ (JSON, keyed by date). Dedup by message_id.</div>
+        <span class="tag">scripts/ingest/poll-messages.ts</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 3: Text extraction with LLM</div>
+        <div class="timeline-desc">Send plain text messages to Claude/GPT-4o with structured output schema. Extract kajian events with confidence scores.</div>
+        <span class="tag">scripts/extract/text-extractor.ts</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 4: Geolocation resolver</div>
+        <div class="timeline-desc">Parse goo.gl/maps/ and maps.app.goo.gl/ short URLs. Resolve to lat/lng coordinates. Cache results.</div>
+        <span class="tag">scripts/extract/geo-resolver.ts</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 5: Event storage and dedup</div>
+        <div class="timeline-desc">Store extracted events in data/events/ (JSON, keyed by date). Dedup by composite key: source_id + date + masjid + ustadz.</div>
+        <span class="tag">scripts/extract/store-events.ts</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 6: Static API generation</div>
+        <div class="timeline-desc">Generate pre-built JSON files from sources + health + events data at public/api/v1/.</div>
+        <span class="tag">scripts/generate-api.ts</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 7: GitHub Actions workflow</div>
+        <div class="timeline-desc">Cron schedule every 6 hours: poll messages, extract events, generate API, commit.</div>
+        <span class="tag">.github/workflows/ingest-events.yml</span>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Step 8: Event display in dashboard</div>
+        <div class="timeline-desc">New tab in Live Dashboard showing upcoming kajian events. Filter by region, date, ustadz.</div>
+        <span class="tag">src/app/components/EventsTab.tsx</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 04: API Response -->
+  <section class="section" id="api">
+    <div class="section-num">04</div>
+    <h2>API Response</h2>
+    <p>Example response for <code style="font-family:var(--mono);font-size:14px;background:var(--g100);padding:2px 6px;border-radius:4px">GET /api/v1/events?region=bekasi&amp;date=2026-05-17</code></p>
+    <div class="code-block"><pre>{
+  <span class="key">"meta"</span>: {
+    <span class="key">"region"</span>: <span class="str">"bekasi"</span>,
+    <span class="key">"date"</span>: <span class="str">"2026-05-17"</span>,
+    <span class="key">"total"</span>: <span class="num">3</span>,
+    <span class="key">"generated_at"</span>: <span class="str">"2026-05-17T06:00:00Z"</span>
+  },
+  <span class="key">"events"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="str">"evt_bekasi_20260517_001"</span>,
+      <span class="key">"ustadz"</span>: <span class="str">"Ust. Abu Yahya Badrusalam, Lc."</span>,
+      <span class="key">"tema"</span>: <span class="str">"Kitab Tauhid"</span>,
+      <span class="key">"date"</span>: <span class="str">"2026-05-17"</span>,
+      <span class="key">"time_start"</span>: <span class="str">"08:00"</span>,
+      <span class="key">"time_end"</span>: <span class="str">"10:00"</span>,
+      <span class="key">"masjid"</span>: <span class="str">"Masjid Al-Ikhlas"</span>,
+      <span class="key">"city"</span>: <span class="str">"Bekasi"</span>,
+      <span class="key">"format"</span>: <span class="str">"rutin"</span>,
+      <span class="key">"gender"</span>: <span class="str">"umum"</span>,
+      <span class="key">"extraction_confidence"</span>: <span class="num">0.94</span>,
+      <span class="key">"extracted_from"</span>: <span class="str">"text"</span>,
+      <span class="key">"verified"</span>: <span class="num">false</span>
+    }
+  ]
+}</pre></div>
+  </section>
+
+  <!-- Section 05: Costs -->
+  <section class="section" id="costs">
+    <div class="section-num">05</div>
+    <h2>Costs</h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Estimated Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Claude API (text extraction)</td>
+              <td>~$0.01-0.05 / message</td>
+            </tr>
+            <tr>
+              <td>~50 messages/day across 9 topics</td>
+              <td>~$0.50-2.50 / day</td>
+            </tr>
+            <tr>
+              <td>Monthly estimate</td>
+              <td>~$15-75 / month</td>
+            </tr>
+            <tr>
+              <td>Telegram Bot API</td>
+              <td>Free</td>
+            </tr>
+            <tr>
+              <td>GitHub Actions</td>
+              <td>Free (within limits)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 06: Risks -->
+  <section class="section" id="risks">
+    <div class="section-num">06</div>
+    <h2>Risks</h2>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Risk</th>
+              <th>Severity</th>
+              <th>Mitigation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LLM extraction accuracy varies by text format</td>
+              <td><span class="severity-medium">Medium</span></td>
+              <td>Few-shot prompts per city, confidence threshold</td>
+            </tr>
+            <tr>
+              <td>Telegram Bot API rate limits</td>
+              <td><span class="severity-low">Low</span></td>
+              <td>6-hour polling interval, staggered requests</td>
+            </tr>
+            <tr>
+              <td>Google Maps short URL resolution fails</td>
+              <td><span class="severity-low">Low</span></td>
+              <td>Graceful degradation — event saved without geolocation</td>
+            </tr>
+            <tr>
+              <td>Cost overrun on LLM calls</td>
+              <td><span class="severity-medium">Medium</span></td>
+              <td>Cache extractions, skip unchanged messages</td>
+            </tr>
+            <tr>
+              <td>Bot removed from group</td>
+              <td><span class="severity-medium">Medium</span></td>
+              <td>Alert on ingestion failure, manual re-add</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
