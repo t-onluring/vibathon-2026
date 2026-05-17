@@ -1,22 +1,110 @@
-# API Contract
+# API Contract (Static API v1)
 
-## Data Input
+## Scope v1
+Kontrak publik v1 hanya publish dua file:
+1. `data/sources.json`
+2. `data/latest.json`
+
+`data/health/YYYY-MM-DD.json` tetap boleh ada sebagai arsip internal, tapi bukan kontrak konsumsi utama v1.
+
+---
+
+## 1) Data Input / Registry
 ### `data/sources.json`
-- Berisi daftar source dan metadata dasar.
+Daftar source master (source of truth).
 
-## Data Output
+### Required fields (minimum)
+- `id` (immutable)
+- `name`
+- `platform`
+- `source_type`
+- `url`
+- `handle`
+- `region`
+- `priority`
+- `added_at`
+
+### Conditional required fields
+- Jika `source_type = "topic"`, wajib ada:
+  - `parent_id`
+  - `topic_id`
+
+### Identity policy
+- `id` **tidak boleh berubah** setelah dibuat.
+- `name` boleh berubah.
+- Format ID: `<platform_code>-<canonical_slug>`.
+
+### Allowed `platform_code` baseline
+- `tg` (Telegram)
+- `yt` (YouTube)
+- `ig` (Instagram)
+- `web` (Website)
+- `wa` (WhatsApp)
+
+---
+
+## 2) Data Output / Snapshot
 ### `data/latest.json`
-Ringkasan terbaru untuk dashboard.
-Field utama:
+Ringkasan health terbaru untuk dashboard + consumer app.
+
+### Top-level fields
 - `generated_at`
+- `version`
 - `total_sources`
-- `monitored`
+- `monitored_sources`
 - `by_status`
 - `snapshots[]`
 
-### `data/health/YYYY-MM-DD.json`
-Arsip harian snapshot health.
+### Snapshot required fields
+- `source_id`
+- `status`
+- `last_checked_at`
+- `confidence_score`
+- `checks[]`
 
-## Status & Error
-- Status umum: `active`, `stale`, `dead`, `blocked`, `error`, `unmonitored`
-- Jika gagal fetch/parse, source masuk `error` dengan catatan `error`.
+### Confidence score v1 (0..1)
+- Range: `0.0` sampai `1.0`
+- Interpretasi awal:
+  - `>= 0.85` = high trust
+  - `0.60..0.84` = medium trust
+  - `< 0.60` = low trust
+- Rumus baseline v1 (weighted):
+  - `http_fetch` = 0.40
+  - `content_parse` = 0.35
+  - `freshness` = 0.25
+  - Formula: `confidence_score = Σ(weight_i * pass_i)` dengan `pass_i` = 1 jika check `ok=true`, 0 jika `ok=false`.
+- Catatan: rumus internal boleh berkembang, tapi range + interpretasi ini harus stabil untuk consumer.
+
+### `checks[]` item minimal
+- `name`
+- `ok`
+- `details`
+
+---
+
+## Status & Error Semantics
+Status enum v1:
+- `active`
+- `stale`
+- `dead`
+- `blocked`
+- `error`
+- `unmonitored`
+
+Aturan:
+- Jika fetch/parse gagal, status minimal `error` dan detail dicatat di `checks[]`.
+- `source_id` pada snapshot wajib merefer ke `id` yang ada di `data/sources.json`.
+
+---
+
+## Compatibility & Versioning
+- `version` pada `latest.json` mengikuti semantic-style sederhana: `vMAJOR.MINOR.PATCH`.
+- **PATCH**: perbaikan non-breaking (contoh: typo, detail checks).
+- **MINOR**: tambah field baru yang backward-compatible.
+- **MAJOR**: ubah/hapus field kontrak yang breaking.
+- Consumer harus tetap aman pada perubahan PATCH/MINOR.
+
+## Non-goals v1
+- Tidak wajib DB.
+- Tidak wajib endpoint server dinamis.
+- Tidak wajib seluruh platform punya fixture real di fase awal (boleh mulai dari `tg` + `web`).
