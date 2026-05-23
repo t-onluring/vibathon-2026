@@ -13,6 +13,10 @@ function ok(msg) {
   console.log(`✅ ${msg}`);
 }
 
+function warn(msg) {
+  console.warn(`⚠️ ${msg}`);
+}
+
 function isValidDateOrDateTime(value) {
   if (typeof value !== "string") return false;
   const dateOnly = /^\d{4}-\d{2}-\d{2}$/;
@@ -101,6 +105,14 @@ async function main() {
       }
       if (typeof s.topic_id !== "string" || s.topic_id.trim() === "") {
         fail(`${where}.topic_id is required for source_type=topic`);
+      } else {
+        const strictTopicId = process.env.STRICT_TOPIC_ID === "1";
+        const isNumeric = /^\d+$/.test(s.topic_id);
+        if (strictTopicId && !isNumeric) {
+          fail(`${where}.topic_id '${s.topic_id}' must be numeric when STRICT_TOPIC_ID=1`);
+        } else if (!strictTopicId && !isNumeric) {
+          warn(`${where}.topic_id '${s.topic_id}' is non-numeric placeholder (allowed until strict mode enabled)`);
+        }
       }
     }
   });
