@@ -9,7 +9,9 @@
     "lint": "eslint",
     "check:telegram": "tsx scripts/check-telegram.ts",
     "validate:sources": "node scripts/validate-sources.mjs",
-    "check:source-links": "node scripts/check-source-links.mjs"
+    "check:source-links": "node scripts/check-source-links.mjs",
+    "check:snapshot-relations": "node scripts/check-snapshot-relations.mjs",
+    "check:versioning": "node scripts/check-versioning.mjs"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
