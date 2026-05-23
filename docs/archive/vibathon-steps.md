@@ -4,8 +4,8 @@
 > **Last updated**: 2026-05-11
 > **Maintainer**: tehaer
 > **Type**: Live document
-> **Codebase**: [vibathon-2026](file:///var/home/tehaer/projects/HSI_Vibathon/codebase/vibathon-2026)
-> **Related roadmap**: [source-list-kajian.md](file:///var/home/tehaer/projects/HSI_Vibathon/roadmaps/source-list-kajian.md)
+> **Codebase**: [vibathon-2026](../../README.md)
+> **Related roadmap**: [source-list-kajian.md](./source-list-kajian.md)
 
 ---
 
@@ -14,7 +14,6 @@
 | Date | Version | Change | By |
 |---|---|---|---|
 | 2026-05-11 | v0.1 | Initial step 2 plan | tehaer + Amp |
-| 2026-05-14 | v0.2 | Added Phase 3 open-contribution (PR-based) flow and CI validation guardrail | tehaer + Craft Agent |
 
 ---
 
@@ -22,7 +21,7 @@
 
 > **Dari landing page statis → working MVP demo: "Source List Kajian Sunnah Indonesia" Layer 1 dengan Telegram health check otomatis + dashboard publik.**
 
-Step 2 = **Phase 1 dari roadmap Source List** (lihat [source-list-kajian.md → Phase 1](file:///var/home/tehaer/projects/HSI_Vibathon/roadmaps/source-list-kajian.md)) tapi di-bundle untuk konteks vibathon (deliverable shippable + demoable).
+Step 2 = **Phase 1 dari roadmap Source List** (lihat [source-list-kajian.md → Phase 1](./source-list-kajian.md)) tapi di-bundle untuk konteks vibathon (deliverable shippable + demoable).
 
 ---
 

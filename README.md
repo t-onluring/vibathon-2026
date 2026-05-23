@@ -52,8 +52,8 @@ npm run check:telegram
 
 ## Kontribusi
 
-- Panduan utama: [CONTRIBUTING.md](./CONTRIBUTING.md)
-- Quick path non-teknis: [docs/CONTRIBUTOR_GUIDE.md](./docs/CONTRIBUTOR_GUIDE.md)
+- Konvensi dokumentasi: [docs/README.md](./docs/README.md)
+- Panduan kontribusi: [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
 - Gunakan issue templates untuk **Source Add** / **Source Update** lalu buka PR.
 - Validator otomatis di PR: `.github/workflows/validate-sources.yml`
 

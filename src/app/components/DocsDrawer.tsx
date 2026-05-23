@@ -1,7 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { DocFile } from "../lib/data";
+
+const DEFAULT_OPEN_GROUPS: Record<string, boolean> = {
+  "Start Here": true,
+  "Build & Operate": true,
+  "Collab & Decisions": true,
+  Other: false,
+};
 
 export function DocsDrawer({
   docs,
@@ -13,6 +20,7 @@ export function DocsDrawer({
   onClose: () => void;
 }) {
   const [activeSlug, setActiveSlug] = useState<string>(docs[0]?.slug ?? "");
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(DEFAULT_OPEN_GROUPS);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,6 +36,7 @@ export function DocsDrawer({
   }, [isOpen]);
 
   const doc = docs.find((d) => d.slug === activeSlug) ?? docs[0];
+  const groupedDocs = useMemo(() => groupDocs(docs), [docs]);
 
   return (
     <>
@@ -82,23 +91,42 @@ export function DocsDrawer({
           </button>
         </div>
 
-        {/* Doc tabs */}
-        <div className="flex gap-1 overflow-x-auto border-b border-[var(--g300)] px-4 py-2 shrink-0">
-          {docs.map((d) => (
-            <button
-              key={d.slug}
-              type="button"
-              onClick={() => setActiveSlug(d.slug)}
-              className={[
-                "shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 font-mono text-[11.5px] border transition-all duration-150",
-                activeSlug === d.slug
-                  ? "border-[var(--clay)] bg-[var(--clay)]/8 text-[var(--clay)] font-semibold"
-                  : "border-transparent text-[var(--g500)] hover:text-[var(--slate)]",
-              ].join(" ")}
-            >
-              {d.title}
-            </button>
-          ))}
+        {/* Doc groups */}
+        <div className="overflow-y-auto border-b border-[var(--g300)] px-4 py-3 shrink-0 max-h-[42vh]">
+          {groupedDocs.map((group) => {
+            const isOpen = openGroups[group.label] ?? false;
+            return (
+              <div key={group.label} className="mb-3 last:mb-0">
+                <button
+                  type="button"
+                  onClick={() => setOpenGroups((prev) => ({ ...prev, [group.label]: !isOpen }))}
+                  className="w-full flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--g500)] mb-1.5 px-1"
+                >
+                  <span>{group.label}</span>
+                  <span className="text-[11px]">{isOpen ? "−" : "+"}</span>
+                </button>
+                {isOpen && (
+                  <div className="flex flex-wrap gap-1">
+                    {group.docs.map((d) => (
+                      <button
+                        key={d.slug}
+                        type="button"
+                        onClick={() => setActiveSlug(d.slug)}
+                        className={[
+                          "shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 font-mono text-[11.5px] border transition-all duration-150",
+                          activeSlug === d.slug
+                            ? "border-[var(--clay)] bg-[var(--clay)]/8 text-[var(--clay)] font-semibold"
+                            : "border-transparent text-[var(--g500)] hover:text-[var(--slate)]",
+                        ].join(" ")}
+                      >
+                        {d.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Content */}
@@ -140,6 +168,31 @@ function MarkdownDoc({ content }: { content: string }) {
       })}
     </div>
   );
+}
+
+function groupDocs(docs: DocFile[]): { label: string; docs: DocFile[] }[] {
+  const groups = new Map<string, DocFile[]>();
+  const order = ["Start Here", "Build & Operate", "Collab & Decisions", "Other"];
+
+  for (const doc of docs) {
+    const section = getDocSection(doc.slug);
+    const existing = groups.get(section) ?? [];
+    existing.push(doc);
+    groups.set(section, existing);
+  }
+
+  return order
+    .map((label) => ({ label, docs: groups.get(label) ?? [] }))
+    .filter((group) => group.docs.length > 0);
+}
+
+function getDocSection(slug: string): string {
+  if (slug.startsWith("00-") || slug.startsWith("01-")) return "Start Here";
+  if (["02-", "03-", "04-", "05-", "06-"].some((prefix) => slug.startsWith(prefix))) {
+    return "Build & Operate";
+  }
+  if (slug.startsWith("07-") || slug.startsWith("08-")) return "Collab & Decisions";
+  return "Other";
 }
 
 function parseInline(text: string): React.ReactNode {
