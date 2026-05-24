@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1.5 — Parent-Child Sources | Vibathon 2026</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413;
+  --clay:#D97757; --clay-d:#B85C3E; --oat:#E3DACC; --olive:#788C5D;
+  --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5; --g500:#87867F; --g700:#3D3D3A;
+  --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--ivory);
+  color: var(--slate);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px 140px;
+}
+
+/* Masthead */
+.masthead { padding: 80px 0 48px; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--g500);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.eyebrow::before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--clay);
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(38px, 5.4vw, 62px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: var(--slate);
+}
+
+h1 em {
+  color: var(--clay);
+  font-style: italic;
+}
+
+.intro {
+  font-size: 18px;
+  color: var(--g700);
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 48px 0;
+}
+
+.stat-card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 20px 24px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--slate);
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--g500);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--slate);
+}
+
+/* TOC */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 64px;
+}
+
+.toc a {
+  border: 1.5px solid var(--g300);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  color: var(--g700);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.toc a:hover {
+  border-color: var(--slate);
+  color: var(--slate);
+}
+
+/* Sections */
+.section { margin-bottom: 72px; }
+
+.sec-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.sec-index {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--clay);
+  font-weight: 600;
+}
+
+.sec-header h2 {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.sec-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--g100);
+  border-radius: 999px;
+  padding: 3px 10px;
+  color: var(--g500);
+  margin-left: 8px;
+}
+
+.sec-intro {
+  color: var(--g700);
+  margin: 8px 0 32px 42px;
+  max-width: 640px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  margin-left: 42px;
+  padding-left: 32px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--g300);
+}
+
+.timeline-phase {
+  margin-bottom: 32px;
+}
+
+.timeline-phase-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--g500);
+  margin-bottom: 16px;
+  padding: 4px 0;
+}
+
+.milestone {
+  position: relative;
+  margin-bottom: 24px;
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 20px 24px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.milestone:hover {
+  transform: translateY(-3px);
+  border-color: var(--slate);
+}
+
+.milestone::before {
+  content: "";
+  position: absolute;
+  left: -33px;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.milestone.phase-a::before {
+  background: var(--olive);
+}
+
+.milestone.phase-b::before {
+  background: transparent;
+  border: 2px solid var(--clay);
+}
+
+.milestone-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.milestone-desc {
+  font-size: 14px;
+  color: var(--g700);
+  margin-bottom: 10px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  background: var(--g100);
+  border-radius: 4px;
+  padding: 3px 8px;
+  color: var(--g500);
+}
+
+.tag--border {
+  background: var(--ivory);
+  border: 1px solid var(--g300);
+}
+
+/* Code blocks */
+.code-block {
+  background: var(--g100);
+  border: 1.5px solid var(--g300);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0 16px 42px;
+  overflow-x: auto;
+}
+
+.code-block code {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+.code-block .kw { color: var(--clay-d); }
+.code-block .ty { color: var(--olive); }
+.code-block .cm { color: var(--g500); }
+.code-block .st { color: #5a7a3a; }
+
+/* Data model description */
+.model-desc {
+  margin: 0 0 24px 42px;
+  color: var(--g700);
+}
+
+/* Tables */
+.table-wrap {
+  margin: 0 0 0 42px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead th {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--g500);
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1.5px solid var(--g300);
+}
+
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--g200);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) { background: var(--g100); }
+
+.severity-high { color: var(--clay); font-weight: 600; }
+.severity-medium { color: var(--g500); font-weight: 600; }
+.severity-low { color: var(--g300); font-weight: 600; }
+
+/* Source grid */
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin: 0 0 0 42px;
+}
+
+.source-card {
+  background: var(--paper);
+  border: 1.5px solid var(--g300);
+  border-radius: 14px;
+  padding: 16px 20px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.source-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--slate);
+}
+
+.source-card.parent {
+  grid-column: 1 / -1;
+  border-color: var(--clay);
+}
+
+.source-name {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.source-topic {
+  font-size: 14px;
+  color: var(--g700);
+  margin-bottom: 8px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .wrap { padding: 0 18px 80px; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .sec-intro { margin-left: 0; }
+  .timeline { margin-left: 0; }
+  .code-block { margin-left: 0; }
+  .model-desc { margin-left: 0; }
+  .table-wrap { margin-left: 0; }
+  .source-grid { margin-left: 0; grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <p class="eyebrow">Implementation Plan &middot; Vibathon 2026</p>
+    <h1>Phase 1.5 &mdash; <em>Parent-Child</em> Sources</h1>
+    <p class="intro">Extend the source data model with hierarchical parent-child relationships when forum topics are actually scrapeable. For @sijadwalkajian, the accepted fallback is group-level only, so this phase closes with region filtering in the Live Dashboard and a checker baseline for supported TG channel/group sources.</p>
+  </header>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Effort</div>
+      <div class="stat-value">~1 week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Files Touched</div>
+      <div class="stat-value">14</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">New Sources</div>
+      <div class="stat-value">10</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Sub-phases</div>
+      <div class="stat-value">2</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <a href="#milestones">Milestones</a>
+    <a href="#data-model">Data Model</a>
+    <a href="#source-inventory">Source Inventory</a>
+    <a href="#files-changed">Files Changed</a>
+    <a href="#risks">Risks</a>
+  </nav>
+
+  <!-- Section 01: Milestones -->
+  <section class="section" id="milestones">
+    <div class="sec-header">
+      <span class="sec-index">01</span>
+      <h2>Milestones</h2>
+      <span class="sec-badge">10 steps</span>
+    </div>
+    <p class="sec-intro">Split into two sub-phases to reduce blast radius per PR. Phase 1.5a covers data layer changes, Phase 1.5b covers runtime and UI.</p>
+
+    <div class="timeline">
+      <!-- Phase 1.5a -->
+      <div class="timeline-phase">
+        <div class="timeline-phase-label">Sub-phase 1.5a &mdash; Data Layer</div>
+
+        <div class="milestone phase-a">
+          <div class="milestone-title">Step 0: Validate Telegram topic URL scraping</div>
+          <div class="milestone-desc">Resolved blocker. Topic URLs did not expose parseable public HTML, so the accepted fallback is group-level only until official/app/export evidence can unlock topic onboarding again.</div>
+          <div class="tags">
+            <span class="tag">discovery</span>
+            <span class="tag tag--border">blocker</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-a">
+          <div class="milestone-title">Step 0.5: Pull PR #1 + normalize contributor data</div>
+          <div class="milestone-desc">Pull merged PR #1 (camagenta's 9 new sources). Normalize IDs to lowercase, fix indentation to 2-space project standard.</div>
+          <div class="tags">
+            <span class="tag">data</span>
+            <span class="tag">housekeeping</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-a">
+          <div class="milestone-title">Step 1: Extend Source type with parent-child fields</div>
+          <div class="milestone-desc">Add source_type, parent_id, and topic_id optional fields to the Source interface. All new fields optional for backward compatibility.</div>
+          <div class="tags">
+            <span class="tag">types.ts</span>
+            <span class="tag">schema</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-a">
+          <div class="milestone-title">Step 2: Add @sijadwalkajian entries</div>
+          <div class="milestone-desc">Add 1 parent group + 9 city topic children to sources.json. Exclude General and Dapur Satu Data Kajian topics.</div>
+          <div class="tags">
+            <span class="tag">sources.json</span>
+            <span class="tag">10 entries</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-a">
+          <div class="milestone-title">Step 3: Update scripts/lib/types.ts</div>
+          <div class="milestone-desc">Re-export new SourceType type and isTopicSource guard for use in scripts layer.</div>
+          <div class="tags">
+            <span class="tag">types</span>
+            <span class="tag">re-export</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-a">
+          <div class="milestone-title">Step 9: Update validate-sources script</div>
+          <div class="milestone-desc">Add source_type validation, parent-child referential integrity checks, lowercase ID enforcement.</div>
+          <div class="tags">
+            <span class="tag">validation</span>
+            <span class="tag">scripts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 1.5b -->
+      <div class="timeline-phase">
+        <div class="timeline-phase-label">Sub-phase 1.5b &mdash; Runtime + UI</div>
+
+        <div class="milestone phase-b">
+          <div class="milestone-title">Step 4: Refactor health checker into Strategy Pattern</div>
+          <div class="milestone-desc">Create PlatformChecker interface. Extract existing logic into telegram-channel, add telegram-group and telegram-topic checkers.</div>
+          <div class="tags">
+            <span class="tag">checkers/</span>
+            <span class="tag">strategy pattern</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-b">
+          <div class="milestone-title">Step 5: Rewrite orchestrator with two-phase execution</div>
+          <div class="milestone-desc">Rename check-telegram.ts to check-health.ts. Check all leaf sources first, then compute group aggregates from children.</div>
+          <div class="tags">
+            <span class="tag">check-health.ts</span>
+            <span class="tag">orchestrator</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-b">
+          <div class="milestone-title">Step 6: Add region filter to AppTab</div>
+          <div class="milestone-desc">Region filter pills below existing platform filter. Horizontal scroll on mobile. AND logic with existing filters.</div>
+          <div class="tags">
+            <span class="tag">AppTab.tsx</span>
+            <span class="tag">UI</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-b">
+          <div class="milestone-title">Step 7: Visual grouping in dashboard</div>
+          <div class="milestone-desc">Parent cards with expand/collapse chevron. 16px indent + 2px left border for children. Keyboard nav support.</div>
+          <div class="tags">
+            <span class="tag">AppTab.tsx</span>
+            <span class="tag">a11y</span>
+          </div>
+        </div>
+
+        <div class="milestone phase-b">
+          <div class="milestone-title">Step 8: Add tests</div>
+          <div class="milestone-desc">Unit tests for checkers, group scoring, and source validation.</div>
+          <div class="tags">
+            <span class="tag">__tests__/</span>
+            <span class="tag">3 files</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 02: Data Model -->
+  <section class="section" id="data-model">
+    <div class="sec-header">
+      <span class="sec-index">02</span>
+      <h2>Data Model</h2>
+    </div>
+    <p class="sec-intro">Three new optional fields on the Source interface enable hierarchical relationships while maintaining full backward compatibility with existing flat entries.</p>
+
+    <p class="model-desc">The <code>source_type</code> field distinguishes channels, groups, and topics. Parent-child linkage uses <code>parent_id</code> and <code>topic_id</code> on child entries. Group scores are computed as <code>max(own_freshness, avg(children_scores))</code> with zero-child fallback.</p>
+
+    <div class="code-block"><code><span class="kw">export type</span> <span class="ty">SourceType</span> = <span class="st">"channel"</span> | <span class="st">"group"</span> | <span class="st">"topic"</span>;
+
+<span class="kw">export interface</span> <span class="ty">Source</span> {
+  <span class="cm">// ... existing fields unchanged ...</span>
+  source_type?: <span class="ty">SourceType</span>;
+  parent_id?: <span class="ty">string</span>;
+  topic_id?: <span class="ty">string</span>;
+}
+
+<span class="kw">export function</span> isTopicSource(s: <span class="ty">Source</span>): s <span class="kw">is</span> <span class="ty">Source</span> & {
+  source_type: <span class="st">"topic"</span>; parent_id: <span class="ty">string</span>; topic_id: <span class="ty">string</span>;
+} {
+  <span class="kw">return</span> s.source_type === <span class="st">"topic"</span> && !!s.parent_id && !!s.topic_id;
+}</code></div>
+  </section>
+
+  <!-- Section 03: Source Inventory -->
+  <section class="section" id="source-inventory">
+    <div class="sec-header">
+      <span class="sec-index">03</span>
+      <h2>Source Inventory</h2>
+      <span class="sec-badge">10 entries</span>
+    </div>
+    <p class="sec-intro">One parent group entry plus nine city-topic children for @sijadwalkajian. Excluded: General (system messages only) and Dapur Satu Data Kajian (operational/internal).</p>
+
+    <div class="source-grid">
+      <div class="source-card parent">
+        <div class="source-name">tg-sijadwalkajian</div>
+        <div class="source-topic">@sijadwalkajian (Forum Supergroup)</div>
+        <div class="tags">
+          <span class="tag">group</span>
+          <span class="tag tag--border">parent</span>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-jakarta</div>
+        <div class="source-topic">Jakarta</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">jakarta</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-bogor</div>
+        <div class="source-topic">Bogor</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">bogor</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-tangerang</div>
+        <div class="source-topic">Tangerang</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">tangerang</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-tangsel</div>
+        <div class="source-topic">Tangerang Selatan</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">tangerang-selatan</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-bekasi</div>
+        <div class="source-topic">Bekasi</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">bekasi</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-semarang</div>
+        <div class="source-topic">Semarang</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">semarang</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-surabaya</div>
+        <div class="source-topic">Surabaya</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">surabaya</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-pekanbaru</div>
+        <div class="source-topic">Pekanbaru</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">pekanbaru</span></div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">tg-sijadwalkajian-jambi</div>
+        <div class="source-topic">Jambi</div>
+        <div class="tags"><span class="tag">topic</span><span class="tag tag--border">jambi</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 04: Files Changed -->
+  <section class="section" id="files-changed">
+    <div class="sec-header">
+      <span class="sec-index">04</span>
+      <h2>Files Changed</h2>
+      <span class="sec-badge">14 files</span>
+    </div>
+    <p class="sec-intro">All file modifications split across two sub-phases to reduce blast radius per pull request.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Action</th>
+            <th>Sub-phase</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>src/shared/types.ts</code></td>
+            <td>Modify</td>
+            <td>1.5a</td>
+          </tr>
+          <tr>
+            <td><code>data/sources.json</code></td>
+            <td>Modify</td>
+            <td>1.5a</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/types.ts</code></td>
+            <td>Modify</td>
+            <td>1.5a</td>
+          </tr>
+          <tr>
+            <td><code>scripts/validate-sources.mjs</code></td>
+            <td>Modify</td>
+            <td>1.5a</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/checkers/platform-checker.ts</code></td>
+            <td>Create</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/checkers/telegram-channel.ts</code></td>
+            <td>Create</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/checkers/telegram-group.ts</code></td>
+            <td>Create</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/checkers/telegram-topic.ts</code></td>
+            <td>Create</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/check-health.ts</code></td>
+            <td>Rename + Rewrite</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>.github/workflows/health-check.yml</code></td>
+            <td>Modify</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>src/app/components/AppTab.tsx</code></td>
+            <td>Modify</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/__tests__/checkers.test.ts</code></td>
+            <td>Create</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/lib/__tests__/group-scoring.test.ts</code></td>
+            <td>Create</td>
+            <td>1.5b</td>
+          </tr>
+          <tr>
+            <td><code>scripts/__tests__/validate-sources.test.ts</code></td>
+            <td>Create</td>
+            <td>1.5a</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Section 05: Risks -->
+  <section class="section" id="risks">
+    <div class="sec-header">
+      <span class="sec-index">05</span>
+      <h2>Risks</h2>
+      <span class="sec-badge">5 items</span>
+    </div>
+    <p class="sec-intro">Risk assessment with severity levels and planned mitigations.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Risk</th>
+            <th>Severity</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Telegram topic URL doesn't return parseable HTML</td>
+            <td><span class="severity-high">High</span></td>
+            <td>Confirmed in Step B. Fallback accepted: group-level only.</td>
+          </tr>
+          <tr>
+            <td>Topic ID discovery requires Telegram app access</td>
+            <td><span class="severity-medium">Medium</span></td>
+            <td>Web preview first, browser tool fallback.</td>
+          </tr>
+          <tr>
+            <td>Group score timing</td>
+            <td><span class="severity-medium">Medium</span></td>
+            <td>Two-phase orchestrator guarantees ordering.</td>
+          </tr>
+          <tr>
+            <td>Handle uniqueness rejects topic children</td>
+            <td><span class="severity-low">Low</span></td>
+            <td>Relaxed in Step 9.</td>
+          </tr>
+          <tr>
+            <td>10+ region pills overflow on mobile</td>
+            <td><span class="severity-low">Low</span></td>
+            <td>Horizontal scroll with fade edges.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

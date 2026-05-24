@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 1 Internal Roadmap — Vibathon Scope</title>
+<style>
+:root {
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --g700:#3D3D3A; --g500:#87867F;
+  --g300:#D1CFC5; --g200:#E6E3DA; --g100:#F0EEE6; --clay:#D97757; --oat:#E3DACC; --olive:#788C5D;
+  --serif:ui-serif, Georgia, "Times New Roman", Times, serif;
+  --sans:system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px 140px}
+.masthead{padding:80px 0 56px;border-bottom:1.5px solid var(--g300);margin-bottom:12px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.eyebrow:before{content:"";width:24px;height:1.5px;background:var(--clay)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(38px,5.4vw,62px);line-height:1.06;letter-spacing:-.018em;max-width:17ch;margin:0}
+h1 em{font-style:italic;color:var(--clay)}
+.intro{font-size:16.5px;color:var(--g700);max-width:720px;margin:22px 0 0}
+.toc{display:flex;flex-wrap:wrap;gap:8px;padding:26px 0 0}
+.toc a{font-size:12.5px;padding:7px 14px;border:1.5px solid var(--g300);border-radius:999px;text-decoration:none;color:var(--g700);background:var(--paper);display:inline-flex;gap:7px}
+.toc .n{font-family:var(--mono);font-size:10px;color:var(--g500)}
+section{margin-top:72px;scroll-margin-top:28px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
+.idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;width:34px}
+h2{font-family:var(--serif);font-weight:500;font-size:27px;letter-spacing:-.012em;margin:0}
+.sec-intro{font-size:14.5px;color:var(--g700);max-width:700px;margin:0 0 24px 50px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(316px,1fr));gap:20px;margin-left:50px}
+.card{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;padding:20px}
+.card-eyebrow{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--g500);margin-bottom:8px}
+.card h3{font-family:var(--serif);font-weight:500;font-size:18px;margin:0 0 8px}
+.card p{font-size:13.5px;color:var(--g700);margin:0 0 12px}
+.badge{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;background:var(--g100);border:1.5px solid var(--g300);color:var(--g500);display:inline-block;margin-right:6px}
+.badge.current{background:var(--olive);color:var(--paper);border-color:var(--olive)}
+.badge.next{background:var(--oat);color:var(--slate);border-color:var(--oat)}
+.links{margin-left:50px}
+.links a{color:var(--clay);text-underline-offset:3px;text-decoration-color:var(--oat)}
+footer{margin-top:96px;padding-top:24px;border-top:1.5px solid var(--g300);font-family:var(--mono);font-size:11px;color:var(--g500);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.legend{margin-left:50px;margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.legend-label{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin-right:4px}
+@media (max-width:640px){.sec-intro,.grid,.links,.legend{margin-left:0}}
+@media print {.toc{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Roadmap · Vibathon Scope · 2026-05-17</div>
+    <h1>Empat milestone internal untuk Phase 1 <em>execution</em></h1>
+    <p class="intro">Roadmap utama tetap Phase 0-4. Dokumen ini khusus memecah Phase 1 (Vibathon Scope) menjadi milestone internal 1.5, 2, 3, dan 4 agar implementasi bertahap, terukur, dan mudah dipantau.</p>
+  </header>
+
+  <nav class="toc">
+    <a href="#sec-01"><span class="n">01</span> Hierarki</a>
+    <a href="#sec-02"><span class="n">02</span> Milestones</a>
+    <a href="#sec-03"><span class="n">03</span> Link & Gates</a>
+  </nav>
+
+  <section id="sec-01">
+    <div class="sec-head"><span class="idx">01</span><h2>Hierarki roadmap</h2></div>
+    <p class="sec-intro">Top-level roadmap tetap: Phase 0 (Konsolidasi), Phase 1 (Vibathon Scope), Phase 2 (Multi-Platform), Phase 3 (Open Contribution), Phase 4 (Public Dataset).</p>
+  </section>
+
+  <section id="sec-02">
+    <div class="sec-head"><span class="idx">02</span><h2>Internal milestones di dalam Phase 1</h2></div>
+    <p class="sec-intro">Urutan eksekusi internal yang disepakati untuk mengembangkan dari daftar link Telegram menjadi pipeline ekstraksi event kajian.</p>
+    <div class="grid">
+      <article class="card">
+        <div class="card-eyebrow">1.5 · Foundation</div>
+        <h3>Parent-Child Sources</h3>
+        <p>Model parent-child source sudah ada; topic scrape forum yang gagal fallback ke group-level only, lalu phase ini ditutup dengan region filter dashboard dan checker baseline.</p>
+        <span class="badge current">CURRENT</span><span class="badge">Fallback Closeout</span>
+      </article>
+      <article class="card">
+        <div class="card-eyebrow">2 · MVP</div>
+        <h3>Text Event Extraction</h3>
+        <p>Ingestion message Telegram dan parsing LLM ke event terstruktur (ustadz, masjid, tanggal, waktu).</p>
+        <span class="badge next">NEXT</span><span class="badge">Text Pipeline</span>
+      </article>
+      <article class="card">
+        <div class="card-eyebrow">3 · Vision</div>
+        <h3>Poster Image Extraction</h3>
+        <p>OCR/vision untuk poster kajian, termasuk multi-event splitting dan fusion caption-image.</p>
+        <span class="badge">QUEUED</span><span class="badge">Vision Pipeline</span>
+      </article>
+      <article class="card">
+        <div class="card-eyebrow">4 · Hardening</div>
+        <h3>Full Pipeline</h3>
+        <p>Split eksekusi 4.1 dedup, 4.2 near real-time ingestion, 4.3 API hardening + verification.</p>
+        <span class="badge">QUEUED</span><span class="badge">Production Readiness</span>
+      </article>
+    </div>
+    <div class="legend" aria-label="Status Legend">
+      <span class="legend-label">Status:</span>
+      <span class="badge">DONE</span>
+      <span class="badge current">CURRENT</span>
+      <span class="badge next">NEXT</span>
+      <span class="badge">QUEUED</span>
+    </div>
+  </section>
+
+  <section id="sec-03">
+    <div class="sec-head"><span class="idx">03</span><h2>Cross-link dokumentasi</h2></div>
+    <p class="sec-intro">Gunakan dokumen berikut sebagai referensi operasional dan quality gate sebelum eksekusi fase.</p>
+    <div class="links">
+      <p><a href="./phase-1-internal-roadmap.md">Phase 1 Internal Roadmap (Markdown)</a></p>
+      <p><a href="./quality-gates.md">Quality Gates (Markdown)</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Vibathon 2026 · docs/roadmap/phase-1-internal-roadmap.html</span>
+    <span>Single-file HTML · no build step</span>
+  </footer>
+</div>
+</body>
+</html>

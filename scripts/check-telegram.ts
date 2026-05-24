@@ -2,11 +2,11 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchTelegramChannel } from "./lib/fetch-telegram.js";
-import { reliabilityScore, statusFromAge } from "./lib/score.js";
+import { confidenceScoreFromMetrics, statusFromAge } from "./lib/score.js";
 import type {
-  HealthSnapshot,
-  HealthStatus,
+  CheckItem,
   LatestSummary,
+  SnapshotItem,
   Source,
   SourcesFile,
 } from "./lib/types.js";
@@ -18,6 +18,7 @@ const HEALTH_DIR = join(ROOT, "data", "health");
 const LATEST_PATH = join(ROOT, "data", "latest.json");
 
 const STAGGER_MS = 5_000;
+const SNAPSHOT_VERSION = "v1.0.0";
 
 async function loadSources(): Promise<Source[]> {
   const raw = await readFile(SOURCES_PATH, "utf-8");
@@ -25,60 +26,138 @@ async function loadSources(): Promise<Source[]> {
   return file.sources;
 }
 
-async function checkOne(source: Source): Promise<HealthSnapshot> {
-  const checked_at = new Date().toISOString();
+function canMonitorTelegram(source: Source): boolean {
+  return source.platform === "tg" && (source.source_type === "channel" || source.source_type === "group");
+}
+
+function makeChecks(source: Source, metrics: { subscribers: number | null; last_post_at: string | null }): CheckItem[] {
+  const hasParsedSignal = metrics.last_post_at !== null || metrics.subscribers !== null;
+  const freshnessDetails = metrics.last_post_at !== null
+    ? `Last post detected at ${metrics.last_post_at}`
+    : source.source_type === "group"
+      ? "No last post timestamp detected. Public Telegram HTML only exposed the group join gate / member count."
+      : "No last post timestamp detected in public HTML";
+
+  return [
+    {
+      name: "http_fetch",
+      ok: true,
+      details: `Fetched public Telegram preview for @${source.handle}`,
+    },
+    {
+      name: "content_parse",
+      ok: hasParsedSignal,
+      details: hasParsedSignal
+        ? `Parsed metrics from public HTML (subs=${metrics.subscribers ?? "n/a"}, last_post=${metrics.last_post_at ?? "n/a"})`
+        : "Public HTML did not expose parsable Telegram metrics",
+    },
+    {
+      name: "freshness",
+      ok: metrics.last_post_at !== null,
+      details: freshnessDetails,
+    },
+  ];
+}
+
+function classifyTelegramStatus(source: Source, metrics: { subscribers: number | null; last_post_at: string | null; last_post_age_hours: number | null }) {
+  if (metrics.last_post_at !== null) {
+    return statusFromAge(metrics.last_post_age_hours);
+  }
+
+  if (source.source_type === "group") {
+    return "blocked" as const;
+  }
+
+  if (metrics.subscribers !== null) {
+    return "blocked" as const;
+  }
+
+  return "blocked" as const;
+}
+
+async function checkTelegramSource(source: Source): Promise<SnapshotItem> {
+  const last_checked_at = new Date().toISOString();
   try {
     const metrics = await fetchTelegramChannel(source.handle);
-    const status = statusFromAge(metrics.last_post_age_hours);
-    const score = reliabilityScore(metrics);
+    const checks = makeChecks(source, metrics);
+    const status = classifyTelegramStatus(source, metrics);
+    const confidence_score = confidenceScoreFromMetrics(metrics);
+
     return {
       source_id: source.id,
-      checked_at,
+      last_checked_at,
       platform: source.platform,
       status,
-      reliability_score: score,
+      confidence_score,
+      checks,
       metrics,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return {
       source_id: source.id,
-      checked_at,
+      last_checked_at,
       platform: source.platform,
       status: "error",
-      reliability_score: 0,
+      confidence_score: 0,
+      checks: [
+        {
+          name: "http_fetch",
+          ok: false,
+          details: message,
+        },
+        {
+          name: "content_parse",
+          ok: false,
+          details: "Skipped because fetch failed",
+        },
+        {
+          name: "freshness",
+          ok: false,
+          details: "Skipped because fetch failed",
+        },
+      ],
       metrics: {},
       error: message,
     };
   }
 }
 
-function unmonitoredSnapshot(source: Source, checked_at: string): HealthSnapshot {
+function unmonitoredSnapshot(source: Source, last_checked_at: string): SnapshotItem {
   return {
     source_id: source.id,
-    checked_at,
+    last_checked_at,
     platform: source.platform,
     status: "unmonitored",
-    reliability_score: 0,
+    confidence_score: 0,
+    checks: [
+      {
+        name: "monitoring",
+        ok: false,
+        details: `No active checker strategy for ${source.platform}/${source.source_type} in this phase`,
+      },
+    ],
     metrics: {},
   };
 }
 
-function summarize(snapshots: HealthSnapshot[], totalSources: number): LatestSummary {
-  const by_status: Record<HealthStatus, number> = {
+function summarize(snapshots: SnapshotItem[], totalSources: number): LatestSummary {
+  const by_status = {
     active: 0,
     stale: 0,
     dead: 0,
     blocked: 0,
     error: 0,
     unmonitored: 0,
-  };
+  } as LatestSummary["by_status"];
+
   for (const s of snapshots) by_status[s.status]++;
 
   return {
     generated_at: new Date().toISOString(),
+    version: SNAPSHOT_VERSION,
     total_sources: totalSources,
-    monitored: snapshots.filter((s) => s.status !== "unmonitored").length,
+    monitored_sources: snapshots.filter((s) => s.status !== "unmonitored").length,
     by_status,
     snapshots,
   };
@@ -87,20 +166,20 @@ function summarize(snapshots: HealthSnapshot[], totalSources: number): LatestSum
 async function main() {
   console.log("[health-check] loading sources...");
   const sources = await loadSources();
-  const tgSources = sources.filter((s) => s.platform === "telegram");
-  const otherSources = sources.filter((s) => s.platform !== "telegram");
-  console.log(`[health-check] ${tgSources.length} telegram sources to check`);
+  const tgSources = sources.filter(canMonitorTelegram);
+  const otherSources = sources.filter((s) => !canMonitorTelegram(s));
+  console.log(`[health-check] ${tgSources.length} tg channel/group sources to check`);
 
-  const snapshots: HealthSnapshot[] = [];
+  const snapshots: SnapshotItem[] = [];
   const checkedAtRunStart = new Date().toISOString();
 
   for (let i = 0; i < tgSources.length; i++) {
     const src = tgSources[i];
-    console.log(`[${i + 1}/${tgSources.length}] checking ${src.handle}...`);
-    const snap = await checkOne(src);
+    console.log(`[${i + 1}/${tgSources.length}] checking ${src.handle} (${src.source_type})...`);
+    const snap = await checkTelegramSource(src);
     snapshots.push(snap);
     console.log(
-      `  → status=${snap.status}, score=${snap.reliability_score}, last_post=${
+      `  → status=${snap.status}, confidence=${snap.confidence_score}, last_post=${
         (snap.metrics as { last_post_at?: string | null }).last_post_at ?? "n/a"
       }`
     );
