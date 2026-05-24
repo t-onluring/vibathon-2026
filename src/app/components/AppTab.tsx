@@ -505,6 +505,7 @@ const PLATFORM_FILTER_KEYS: Array<{ key: "all" | Platform; label: string }> = [
 export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestSummary | null }) {
   const [statusFilter, setStatusFilter] = useState<"all" | HealthStatus>("all");
   const [platformFilter, setPlatformFilter] = useState<"all" | Platform>("all");
+  const [regionFilter, setRegionFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("score");
   const [loading, setLoading] = useState(true);
@@ -548,10 +549,29 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
     return c;
   }, [rows]);
 
+  const regionFilterKeys = useMemo(() => {
+    const regions = Array.from(new Set(sources.map((s) => s.region).filter(Boolean)));
+    const normalized = regions.sort((a, b) => {
+      if (a === "nasional") return -1;
+      if (b === "nasional") return 1;
+      return a.localeCompare(b, "id");
+    });
+    return [{ key: "all", label: "All" }, ...normalized.map((region) => ({ key: region, label: region }))];
+  }, [sources]);
+
+  const regionCounts = useMemo(() => {
+    const c: Record<string, number> = { all: rows.length };
+    for (const { source } of rows) {
+      c[source.region] = (c[source.region] ?? 0) + 1;
+    }
+    return c;
+  }, [rows]);
+
   const filtered = useMemo(() => {
     let r = rows;
     if (statusFilter !== "all") r = r.filter(({ snapshot }) => (snapshot?.status ?? "unmonitored") === statusFilter);
     if (platformFilter !== "all") r = r.filter(({ source }) => source.platform === platformFilter);
+    if (regionFilter !== "all") r = r.filter(({ source }) => source.region === regionFilter);
     if (search) {
       const q = search.toLowerCase();
       r = r.filter(({ source }) =>
@@ -562,7 +582,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
     else if (sortBy === "name") r = [...r].sort((a, b) => a.source.name.localeCompare(b.source.name));
     else if (sortBy === "subs") r = [...r].sort((a, b) => (b.snapshot?.metrics?.subscribers ?? 0) - (a.snapshot?.metrics?.subscribers ?? 0));
     return r;
-  }, [rows, statusFilter, platformFilter, search, sortBy]);
+  }, [rows, statusFilter, platformFilter, regionFilter, search, sortBy]);
 
   const aggregateHistory = useMemo(() =>
     generateAggregate(rows.map(({ source, snapshot }) => ({
@@ -587,7 +607,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
     return `${maxYears} tahun`;
   }, [latest]);
 
-  const hasActiveFilters = statusFilter !== "all" || platformFilter !== "all" || search;
+  const hasActiveFilters = statusFilter !== "all" || platformFilter !== "all" || regionFilter !== "all" || search;
 
   return (
     <div className="mx-auto max-w-[1180px] px-8 py-10">
@@ -686,7 +706,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
           </div>
 
           {/* Platform filter pills */}
-          <div className="mb-6 flex flex-wrap items-center gap-2">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="eyebrow !text-[9.5px] min-w-[52px]">Platform</span>
             {PLATFORM_FILTER_KEYS.map(({ key, label }) => (
               <button key={key} type="button" onClick={() => setPlatformFilter(key)}
@@ -701,13 +721,34 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
               </button>
             ))}
           </div>
+
+          {/* Region filter pills */}
+          <div className="mb-6 flex items-start gap-2">
+            <span className="eyebrow !text-[9.5px] min-w-[52px] pt-1">Region</span>
+            <div className="flex-1 overflow-x-auto pb-1">
+              <div className="flex min-w-max flex-wrap gap-2 sm:min-w-0">
+                {regionFilterKeys.map(({ key, label }) => (
+                  <button key={key} type="button" onClick={() => setRegionFilter(key)}
+                    className={[
+                      "px-3 py-1 rounded-full text-[11.5px] font-mono border transition-all duration-150 whitespace-nowrap capitalize",
+                      regionFilter === key
+                        ? "bg-[var(--slate)] text-[var(--ivory)] border-[var(--slate)]"
+                        : "bg-transparent text-[var(--g700)] border-[var(--g300)] hover:border-[var(--g500)]",
+                    ].join(" ")}>
+                    {label}
+                    <span className="ml-1.5 opacity-60 text-[10px]">{regionCounts[key] ?? 0}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Active filters summary */}
         {hasActiveFilters && (
           <div className="mb-4 flex items-center gap-3 font-mono text-[12px] text-[var(--g500)]">
             <span>Showing {filtered.length} of {rows.length}</span>
-            <button type="button" onClick={() => { setStatusFilter("all"); setPlatformFilter("all"); setSearch(""); }}
+            <button type="button" onClick={() => { setStatusFilter("all"); setPlatformFilter("all"); setRegionFilter("all"); setSearch(""); }}
               className="text-[var(--clay)] underline underline-offset-2 hover:opacity-70 transition-opacity">
               Clear filters
             </button>
@@ -726,7 +767,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
             <div className="rounded-xl border border-dashed border-[var(--g300)] bg-[var(--g100)] p-12 text-center">
               <div className="text-3xl mb-3 opacity-30">🔍</div>
               <p className="text-[14px] text-[var(--g500)]">No sources match your filters.</p>
-              <button type="button" onClick={() => { setStatusFilter("all"); setPlatformFilter("all"); setSearch(""); }}
+              <button type="button" onClick={() => { setStatusFilter("all"); setPlatformFilter("all"); setRegionFilter("all"); setSearch(""); }}
                 className="mt-3 text-[12.5px] text-[var(--clay)] underline underline-offset-2">
                 Clear all filters
               </button>
@@ -739,9 +780,8 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
           <div className="mt-6 flex items-start gap-3 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-4 text-[13px] text-[var(--g700)] leading-relaxed">
             <span className="text-base shrink-0">💡</span>
             <span>
-              Skor dihitung dari <strong>freshness</strong> (40%), <strong>consistency</strong> (25%), <strong>volume</strong> (20%),{" "}
-              <strong>engagement</strong> (10%), <strong>diversity</strong> (5%).
-              MVP saat ini menggunakan freshness only — metric lain butuh historical data.
+              <strong>confidence_score</strong> saat ini diturunkan dari 3 check dasar: <strong>http_fetch</strong> (40%), <strong>content_parse</strong> (35%), dan <strong>freshness</strong> (25%).
+              Ini masih baseline Phase 1.5 — belum mencerminkan kualitas ekstraksi event penuh.
             </span>
           </div>
         )}

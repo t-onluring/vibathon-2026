@@ -31,6 +31,13 @@ function canMonitorTelegram(source: Source): boolean {
 }
 
 function makeChecks(source: Source, metrics: { subscribers: number | null; last_post_at: string | null }): CheckItem[] {
+  const hasParsedSignal = metrics.last_post_at !== null || metrics.subscribers !== null;
+  const freshnessDetails = metrics.last_post_at !== null
+    ? `Last post detected at ${metrics.last_post_at}`
+    : source.source_type === "group"
+      ? "No last post timestamp detected. Public Telegram HTML only exposed the group join gate / member count."
+      : "No last post timestamp detected in public HTML";
+
   return [
     {
       name: "http_fetch",
@@ -39,20 +46,33 @@ function makeChecks(source: Source, metrics: { subscribers: number | null; last_
     },
     {
       name: "content_parse",
-      ok: metrics.last_post_at !== null || metrics.subscribers !== null,
-      details:
-        metrics.last_post_at !== null || metrics.subscribers !== null
-          ? `Parsed metrics from public HTML (subs=${metrics.subscribers ?? "n/a"}, last_post=${metrics.last_post_at ?? "n/a"})`
-          : "Public HTML did not expose parsable Telegram metrics",
+      ok: hasParsedSignal,
+      details: hasParsedSignal
+        ? `Parsed metrics from public HTML (subs=${metrics.subscribers ?? "n/a"}, last_post=${metrics.last_post_at ?? "n/a"})`
+        : "Public HTML did not expose parsable Telegram metrics",
     },
     {
       name: "freshness",
       ok: metrics.last_post_at !== null,
-      details: metrics.last_post_at !== null
-        ? `Last post detected at ${metrics.last_post_at}`
-        : "No last post timestamp detected in public HTML",
+      details: freshnessDetails,
     },
   ];
+}
+
+function classifyTelegramStatus(source: Source, metrics: { subscribers: number | null; last_post_at: string | null; last_post_age_hours: number | null }) {
+  if (metrics.last_post_at !== null) {
+    return statusFromAge(metrics.last_post_age_hours);
+  }
+
+  if (source.source_type === "group") {
+    return "blocked" as const;
+  }
+
+  if (metrics.subscribers !== null) {
+    return "blocked" as const;
+  }
+
+  return "blocked" as const;
 }
 
 async function checkTelegramSource(source: Source): Promise<SnapshotItem> {
@@ -60,7 +80,7 @@ async function checkTelegramSource(source: Source): Promise<SnapshotItem> {
   try {
     const metrics = await fetchTelegramChannel(source.handle);
     const checks = makeChecks(source, metrics);
-    const status = statusFromAge(metrics.last_post_age_hours);
+    const status = classifyTelegramStatus(source, metrics);
     const confidence_score = confidenceScoreFromMetrics(metrics);
 
     return {
