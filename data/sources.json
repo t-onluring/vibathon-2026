@@ -677,55 +677,7 @@
       ],
       "verified": true,
       "added_at": "2026-05-17",
-      "notes": "Parent Telegram forum group for city topics."
-    },
-    {
-      "id": "tg-sijadwalkajian-jakarta",
-      "name": "Sijadwal Kajian - Jakarta",
-      "platform": "tg",
-      "source_type": "topic",
-      "parent_id": "tg-sijadwalkajian",
-      "topic_id": "REPLACE_WITH_REAL_TOPIC_ID",
-      "url": "https://t.me/sijadwalkajian/REPLACE_WITH_REAL_TOPIC_ID",
-      "handle": "sijadwalkajian",
-      "category": [
-        "kajian",
-        "city"
-      ],
-      "region": "jakarta",
-      "language": "id",
-      "priority": 2,
-      "tags": [
-        "topic",
-        "city"
-      ],
-      "verified": false,
-      "added_at": "2026-05-17",
-      "notes": "Topic placeholder pending real numeric topic_id verification."
-    },
-    {
-      "id": "tg-sijadwalkajian-surabaya",
-      "name": "Sijadwal Kajian - Surabaya",
-      "platform": "tg",
-      "source_type": "topic",
-      "parent_id": "tg-sijadwalkajian",
-      "topic_id": "REPLACE_WITH_REAL_TOPIC_ID",
-      "url": "https://t.me/sijadwalkajian/REPLACE_WITH_REAL_TOPIC_ID",
-      "handle": "sijadwalkajian",
-      "category": [
-        "kajian",
-        "city"
-      ],
-      "region": "surabaya",
-      "language": "id",
-      "priority": 2,
-      "tags": [
-        "topic",
-        "city"
-      ],
-      "verified": false,
-      "added_at": "2026-05-17",
-      "notes": "Topic placeholder pending real numeric topic_id verification."
+      "notes": "Telegram forum group. Public topic scrape validation failed on 2026-05-24, so monitoring remains group-level only for now."
     }
   ]
 }

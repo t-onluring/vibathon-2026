@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-05-23T18:03:25.155Z",
-  "total_sources": 32,
+  "total_sources": 30,
   "monitored": 0,
   "by_status": {
     "active": 0,
@@ -8,7 +8,7 @@
     "dead": 0,
     "blocked": 0,
     "error": 0,
-    "unmonitored": 32
+    "unmonitored": 30
   },
   "snapshots": [
     {
@@ -245,22 +245,6 @@
     },
     {
       "source_id": "tg-sijadwalkajian",
-      "checked_at": "2026-05-23T18:03:25.153Z",
-      "platform": "tg",
-      "status": "unmonitored",
-      "reliability_score": 0,
-      "metrics": {}
-    },
-    {
-      "source_id": "tg-sijadwalkajian-jakarta",
-      "checked_at": "2026-05-23T18:03:25.153Z",
-      "platform": "tg",
-      "status": "unmonitored",
-      "reliability_score": 0,
-      "metrics": {}
-    },
-    {
-      "source_id": "tg-sijadwalkajian-surabaya",
       "checked_at": "2026-05-23T18:03:25.153Z",
       "platform": "tg",
       "status": "unmonitored",
