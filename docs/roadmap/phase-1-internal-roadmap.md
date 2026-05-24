@@ -18,12 +18,12 @@ Top-level roadmap tetap:
 ## 1.5 — Parent-Child Sources
 
 Tujuan:
-- Menambahkan model parent-child source untuk Telegram forum + topic
-- Menyediakan region filter dan checker strategy refactor
+- Menutup baseline parent-child source tanpa memaksakan topic scrape yang belum terbukti
+- Menyediakan region filter dan checker strategy refactor untuk source yang memang bisa dipantau
 
 Output:
-- `source_type`, `parent_id`, `topic_id`
-- Group/topic health check orchestration
+- `source_type`, `parent_id`, `topic_id` sebagai model data
+- TG channel/group health check orchestration + fallback group-level only untuk forum yang topic HTML-nya tidak parseable
 - Region-aware dashboard filtering
 
 ## 2 — Text Event Extraction MVP

@@ -6,7 +6,7 @@ Build the first content ingestion pipeline that extracts structured kajian event
 
 ## Context
 
-- Phase 1.5 establishes the source registry with parent-child topics and health monitoring
+- Phase 1.5 establishes the source registry, region filtering, and the health-check baseline (with group-level fallback when Telegram topic HTML is not parseable)
 - L3 consumer apps need structured event data (ustadz, masjid, waktu, lokasi) — not just "where to find info"
 - @sijadwalkajian topics contain 3 content formats: plain text, image posters, and forwarded videos
 - Plain text format (like Bekasi topic) has the highest extraction confidence and lowest cost
@@ -14,7 +14,7 @@ Build the first content ingestion pipeline that extracts structured kajian event
 
 ## Prerequisites
 
-- Phase 1.5 complete (parent-child sources, region filter, health checker strategy pattern)
+- Phase 1.5 complete (parent-child data model, region filter, health checker strategy baseline, and accepted fallback for non-parseable Telegram topics)
 - Telegram Bot API token (needed for message ingestion — web scraping only gives latest messages)
 
 ## Architecture

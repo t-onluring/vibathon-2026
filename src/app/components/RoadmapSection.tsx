@@ -27,8 +27,8 @@ const PHASES: Phase[] = [
   {
     id: "1.5",
     label: "Phase 1.5: Parent-Child Sources",
-    desc: "Model source parent/topic, region filtering dashboard, dan checker strategy refactor sebagai fondasi ekstraksi event.",
-    status: "next",
+    desc: "Model parent-child source sudah dibakukan, topic scrape `@sijadwalkajian` fallback ke group-level only, dan closeout saat ini fokus ke region filtering + checker baseline.",
+    status: "current",
   },
   {
     id: "2",

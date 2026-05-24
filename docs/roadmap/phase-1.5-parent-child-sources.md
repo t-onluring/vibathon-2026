@@ -2,16 +2,16 @@
 
 ## Summary
 
-Extend the source data model with `source_type`, `parent_id`, and `topic_id` fields to support Telegram Forum supergroups (like @sijadwalkajian) with per-city topic children. Add region filter to the Live Dashboard. Refactor health checker into pluggable Strategy Pattern for future platform extensibility.
+Extend the source data model with `source_type`, `parent_id`, and `topic_id` fields to support Telegram Forum supergroups when topic-level onboarding is feasible. For `@sijadwalkajian`, Step B proved the public HTML is not topic-parseable, so the accepted fallback is group-level only. Phase 1.5 therefore closes with region filter support in the Live Dashboard plus a checker strategy baseline for supported TG `channel`/`group` sources.
 
 ## Context
 
-- @sijadwalkajian is a Telegram Forum supergroup with 10+ city-based topics (Jakarta, Bogor, Surabaya, etc.)
-- Current data model is flat — no parent-child, no per-topic monitoring
-- L3 consumer apps need `region` filtering to build city-specific kajian finders
-- Health checker is currently hardcoded for Telegram channels only
-- **PR #1 merged** (camagenta): added 9 new Telegram sources with per-city regions (yogyakarta, gresik, balikpapan, surabaya) — region filter is already needed pre-Phase 1.5
-- **Source count**: 20 local → 29 after PR pull → 39 after this phase
+- `@sijadwalkajian` memang forum supergroup Telegram, tetapi public HTML-nya tidak mengekspos daftar topic maupun timeline yang parseable.
+- Current data model was initially flat — parent-child fields are now available even if real topic onboarding is deferred.
+- L3 consumer apps still need `region` filtering to build city-specific kajian finders.
+- Health checker needed refactor because the registry now uses static API v1 platform codes (`tg`, `web`, `ig`, `yt`, `wa`).
+- **PR #1 merged** (camagenta): added 9 new Telegram sources with per-city regions (yogyakarta, gresik, balikpapan, surabaya) — region filter is useful even without topic-level monitoring.
+- **Source count** is now lower than the original topic-expansion assumption because placeholder topic children were intentionally removed after Step B fallback.
 
 ## Decisions Log
 
@@ -84,11 +84,11 @@ export function isTopicSource(s: Source): s is Source & {
 
 **File:** `data/sources.json`
 
-Add 1 parent group + 9 city topic children (10 entries total).
+Original idea: add 1 parent group + 9 city topic children.
 
-Excluded: General (system messages only), Dapur Satu Data Kajian (operational/internal).
+**Actual fallback outcome:** only the parent group is kept in publishable data until real `topic_id` values and parseable HTML are proven.
 
-Cities: Jakarta, Bogor, Tangerang, Tangerang Selatan, Bekasi, Semarang, Surabaya, Pekanbaru, Jambi.
+Excluded for now: all city topic children, because topic URLs were not publicly scrapeable.
 
 ### Step 3: Update scripts/lib/types.ts
 
@@ -96,11 +96,10 @@ Re-export new `SourceType` type and `isTopicSource` guard.
 
 ### Step 4: Refactor health checker into Strategy Pattern
 
-New files:
-- `scripts/lib/checkers/platform-checker.ts` — `PlatformChecker` interface
-- `scripts/lib/checkers/telegram-channel.ts` — extract from existing `check-telegram.ts`
-- `scripts/lib/checkers/telegram-group.ts` — group-level check
-- `scripts/lib/checkers/telegram-topic.ts` — topic-level check
+Target architecture remains useful, but the practical closeout for Phase 1.5 is smaller:
+- supported TG `channel` + `group` checking
+- schema-aligned snapshot output (`version`, `monitored_sources`, `last_checked_at`, `confidence_score`, `checks[]`)
+- topic-specific checker deferred until topic onboarding is unblocked
 
 ### Step 5: Rewrite orchestrator with two-phase execution
 
@@ -118,7 +117,7 @@ Region filter pills below existing platform filter. Horizontal scroll on mobile 
 
 **File:** `src/app/components/AppTab.tsx`
 
-Parent cards with expand/collapse chevron, collapsed by default. 16px indent + 2px left border for children. `aria-expanded` and keyboard nav support.
+Deferred. Since topic children are not currently published, visual parent/child grouping is not required to close the fallback version of Phase 1.5.
 
 ### Step 8: Add tests
 
@@ -155,8 +154,8 @@ Add: source_type validation, parent-child referential integrity, lowercase ID en
 
 | Risk | Severity | Mitigation |
 |------|----------|------------|
-| Telegram topic URL doesn't return parseable HTML | High | Step 0 blocker. Fallback: group-level only. |
-| Topic ID discovery requires Telegram app access | Medium | Web preview first, browser tool fallback. |
-| Group score timing | Medium | Two-phase orchestrator guarantees ordering. |
-| Handle uniqueness rejects topic children | Low | Relaxed in Step 9. |
-| 10+ region pills overflow on mobile | Low | Horizontal scroll with fade edges. |
+| Telegram topic URL doesn't return parseable HTML | High | Confirmed in Step B. Accepted fallback: group-level only. |
+| Topic ID discovery requires Telegram app access | Medium | Re-open only if official/app/export evidence appears. |
+| Group freshness may still be unavailable | Medium | Surface partial-check/error semantics via `checks[]` + confidence score. |
+| Handle uniqueness rejects topic children | Low | Already handled in source validation rules if topic onboarding returns later. |
+| 10+ region pills overflow on mobile | Low | Horizontal scroll / wrap in dashboard filter UI. |

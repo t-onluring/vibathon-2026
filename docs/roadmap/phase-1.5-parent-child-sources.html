@@ -395,7 +395,7 @@ tbody tr:nth-child(even) { background: var(--g100); }
   <header class="masthead">
     <p class="eyebrow">Implementation Plan &middot; Vibathon 2026</p>
     <h1>Phase 1.5 &mdash; <em>Parent-Child</em> Sources</h1>
-    <p class="intro">Extend the source data model with hierarchical parent-child relationships to support Telegram Forum supergroups. Add per-city topic monitoring for @sijadwalkajian, region filtering in the Live Dashboard, and refactor the health checker into a pluggable Strategy Pattern.</p>
+    <p class="intro">Extend the source data model with hierarchical parent-child relationships when forum topics are actually scrapeable. For @sijadwalkajian, the accepted fallback is group-level only, so this phase closes with region filtering in the Live Dashboard and a checker baseline for supported TG channel/group sources.</p>
   </header>
 
   <!-- Stats bar -->
@@ -443,7 +443,7 @@ tbody tr:nth-child(even) { background: var(--g100); }
 
         <div class="milestone phase-a">
           <div class="milestone-title">Step 0: Validate Telegram topic URL scraping</div>
-          <div class="milestone-desc">Blocker. Test that topic URLs return parseable HTML via Cheerio. Discover numeric topic_id values for each city. Fallback: group-level only if topics are inaccessible.</div>
+          <div class="milestone-desc">Resolved blocker. Topic URLs did not expose parseable public HTML, so the accepted fallback is group-level only until official/app/export evidence can unlock topic onboarding again.</div>
           <div class="tags">
             <span class="tag">discovery</span>
             <span class="tag tag--border">blocker</span>
@@ -765,7 +765,7 @@ tbody tr:nth-child(even) { background: var(--g100); }
           <tr>
             <td>Telegram topic URL doesn't return parseable HTML</td>
             <td><span class="severity-high">High</span></td>
-            <td>Step 0 blocker. Fallback: group-level only.</td>
+            <td>Confirmed in Step B. Fallback accepted: group-level only.</td>
           </tr>
           <tr>
             <td>Topic ID discovery requires Telegram app access</td>

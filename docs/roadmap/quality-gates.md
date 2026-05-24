@@ -30,12 +30,13 @@ Dokumen ini fokus ke gates milestone internal pada **Phase 1** dan split hardeni
 
 | Metric | Target |
 |---|---|
-| Topic scrape success rate (7 hari) | >= 95% |
+| TG channel/group check coverage | 100% untuk source `tg` bertipe `channel`/`group` |
 | Source validation pass | 100% |
 | Existing source regression | 0 |
+| Region filter availability | semua `region` di `sources.json` bisa difilter di dashboard |
 | Health-check runtime increase | <= 20% vs baseline |
 
-**NO-GO:** topic scrape < 90% selama 2 hari berturut-turut, atau parent-child integrity fail > 0.
+**NO-GO:** checker menulis snapshot di luar schema v1, source validation fail > 0, atau region filter tidak bisa mengisolasi source sesuai `region`.
 
 ## Phase 2 — Text Event Extraction MVP
 
