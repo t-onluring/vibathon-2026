@@ -7,6 +7,10 @@ const HOURS = {
   THIRTY_DAYS: 720,
 };
 
+function round(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
 export function freshnessScore(lastPostAgeHours: number | null): number {
   if (lastPostAgeHours === null) return 0;
   if (lastPostAgeHours < HOURS.THREE_DAYS) return 100;
@@ -23,12 +27,22 @@ export function statusFromAge(lastPostAgeHours: number | null): HealthStatus {
   return "dead";
 }
 
-/**
- * MVP score = freshness only (40% weight in full formula, but we use 100% here
- * since other signals — consistency, volume, engagement, diversity — need
- * historical data we don't have on first run).
- */
-export function reliabilityScore(metrics: TelegramMetrics): number {
-  const fresh = freshnessScore(metrics.last_post_age_hours);
-  return Math.round(fresh);
+export function confidenceScoreFromChecks(checks: {
+  httpFetch: boolean;
+  contentParse: boolean;
+  freshness: boolean;
+}): number {
+  return round(
+    (checks.httpFetch ? 0.4 : 0) +
+    (checks.contentParse ? 0.35 : 0) +
+    (checks.freshness ? 0.25 : 0)
+  );
+}
+
+export function confidenceScoreFromMetrics(metrics: TelegramMetrics): number {
+  return confidenceScoreFromChecks({
+    httpFetch: true,
+    contentParse: metrics.last_post_at !== null || metrics.subscribers !== null,
+    freshness: metrics.last_post_at !== null,
+  });
 }

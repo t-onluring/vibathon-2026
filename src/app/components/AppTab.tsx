@@ -18,22 +18,48 @@ const STATUS_META: Record<HealthStatus, { label: string; bg: string; fg: string;
 };
 
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
-  telegram: (
+  tg: (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/>
     </svg>
   ),
-  website: (
+  web: (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
     </svg>
   ),
-  instagram: (
+  ig: (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/>
     </svg>
   ),
+  yt: (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 1.96C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58Z"/>
+      <path d="m9.75 15.02 5.75-3.02-5.75-3.02v6.04Z"/>
+    </svg>
+  ),
+  wa: (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-1.9 5.4A8.5 8.5 0 1 1 21 11.5Z"/>
+      <path d="M8 12c1.5 2.5 3.5 4 6 5"/>
+      <path d="M14.5 14.5 16 16"/>
+    </svg>
+  ),
 };
+
+const PLATFORM_LABELS: Record<Platform, string> = {
+  tg: "Telegram",
+  web: "Website",
+  ig: "Instagram",
+  yt: "YouTube",
+  wa: "WhatsApp",
+};
+
+function confidenceToPercent(score?: number | null): number | null {
+  if (typeof score !== "number") return null;
+  return Math.round(score * 100);
+}
 
 // ===== Seeded history generation ==============================
 
@@ -384,7 +410,7 @@ function ScoreExplainer() {
 function SourceCard({ source, snapshot, index }: { source: Source; snapshot?: Snapshot; index: number }) {
   const [hovered, setHovered] = useState(false);
   const status: HealthStatus = snapshot?.status ?? "unmonitored";
-  const score = snapshot?.reliability_score ?? null;
+  const score = confidenceToPercent(snapshot?.confidence_score);
   const meta = STATUS_META[status];
   const history = useMemo(() => generateHistory(source.id, status, score), [source.id, status, score]);
   const sparkColor = meta.ringColor;
@@ -415,9 +441,9 @@ function SourceCard({ source, snapshot, index }: { source: Source; snapshot?: Sn
             {meta.label}
           </span>
           <span className="inline-flex items-center gap-1 text-[var(--g500)] opacity-60 shrink-0">
-            {PLATFORM_ICONS[source.platform] ?? PLATFORM_ICONS.website}
+            {PLATFORM_ICONS[source.platform] ?? PLATFORM_ICONS.web}
           </span>
-          {source.priority === "archived" && (
+          {source.priority >= 4 && (
             <span className="font-mono text-[10px] text-[var(--g500)] shrink-0">archived</span>
           )}
         </div>
@@ -469,9 +495,11 @@ const STATUS_FILTER_KEYS: Array<{ key: "all" | HealthStatus; label: string }> = 
 
 const PLATFORM_FILTER_KEYS: Array<{ key: "all" | Platform; label: string }> = [
   { key: "all", label: "All" },
-  { key: "telegram", label: "Telegram" },
-  { key: "website", label: "Website" },
-  { key: "instagram", label: "Instagram" },
+  { key: "tg", label: "Telegram" },
+  { key: "web", label: "Website" },
+  { key: "ig", label: "Instagram" },
+  { key: "yt", label: "YouTube" },
+  { key: "wa", label: "WhatsApp" },
 ];
 
 export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestSummary | null }) {
@@ -530,7 +558,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
         source.name.toLowerCase().includes(q) || source.handle?.toLowerCase().includes(q)
       );
     }
-    if (sortBy === "score") r = [...r].sort((a, b) => (b.snapshot?.reliability_score ?? -1) - (a.snapshot?.reliability_score ?? -1));
+    if (sortBy === "score") r = [...r].sort((a, b) => (b.snapshot?.confidence_score ?? -1) - (a.snapshot?.confidence_score ?? -1));
     else if (sortBy === "name") r = [...r].sort((a, b) => a.source.name.localeCompare(b.source.name));
     else if (sortBy === "subs") r = [...r].sort((a, b) => (b.snapshot?.metrics?.subscribers ?? 0) - (a.snapshot?.metrics?.subscribers ?? 0));
     return r;
@@ -540,7 +568,7 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
     generateAggregate(rows.map(({ source, snapshot }) => ({
       id: source.id,
       status: snapshot?.status ?? "unmonitored",
-      score: snapshot?.reliability_score ?? null,
+      score: confidenceToPercent(snapshot?.confidence_score),
     }))),
     [rows]
   );

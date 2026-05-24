@@ -1,4 +1,4 @@
-export type { Platform, Priority, HealthStatus, Source } from "../../src/shared/types.js";
+export type { Platform, Priority, HealthStatus, Source, SourceType } from "../../src/shared/types.js";
 import type { Platform, HealthStatus, Source } from "../../src/shared/types.js";
 
 export interface SourcesFile {
@@ -15,20 +15,28 @@ export interface TelegramMetrics {
   last_post_age_hours: number | null;
 }
 
-export interface HealthSnapshot {
+export interface CheckItem {
+  name: string;
+  ok: boolean;
+  details: string;
+}
+
+export interface SnapshotItem {
   source_id: string;
-  checked_at: string;
   platform: Platform;
   status: HealthStatus;
-  reliability_score: number;
+  last_checked_at: string;
+  confidence_score: number;
+  checks: CheckItem[];
   metrics: TelegramMetrics | Record<string, unknown>;
   error?: string;
 }
 
 export interface LatestSummary {
   generated_at: string;
+  version: string;
   total_sources: number;
-  monitored: number;
+  monitored_sources: number;
   by_status: Record<HealthStatus, number>;
-  snapshots: HealthSnapshot[];
+  snapshots: SnapshotItem[];
 }

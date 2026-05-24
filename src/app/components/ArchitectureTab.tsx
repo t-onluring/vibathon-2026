@@ -231,7 +231,7 @@ function LayerDetail({ id }: { id: string }) {
       <div className="space-y-1 font-mono text-[11px] text-[var(--g600)]">
         <div>⏰ cron: <span className="text-[var(--olive)]">0 17 * * *</span> (00:01 WIB)</div>
         <div>🔁 retry: <span className="text-[var(--olive)]">3×</span> dengan 5s stagger</div>
-        <div>📊 score: freshness → reliability_score</div>
+        <div>📊 score: weighted checks → confidence_score</div>
         <div>🏃 runtime: <span className="text-[var(--olive)]">GitHub Actions</span></div>
       </div>
     ),

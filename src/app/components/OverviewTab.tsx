@@ -239,7 +239,7 @@ export function OverviewTab({
 
   const active = latest?.by_status.active ?? 0;
   const total = sources.length;
-  const monitored = latest?.monitored ?? 0;
+  const monitored = latest?.monitored_sources ?? 0;
 
   return (
     <div

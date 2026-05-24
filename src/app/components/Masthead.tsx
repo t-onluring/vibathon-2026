@@ -21,7 +21,7 @@ export function Masthead({
   const total = sources.length;
   const active = latest?.by_status.active ?? 0;
   const dead = (latest?.by_status.dead ?? 0) + (latest?.by_status.stale ?? 0);
-  const monitored = latest?.monitored ?? sources.filter((s) => s.monitor_status !== "not_yet_monitored").length;
+  const monitored = latest?.monitored_sources ?? sources.filter((s) => s.monitor_status !== "not_yet_monitored").length;
 
   return (
     <header
