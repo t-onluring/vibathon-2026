@@ -35,6 +35,8 @@ type SpikeArtifact = {
   topics: TopicFreshnessItem[];
 };
 
+type TelegramEntity = Parameters<TelegramClient["iterMessages"]>[0];
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..");
 const OUTPUT_PATH = process.env.SPIKE_OUTPUT_PATH ?? join(ROOT, "data", "spikes", "telegram-topic-freshness.json");
@@ -59,12 +61,46 @@ function toIso(value: unknown): string | null {
   return Number.isFinite(d.getTime()) ? d.toISOString() : null;
 }
 
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+}
+
+function getNumber(value: unknown, key: string): number {
+  const n = Number(asRecord(value)[key] ?? 0);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function getString(value: unknown, key: string, fallback: string): string {
+  const v = asRecord(value)[key];
+  return typeof v === "string" ? v : fallback;
+}
+
+function newestIso(a: string | null, b: string | null): string | null {
+  if (!a) return b;
+  if (!b) return a;
+  return new Date(a).getTime() >= new Date(b).getTime() ? a : b;
+}
+
+async function getLatestReplyDate(client: TelegramClient, entity: TelegramEntity, topMessageId: number): Promise<string | null> {
+  if (!Number.isFinite(topMessageId) || topMessageId <= 0) return null;
+
+  try {
+    for await (const msg of client.iterMessages(entity, { replyTo: topMessageId, limit: 1 })) {
+      return toIso(asRecord(msg).date);
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
 async function fetchForumTopicFreshness(client: TelegramClient, handle: string): Promise<TopicFreshnessItem[]> {
   const entity = await client.getEntity(handle.startsWith("@") ? handle : `@${handle}`);
 
   const res = await client.invoke(
     new Api.channels.GetForumTopics({
-      channel: entity as any,
+      channel: entity as unknown as Api.TypeInputChannel,
       offsetDate: 0,
       offsetId: 0,
       offsetTopic: 0,
@@ -72,35 +108,50 @@ async function fetchForumTopicFreshness(client: TelegramClient, handle: string):
     })
   );
 
-  const topicsRaw = (res as any)?.topics ?? [];
+  const topicsRaw = asRecord(res).topics ?? [];
   if (!Array.isArray(topicsRaw) || topicsRaw.length === 0) {
     return [];
   }
 
+  const rootMessagesRaw = asRecord(res).messages ?? [];
+  const rootMessageDateById = new Map<number, string | null>();
+  if (Array.isArray(rootMessagesRaw)) {
+    for (const msg of rootMessagesRaw) {
+      const id = getNumber(msg, "id");
+      if (!id) continue;
+      rootMessageDateById.set(id, toIso(asRecord(msg).date));
+    }
+  }
+
   const topMessageIds = topicsRaw
-    .map((t: any) => Number(t?.topMessage ?? 0))
+    .map((t) => getNumber(t, "topMessage"))
     .filter((id: number) => Number.isFinite(id) && id > 0);
 
-  const messageDateById = new Map<number, string | null>();
+  const topMessageDateById = new Map<number, string | null>(rootMessageDateById);
   if (topMessageIds.length > 0) {
     try {
-      const messages = await client.getMessages(entity as any, { ids: topMessageIds });
+      const messages = await client.getMessages(entity, { ids: topMessageIds });
       const arr = Array.isArray(messages) ? messages : [messages];
-      for (const msg of arr as any[]) {
-        const id = Number(msg?.id ?? 0);
+      for (const msg of arr) {
+        const id = getNumber(msg, "id");
         if (!id) continue;
-        messageDateById.set(id, toIso(msg?.date));
+        topMessageDateById.set(id, toIso(asRecord(msg).date));
       }
     } catch {
       // keep empty map; topic checks will explain missing date
     }
   }
 
-  const topics: TopicFreshnessItem[] = topicsRaw.map((t: any) => {
-    const topicId = String(t?.id ?? "unknown-topic-id");
-    const topicTitle = String(t?.title ?? `Topic ${topicId}`);
-    const topMessageId = Number(t?.topMessage ?? 0);
-    const lastPostAt = messageDateById.get(topMessageId) ?? null;
+  const topics: TopicFreshnessItem[] = [];
+
+  for (const t of topicsRaw) {
+    const rawTopicId = getNumber(t, "id");
+    const topicId = rawTopicId ? String(rawTopicId) : "unknown-topic-id";
+    const topicTitle = getString(t, "title", `Topic ${topicId}`);
+    const topMessageId = getNumber(t, "topMessage");
+    const topMessageDate = topMessageDateById.get(topMessageId) ?? null;
+    const latestReplyDate = await getLatestReplyDate(client, entity, topMessageId);
+    const lastPostAt = newestIso(latestReplyDate, topMessageDate);
     const status = classifyFreshness(lastPostAt);
 
     const checks: CheckItem[] = [
@@ -118,20 +169,22 @@ async function fetchForumTopicFreshness(client: TelegramClient, handle: string):
         name: "freshness",
         ok: lastPostAt !== null,
         details:
-          lastPostAt !== null
-            ? `Last post timestamp resolved from topMessage id=${topMessageId}.`
-            : "No resolvable last_post_at from topic topMessage in this run.",
+          latestReplyDate !== null
+            ? `Last post timestamp resolved from latest reply in topic topMessage id=${topMessageId}.`
+            : topMessageDate !== null
+              ? `Last post timestamp resolved from root topMessage id=${topMessageId}; no newer reply timestamp found.`
+              : "No resolvable last_post_at from topic replies or topMessage in this run.",
       },
     ];
 
-    return {
+    topics.push({
       topic_id: topicId,
       topic_title: topicTitle,
       last_post_at: lastPostAt,
       status,
       checks,
-    };
-  });
+    });
+  }
 
   return topics;
 }
