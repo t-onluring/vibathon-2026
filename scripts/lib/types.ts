@@ -15,20 +15,30 @@ export interface TelegramMetrics {
   last_post_age_hours: number | null;
 }
 
-export interface HealthSnapshot {
+export interface CheckItem {
+  name: string;
+  ok: boolean;
+  details: string;
+}
+
+export interface SnapshotItem {
   source_id: string;
-  checked_at: string;
+  last_checked_at: string;
   platform: Platform;
   status: HealthStatus;
-  reliability_score: number;
+  confidence_score: number;
+  checks: CheckItem[];
   metrics: TelegramMetrics | Record<string, unknown>;
   error?: string;
 }
 
+export type HealthSnapshot = SnapshotItem;
+
 export interface LatestSummary {
   generated_at: string;
+  version: string;
   total_sources: number;
-  monitored: number;
+  monitored_sources: number;
   by_status: Record<HealthStatus, number>;
-  snapshots: HealthSnapshot[];
+  snapshots: SnapshotItem[];
 }

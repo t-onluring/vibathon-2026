@@ -32,3 +32,11 @@ export function reliabilityScore(metrics: TelegramMetrics): number {
   const fresh = freshnessScore(metrics.last_post_age_hours);
   return Math.round(fresh);
 }
+
+export function confidenceScoreFromMetrics(metrics: Pick<TelegramMetrics, "subscribers" | "last_post_at">): number {
+  const httpFetch = 1;
+  const contentParse = metrics.last_post_at !== null || metrics.subscribers !== null ? 1 : 0;
+  const freshness = metrics.last_post_at !== null ? 1 : 0;
+
+  return Number((0.4 * httpFetch + 0.35 * contentParse + 0.25 * freshness).toFixed(2));
+}

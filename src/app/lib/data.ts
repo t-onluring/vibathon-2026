@@ -11,10 +11,15 @@ export type { Platform, HealthStatus, Priority, Source } from "../../shared/type
 
 export interface Snapshot {
   source_id: string;
-  checked_at: string;
+  last_checked_at: string;
   platform: Platform;
   status: HealthStatus;
-  reliability_score: number;
+  confidence_score: number;
+  checks: {
+    name: string;
+    ok: boolean;
+    details: string;
+  }[];
   metrics: {
     subscribers?: number | null;
     last_post_at?: string | null;
@@ -25,8 +30,9 @@ export interface Snapshot {
 
 export interface LatestSummary {
   generated_at: string;
+  version: string;
   total_sources: number;
-  monitored: number;
+  monitored_sources: number;
   by_status: Record<HealthStatus, number>;
   snapshots: Snapshot[];
 }

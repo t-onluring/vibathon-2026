@@ -48,14 +48,6 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
-const PLATFORM_LABELS: Record<Platform, string> = {
-  tg: "Telegram",
-  web: "Website",
-  ig: "Instagram",
-  yt: "YouTube",
-  wa: "WhatsApp",
-};
-
 function confidenceToPercent(score?: number | null): number | null {
   if (typeof score !== "number") return null;
   return Math.round(score * 100);
