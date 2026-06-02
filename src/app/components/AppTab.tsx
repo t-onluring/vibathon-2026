@@ -398,7 +398,19 @@ function ScoreExplainer() {
 
 // ===== Source card ============================================
 
-function SourceCard({ source, snapshot, index }: { source: Source; snapshot?: Snapshot; index: number }) {
+function SourceCard({
+  source,
+  snapshot,
+  index,
+  parentSource,
+  childCount,
+}: {
+  source: Source;
+  snapshot?: Snapshot;
+  index: number;
+  parentSource?: Source;
+  childCount: number;
+}) {
   const [hovered, setHovered] = useState(false);
   const status: HealthStatus = snapshot?.status ?? "unmonitored";
   const score = confidenceToPercent(snapshot?.confidence_score);
@@ -441,6 +453,17 @@ function SourceCard({ source, snapshot, index }: { source: Source; snapshot?: Sn
         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12px] text-[var(--g500)]">
           {source.handle && (
             <span className="font-mono text-[11.5px] truncate max-w-[180px]">@{source.handle}</span>
+          )}
+          {source.source_type && (
+            <span className="font-mono text-[11px]">{source.source_type}</span>
+          )}
+          {source.parent_id && (
+            <span className="font-mono text-[11px]">
+              parent: {parentSource?.id ?? source.parent_id}
+            </span>
+          )}
+          {!source.parent_id && childCount > 0 && (
+            <span className="font-mono text-[11px]">children: {childCount}</span>
           )}
           {subs != null && <span>{formatNum(subs)} subs</span>}
           {lastPost && <span>{formatRelative(lastPost)}</span>}
@@ -523,6 +546,21 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
     [sources, snapshotMap]
   );
 
+  const sourceMap = useMemo(() => {
+    const m = new Map<string, Source>();
+    for (const source of sources) m.set(source.id, source);
+    return m;
+  }, [sources]);
+
+  const childCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const source of sources) {
+      if (!source.parent_id) continue;
+      counts.set(source.parent_id, (counts.get(source.parent_id) ?? 0) + 1);
+    }
+    return counts;
+  }, [sources]);
+
   const statusCounts = useMemo(() => {
     const c: Record<string, number> = { all: rows.length };
     for (const { snapshot } of rows) {
@@ -566,7 +604,11 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
     if (search) {
       const q = search.toLowerCase();
       r = r.filter(({ source }) =>
-        source.name.toLowerCase().includes(q) || source.handle?.toLowerCase().includes(q)
+        source.name.toLowerCase().includes(q)
+          || source.handle?.toLowerCase().includes(q)
+          || source.id.toLowerCase().includes(q)
+          || source.parent_id?.toLowerCase().includes(q)
+          || source.source_type?.toLowerCase().includes(q)
       );
     }
     if (sortBy === "score") r = [...r].sort((a, b) => (b.snapshot?.confidence_score ?? -1) - (a.snapshot?.confidence_score ?? -1));
@@ -750,7 +792,14 @@ export function AppTab({ sources, latest }: { sources: Source[]; latest: LatestS
             [...Array(6)].map((_, i) => <SkeletonCard key={i} />)
           ) : filtered.length > 0 ? (
             filtered.map(({ source, snapshot }, i) => (
-              <SourceCard key={source.id} source={source} snapshot={snapshot} index={i} />
+              <SourceCard
+                key={source.id}
+                source={source}
+                snapshot={snapshot}
+                index={i}
+                parentSource={source.parent_id ? sourceMap.get(source.parent_id) : undefined}
+                childCount={childCounts.get(source.id) ?? 0}
+              />
             ))
           ) : (
             <div className="rounded-xl border border-dashed border-[var(--g300)] bg-[var(--g100)] p-12 text-center">
