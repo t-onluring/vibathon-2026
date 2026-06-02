@@ -113,7 +113,7 @@ function ApiPreview() {
   return (
     <div className="rounded-xl border border-[var(--g300)] bg-[var(--paper)] overflow-hidden">
       <div className="border-b border-[var(--g300)] bg-[var(--g100)] px-4 py-2.5 font-mono text-[10.5px] text-[var(--g500)] uppercase tracking-[0.08em]">
-        Static API · Phase 1.5
+        Static API · Phase 1.5 Complete
       </div>
       {endpoints.map((ep) => (
         <div

@@ -27,8 +27,8 @@ const PHASES: Phase[] = [
   {
     id: "1.5",
     label: "Phase 1.5: Parent-Child Sources",
-    desc: "Model parent-child source sudah dibakukan, topic scrape `@sijadwalkajian` fallback ke group-level only, dan closeout saat ini fokus ke region filtering + checker baseline.",
-    status: "current",
+    desc: "Model parent-child source sudah dibakukan, topic scrape `@sijadwalkajian` fallback ke group-level only, dan closeout Phase 1.5 sudah selesai.",
+    status: "done",
   },
   {
     id: "2",
@@ -67,7 +67,7 @@ export function RoadmapSection() {
     <div ref={ref} className="mb-10 rounded-2xl border border-[var(--g300)] bg-[var(--paper)] p-6">
       <p className="eyebrow mb-2">Peta Jalan</p>
       <h2 className="font-serif text-[clamp(22px,2.8vw,30px)] leading-tight text-[var(--slate)] mb-6">
-        Fase utama tetap 0-4, dengan detail internal di Phase 1.
+        Fase utama tetap 0-4, dengan Phase 1.5 sudah closed out.
       </h2>
 
       <div className="relative max-w-[680px]">
