@@ -11,6 +11,7 @@ type MappedTopicInput = {
   status: "active" | "stale" | "dead" | "blocked" | "error";
   checks: CheckItem[];
   normalized_topic_title: string;
+  ignored?: boolean;
   mapped: boolean;
   mapped_region: string | null;
   mapped_source_id: string | null;
@@ -24,13 +25,14 @@ type MappingArtifactInput = {
   summary: {
     total_topics: number;
     mapped_topics: number;
+    ignored_topics?: number;
     unmapped_topics: number;
   };
   topics: MappedTopicInput[];
 };
 
 type EvaluatedTopic = MappedTopicInput & {
-  evaluated_status: "active" | "stale" | "dead" | "blocked" | "error";
+  evaluated_status: "active" | "stale" | "dead" | "blocked" | "ignored" | "error";
   evaluation_reason: string;
   freshness_age_hours: number | null;
 };
@@ -49,6 +51,7 @@ type EvaluatedArtifact = {
     stale: number;
     dead: number;
     blocked: number;
+    ignored: number;
     error: number;
   };
   topics: EvaluatedTopic[];
@@ -82,6 +85,15 @@ function evaluateTopic(topic: MappedTopicInput): EvaluatedTopic {
       ...topic,
       evaluated_status: "error",
       evaluation_reason: "http_fetch failed from source artifact checks",
+      freshness_age_hours: ageHours,
+    };
+  }
+
+  if (topic.ignored) {
+    return {
+      ...topic,
+      evaluated_status: "ignored",
+      evaluation_reason: "topic intentionally ignored by topic-region-map policy",
       freshness_age_hours: ageHours,
     };
   }
@@ -142,6 +154,7 @@ async function main() {
     stale: topics.filter((t) => t.evaluated_status === "stale").length,
     dead: topics.filter((t) => t.evaluated_status === "dead").length,
     blocked: topics.filter((t) => t.evaluated_status === "blocked").length,
+    ignored: topics.filter((t) => t.evaluated_status === "ignored").length,
     error: topics.filter((t) => t.evaluated_status === "error").length,
   };
 

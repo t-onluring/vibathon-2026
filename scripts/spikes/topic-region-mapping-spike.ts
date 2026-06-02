@@ -31,11 +31,13 @@ type MappingFile = {
   updated_at: string;
   parent_source_id: string;
   match_mode: string;
+  ignored_topic_titles?: string[];
   rules: MappingRule[];
 };
 
 type MappedTopic = TopicFreshnessItem & {
   normalized_topic_title: string;
+  ignored: boolean;
   mapped: boolean;
   mapped_region: string | null;
   mapped_source_id: string | null;
@@ -49,6 +51,7 @@ type MappingArtifact = {
   summary: {
     total_topics: number;
     mapped_topics: number;
+    ignored_topics: number;
     unmapped_topics: number;
   };
   topics: MappedTopic[];
@@ -79,6 +82,10 @@ function buildRuleMap(rules: MappingRule[]): Map<string, MappingRule> {
   return m;
 }
 
+function buildIgnoredSet(topicTitles: string[] = []): Set<string> {
+  return new Set(topicTitles.map(normalizeTopicTitle));
+}
+
 async function main() {
   const inputRaw = await readFile(INPUT_PATH, "utf-8");
   const mapRaw = await readFile(MAP_PATH, "utf-8");
@@ -87,21 +94,25 @@ async function main() {
   const mapping = JSON.parse(mapRaw) as MappingFile;
 
   const ruleMap = buildRuleMap(mapping.rules);
+  const ignoredSet = buildIgnoredSet(mapping.ignored_topic_titles);
 
   const topics: MappedTopic[] = (input.topics ?? []).map((topic) => {
     const normalized = normalizeTopicTitle(topic.topic_title || "");
     const rule = ruleMap.get(normalized);
+    const ignored = ignoredSet.has(normalized);
 
     return {
       ...topic,
       normalized_topic_title: normalized,
-      mapped: Boolean(rule),
-      mapped_region: rule?.region ?? null,
-      mapped_source_id: rule?.source_id ?? null,
+      ignored,
+      mapped: !ignored && Boolean(rule),
+      mapped_region: ignored ? null : rule?.region ?? null,
+      mapped_source_id: ignored ? null : rule?.source_id ?? null,
     };
   });
 
   const mappedCount = topics.filter((t) => t.mapped).length;
+  const ignoredCount = topics.filter((t) => t.ignored).length;
 
   const output: MappingArtifact = {
     generated_at: new Date().toISOString(),
@@ -111,7 +122,8 @@ async function main() {
     summary: {
       total_topics: topics.length,
       mapped_topics: mappedCount,
-      unmapped_topics: topics.length - mappedCount,
+      ignored_topics: ignoredCount,
+      unmapped_topics: topics.length - mappedCount - ignoredCount,
     },
     topics,
   };
