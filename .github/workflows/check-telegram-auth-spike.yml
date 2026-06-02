@@ -76,6 +76,7 @@ jobs:
           JS
 
       - name: Upload spike artifacts
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: telegram-auth-topic-freshness
