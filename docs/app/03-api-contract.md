@@ -1,9 +1,10 @@
 # API Contract (Static API v1)
 
 ## Scope v1
-Kontrak publik v1 hanya publish dua file:
-1. `data/sources.json`
-2. `data/latest.json`
+Kontrak publik v1 publish tiga endpoint statis:
+1. `GET /v1/sources.json`
+2. `GET /v1/latest.json`
+3. `GET /v1/active.json`
 
 `data/health/YYYY-MM-DD.json` tetap boleh ada sebagai arsip internal, tapi bukan kontrak konsumsi utama v1.
 
@@ -108,3 +109,16 @@ Aturan:
 - Tidak wajib DB.
 - Tidak wajib endpoint server dinamis.
 - Tidak wajib seluruh platform punya fixture real di fase awal (boleh mulai dari `tg` + `web`).
+
+## 3) Published Static Endpoints
+
+Static API v1 dipublish sebagai file JSON statis:
+- `GET /v1/sources.json` — salinan registry resmi `data/sources.json`
+- `GET /v1/latest.json` — salinan snapshot terbaru `data/latest.json`
+- `GET /v1/active.json` — subset source registry dengan snapshot `status = "active"`
+
+`active.json` wajib berisi:
+- `generated_at`
+- `version`
+- `total_sources`
+- `sources[]`

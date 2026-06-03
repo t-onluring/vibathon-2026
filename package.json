@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run generate:api && next build",
     "start": "next start",
     "lint": "eslint",
     "check:telegram": "tsx scripts/check-telegram.ts",
@@ -13,6 +13,7 @@
     "check:source-links": "node scripts/check-source-links.mjs",
     "check:snapshot-relations": "node scripts/check-snapshot-relations.mjs",
     "check:versioning": "node scripts/check-versioning.mjs",
+    "generate:api": "node scripts/generate-api.mjs",
     "spike:topic-freshness": "tsx scripts/spikes/telegram-topic-freshness-spike.ts",
     "spike:topic-mapping": "tsx scripts/spikes/topic-region-mapping-spike.ts",
     "spike:topic-evaluate": "tsx scripts/spikes/topic-freshness-status-evaluator-spike.ts",

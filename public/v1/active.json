@@ -1,0 +1,256 @@
+{
+  "generated_at": "2026-06-02T04:20:55.343Z",
+  "version": "v1.0.0",
+  "total_sources": 11,
+  "sources": [
+    {
+      "id": "tg-mthilyatunnisa",
+      "name": "MT Hilyatunnisa",
+      "platform": "tg",
+      "url": "https://t.me/mthilyatunnisa",
+      "handle": "mthilyatunnisa",
+      "category": [
+        "komunitas",
+        "akhwat"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "majelis-taklim",
+        "akhwat",
+        "kajian"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Majelis Taklim Akhwat",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-kajianustadzafifi",
+      "name": "Kajian Ustadz Afifi Abdul Wadud",
+      "platform": "tg",
+      "url": "https://t.me/KajianustadzAfifi",
+      "handle": "KajianustadzAfifi",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "ustadz",
+        "afifi-abdul-wadud",
+        "artikel"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Official/Unofficial channel Ustadz Afifi Abdul Wadud",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-gresikmengaji",
+      "name": "Gresik Mengaji",
+      "platform": "tg",
+      "url": "https://t.me/gresikmengaji",
+      "handle": "gresikmengaji",
+      "category": [
+        "aggregator",
+        "komunitas"
+      ],
+      "region": "gresik",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "jadwal",
+        "kajian",
+        "gresik"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Gresik regional aggregator",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-khalidbasalamahofficial",
+      "name": "Ust. Khalid Basalamah Official",
+      "platform": "tg",
+      "url": "https://t.me/khalidbasalamahofficial",
+      "handle": "khalidbasalamahofficial",
+      "category": [
+        "ustadz",
+        "media"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "ustadz",
+        "khalid-basalamah",
+        "khb"
+      ],
+      "verified": true,
+      "added_at": "2026-05-16",
+      "notes": "Ustadz Khalid Basalamah official Telegram channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-fawaid-kangaswad",
+      "name": "Fawaid Kang Aswad",
+      "platform": "tg",
+      "url": "https://t.me/fawaid_kangaswad",
+      "handle": "fawaid_kangaswad",
+      "category": [
+        "media",
+        "artikel"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "fawaid",
+        "faedah",
+        "artikel"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Kumpulan fawaid dan artikel ringkas",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-muflihsafitraofficial",
+      "name": "Ust. Muflih Safitra Official",
+      "platform": "tg",
+      "url": "https://t.me/muflihsafitraofficial",
+      "handle": "muflihsafitraofficial",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "region": "balikpapan",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "ustadz",
+        "muflih-safitra",
+        "audio"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Ustadz Muflih Safitra official channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-jadwalkajiankaskus",
+      "name": "Jadwal Kajian Kaskus",
+      "platform": "tg",
+      "url": "https://t.me/jadwal_kajian_kaskus",
+      "handle": "jadwal_kajian_kaskus",
+      "category": [
+        "aggregator"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "jadwal",
+        "kajian"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-infokajiansunnahsby",
+      "name": "Info Kajian Sunnah Surabaya",
+      "platform": "tg",
+      "url": "https://t.me/infokajiansunnahsby",
+      "handle": "infokajiansunnahsby",
+      "category": [
+        "aggregator",
+        "kajian"
+      ],
+      "region": "surabaya",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "jadwal",
+        "kajian",
+        "surabaya"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Surabaya regional aggregator candidate",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-rodjatv",
+      "name": "Rodja TV",
+      "platform": "tg",
+      "url": "https://t.me/rodjatv",
+      "handle": "rodjatv",
+      "category": [
+        "media",
+        "tv-streaming"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "radio",
+        "tv",
+        "broadcast"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Radio Rodja official channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-yufidtv",
+      "name": "Yufid TV",
+      "platform": "tg",
+      "url": "https://t.me/yufidtv",
+      "handle": "yufidtv",
+      "category": [
+        "media",
+        "video"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "video",
+        "ceramah"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Yufid Network channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-muslimorid",
+      "name": "Muslim.or.id",
+      "platform": "tg",
+      "url": "https://t.me/muslimorid",
+      "handle": "muslimorid",
+      "category": [
+        "media",
+        "artikel"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "artikel",
+        "fatwa"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Muslim.or.id official",
+      "source_type": "channel"
+    }
+  ]
+}

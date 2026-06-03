@@ -25,11 +25,14 @@ jobs:
       - name: Run Telegram health check
         run: npm run check:telegram
 
+      - name: Generate static API
+        run: npm run generate:api
+
       - name: Commit snapshot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/latest.json data/health/*.json
+          git add data/latest.json data/health/*.json public/v1/*.json
           if git diff --staged --quiet; then
             echo "No data changes."
           else

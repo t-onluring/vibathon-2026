@@ -1,0 +1,731 @@
+{
+  "$schema": "./schema.json",
+  "version": "0.1.0",
+  "updated_at": "2026-05-11",
+  "license": "CC-BY-SA-4.0",
+  "sources": [
+    {
+      "id": "tg-mthilyatunnisa",
+      "name": "MT Hilyatunnisa",
+      "platform": "tg",
+      "url": "https://t.me/mthilyatunnisa",
+      "handle": "mthilyatunnisa",
+      "category": [
+        "komunitas",
+        "akhwat"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "majelis-taklim",
+        "akhwat",
+        "kajian"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Majelis Taklim Akhwat",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-kajianustadzafifi",
+      "name": "Kajian Ustadz Afifi Abdul Wadud",
+      "platform": "tg",
+      "url": "https://t.me/KajianustadzAfifi",
+      "handle": "KajianustadzAfifi",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "ustadz",
+        "afifi-abdul-wadud",
+        "artikel"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Official/Unofficial channel Ustadz Afifi Abdul Wadud",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-gresikmengaji",
+      "name": "Gresik Mengaji",
+      "platform": "tg",
+      "url": "https://t.me/gresikmengaji",
+      "handle": "gresikmengaji",
+      "category": [
+        "aggregator",
+        "komunitas"
+      ],
+      "region": "gresik",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "jadwal",
+        "kajian",
+        "gresik"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Gresik regional aggregator",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-khalidbasalamahofficial",
+      "name": "Ust. Khalid Basalamah Official",
+      "platform": "tg",
+      "url": "https://t.me/khalidbasalamahofficial",
+      "handle": "khalidbasalamahofficial",
+      "category": [
+        "ustadz",
+        "media"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "ustadz",
+        "khalid-basalamah",
+        "khb"
+      ],
+      "verified": true,
+      "added_at": "2026-05-16",
+      "notes": "Ustadz Khalid Basalamah official Telegram channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-fawaid-kangaswad",
+      "name": "Fawaid Kang Aswad",
+      "platform": "tg",
+      "url": "https://t.me/fawaid_kangaswad",
+      "handle": "fawaid_kangaswad",
+      "category": [
+        "media",
+        "artikel"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "fawaid",
+        "faedah",
+        "artikel"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Kumpulan fawaid dan artikel ringkas",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-muflihsafitraofficial",
+      "name": "Ust. Muflih Safitra Official",
+      "platform": "tg",
+      "url": "https://t.me/muflihsafitraofficial",
+      "handle": "muflihsafitraofficial",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "region": "balikpapan",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "ustadz",
+        "muflih-safitra",
+        "audio"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Ustadz Muflih Safitra official channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-ngangsukawruh",
+      "name": "Ngangsu Kawruh",
+      "platform": "tg",
+      "url": "https://t.me/NgangsuKawruh",
+      "handle": "NgangsuKawruh",
+      "category": [
+        "komunitas",
+        "kajian"
+      ],
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "kajian",
+        "poster",
+        "jogja"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Kanal info kajian berbasis di Yogyakarta / Jawa Tengah",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-jadwalkajiankaskus",
+      "name": "Jadwal Kajian Kaskus",
+      "platform": "tg",
+      "url": "https://t.me/jadwal_kajian_kaskus",
+      "handle": "jadwal_kajian_kaskus",
+      "category": [
+        "aggregator"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "jadwal",
+        "kajian"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-infokajiansunnahsby",
+      "name": "Info Kajian Sunnah Surabaya",
+      "platform": "tg",
+      "url": "https://t.me/infokajiansunnahsby",
+      "handle": "infokajiansunnahsby",
+      "category": [
+        "aggregator",
+        "kajian"
+      ],
+      "region": "surabaya",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "jadwal",
+        "kajian",
+        "surabaya"
+      ],
+      "verified": false,
+      "added_at": "2026-05-16",
+      "notes": "Surabaya regional aggregator candidate",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-jadwalkajiansunnah",
+      "name": "Jadwal Kajian Sunnah",
+      "platform": "tg",
+      "url": "https://t.me/jadwalkajiansunnah",
+      "handle": "jadwalkajiansunnah",
+      "category": [
+        "aggregator",
+        "kajian"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "jadwal",
+        "sunnah"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Primary TG aggregator candidate untuk Phase 1",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-rodjatv",
+      "name": "Rodja TV",
+      "platform": "tg",
+      "url": "https://t.me/rodjatv",
+      "handle": "rodjatv",
+      "category": [
+        "media",
+        "tv-streaming"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "radio",
+        "tv",
+        "broadcast"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Radio Rodja official channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-yufidtv",
+      "name": "Yufid TV",
+      "platform": "tg",
+      "url": "https://t.me/yufidtv",
+      "handle": "yufidtv",
+      "category": [
+        "media",
+        "video"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "video",
+        "ceramah"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Yufid Network channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-muslimorid",
+      "name": "Muslim.or.id",
+      "platform": "tg",
+      "url": "https://t.me/muslimorid",
+      "handle": "muslimorid",
+      "category": [
+        "media",
+        "artikel"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "artikel",
+        "fatwa"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Muslim.or.id official",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-bbgalilmu",
+      "name": "BBG Al-Ilmu",
+      "platform": "tg",
+      "url": "https://t.me/bbgalilmu",
+      "handle": "bbgalilmu",
+      "category": [
+        "komunitas",
+        "kajian"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "kajian",
+        "ilmu"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Bimbingan Belajar Group Al-Ilmu",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-kajianislampedia",
+      "name": "Kajian Islam Pedia",
+      "platform": "tg",
+      "url": "https://t.me/kajianislampedia",
+      "handle": "kajianislampedia",
+      "category": [
+        "aggregator"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 3,
+      "tags": [
+        "kajian"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Pending review reliability",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-jadwalkajianid",
+      "name": "Jadwal Kajian (Legacy)",
+      "platform": "tg",
+      "url": "https://t.me/jadwalkajianID",
+      "handle": "jadwalkajianID",
+      "category": [
+        "aggregator",
+        "legacy"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 4,
+      "tags": [
+        "jadwal",
+        "stale"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Last update 2023-10-30. 4.35K subs but DEAD. Demo case for stale detection.",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-jadwalkajian-id",
+      "name": "Jadwal Kajian ID (Legacy v2)",
+      "platform": "tg",
+      "url": "https://t.me/JadwalKajian_id",
+      "handle": "JadwalKajian_id",
+      "category": [
+        "aggregator",
+        "legacy"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 4,
+      "tags": [
+        "jadwal",
+        "dead"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Last update 2021-06-16. Dead since >4 years. Demo case.",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-syafiqrizabasalamah",
+      "name": "Syafiq Riza Basalamah (Unofficial)",
+      "platform": "tg",
+      "url": "https://t.me/syafiqrizabasalamah",
+      "handle": "syafiqrizabasalamah",
+      "category": [
+        "ustadz"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 4,
+      "tags": [
+        "ustadz",
+        "dead"
+      ],
+      "verified": false,
+      "added_at": "2026-05-11",
+      "notes": "Likely abandoned (last 2017, 83 subs). Investigate official channel.",
+      "source_type": "channel"
+    },
+    {
+      "id": "tg-hsi-abdullahroy",
+      "name": "HSI AbdullahRoy",
+      "platform": "tg",
+      "url": "https://t.me/hsi_abdullahroy",
+      "handle": "hsi_abdullahroy",
+      "category": [
+        "hsi-official",
+        "kajian"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "hsi",
+        "official"
+      ],
+      "verified": false,
+      "added_at": "2026-05-11",
+      "notes": "Verify if this is the real HSI official TG channel",
+      "source_type": "channel"
+    },
+    {
+      "id": "web-portalkajian",
+      "name": "PortalKajian.online",
+      "platform": "web",
+      "url": "https://portalkajian.online",
+      "handle": "portalkajian",
+      "category": [
+        "aggregator",
+        "web"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "aggregator",
+        "geo",
+        "api"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Has /api/kajian (3009 records) but Disallow:/api in robots. Outreach WA: 6281392135904",
+      "partnership_status": "needs_outreach",
+      "has_api": true,
+      "source_type": "site"
+    },
+    {
+      "id": "web-jadwalkajian-com",
+      "name": "JadwalKajian.com",
+      "platform": "web",
+      "url": "https://jadwalkajian.com",
+      "handle": "jadwalkajian",
+      "category": [
+        "aggregator",
+        "web"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "aggregator",
+        "android-app"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Has companion Android app",
+      "source_type": "site"
+    },
+    {
+      "id": "web-forumkajian",
+      "name": "Forum Kajian",
+      "platform": "web",
+      "url": "https://forumkajian.com",
+      "handle": "forumkajian",
+      "category": [
+        "aggregator",
+        "web"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "forum",
+        "android-app",
+        "audio"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Email: info@forumkajian.com. Multi Android app suite.",
+      "source_type": "site"
+    },
+    {
+      "id": "web-cintasedekah",
+      "name": "Cinta Sedekah",
+      "platform": "web",
+      "url": "https://cintasedekah.org",
+      "handle": "cintasedekah",
+      "category": [
+        "aggregator",
+        "media"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "islami",
+        "kajian"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Long-running Islamic content aggregator",
+      "source_type": "site"
+    },
+    {
+      "id": "web-hsi",
+      "name": "HSI (Halaqah Silsilah Ilmiyyah)",
+      "platform": "web",
+      "url": "https://hsi.id",
+      "handle": "hsi",
+      "category": [
+        "hsi-official",
+        "education"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "hsi",
+        "official",
+        "ecosystem"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "notes": "Official HSI hub with 16+ divisi",
+      "source_type": "site"
+    },
+    {
+      "id": "ig-hsi-abdullahroy",
+      "name": "HSI AbdullahRoy (Instagram)",
+      "platform": "ig",
+      "url": "https://instagram.com/hsi.abdullahroy",
+      "handle": "hsi.abdullahroy",
+      "category": [
+        "hsi-official",
+        "kajian"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "hsi",
+        "official"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "monitor_status": "not_yet_monitored",
+      "notes": "IG monitoring deferred to Phase 2",
+      "source_type": "profile"
+    },
+    {
+      "id": "ig-hsiberbagi",
+      "name": "HSI Berbagi",
+      "platform": "ig",
+      "url": "https://instagram.com/hsiberbagi",
+      "handle": "hsiberbagi",
+      "category": [
+        "hsi-official",
+        "donasi"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "hsi",
+        "donasi"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "monitor_status": "not_yet_monitored",
+      "notes": "HSI Berbagi divisi",
+      "source_type": "profile"
+    },
+    {
+      "id": "ig-bmthsi",
+      "name": "BMT HSI",
+      "platform": "ig",
+      "url": "https://instagram.com/bmthsi",
+      "handle": "bmthsi",
+      "category": [
+        "hsi-official",
+        "ekonomi"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "hsi",
+        "syariah"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "monitor_status": "not_yet_monitored",
+      "notes": "BMT HSI - kredit syariah",
+      "source_type": "profile"
+    },
+    {
+      "id": "ig-majalahhsi",
+      "name": "Majalah HSI",
+      "platform": "ig",
+      "url": "https://instagram.com/majalahhsi",
+      "handle": "majalahhsi",
+      "category": [
+        "hsi-official",
+        "media"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "hsi",
+        "majalah"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "monitor_status": "not_yet_monitored",
+      "notes": "Majalah HSI online",
+      "source_type": "profile"
+    },
+    {
+      "id": "ig-hsikibar",
+      "name": "HSI Kibar",
+      "platform": "ig",
+      "url": "https://instagram.com/hsikibar",
+      "handle": "hsikibar",
+      "category": [
+        "hsi-official",
+        "anak"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "hsi",
+        "anak"
+      ],
+      "verified": true,
+      "added_at": "2026-05-11",
+      "monitor_status": "not_yet_monitored",
+      "notes": "HSI Kibar - kajian anak",
+      "source_type": "profile"
+    },
+    {
+      "id": "tg-sijadwalkajian",
+      "name": "Sijadwal Kajian",
+      "platform": "tg",
+      "source_type": "group",
+      "url": "https://t.me/sijadwalkajian",
+      "handle": "sijadwalkajian",
+      "category": [
+        "aggregator",
+        "kajian"
+      ],
+      "region": "nasional",
+      "language": "id",
+      "priority": 1,
+      "tags": [
+        "jadwal",
+        "kajian"
+      ],
+      "verified": true,
+      "added_at": "2026-05-17",
+      "notes": "Parent Telegram forum group for city topics."
+    },
+    {
+      "id": "tg-sijadwalkajian-jakarta",
+      "name": "Sijadwal Kajian - Jakarta",
+      "platform": "tg",
+      "source_type": "topic",
+      "parent_id": "tg-sijadwalkajian",
+      "topic_id": "REPLACE_WITH_REAL_TOPIC_ID",
+      "url": "https://t.me/sijadwalkajian/REPLACE_WITH_REAL_TOPIC_ID",
+      "handle": "sijadwalkajian",
+      "category": [
+        "kajian",
+        "city"
+      ],
+      "region": "jakarta",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "topic",
+        "city"
+      ],
+      "verified": false,
+      "added_at": "2026-05-17",
+      "notes": "Topic placeholder pending real numeric topic_id verification."
+    },
+    {
+      "id": "tg-sijadwalkajian-surabaya",
+      "name": "Sijadwal Kajian - Surabaya",
+      "platform": "tg",
+      "source_type": "topic",
+      "parent_id": "tg-sijadwalkajian",
+      "topic_id": "REPLACE_WITH_REAL_TOPIC_ID",
+      "url": "https://t.me/sijadwalkajian/REPLACE_WITH_REAL_TOPIC_ID",
+      "handle": "sijadwalkajian",
+      "category": [
+        "kajian",
+        "city"
+      ],
+      "region": "surabaya",
+      "language": "id",
+      "priority": 2,
+      "tags": [
+        "topic",
+        "city"
+      ],
+      "verified": false,
+      "added_at": "2026-05-17",
+      "notes": "Topic placeholder pending real numeric topic_id verification."
+    }
+  ]
+}

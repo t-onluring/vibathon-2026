@@ -1,0 +1,776 @@
+{
+  "generated_at": "2026-06-02T04:20:55.343Z",
+  "version": "v1.0.0",
+  "total_sources": 32,
+  "monitored_sources": 20,
+  "by_status": {
+    "active": 11,
+    "stale": 0,
+    "dead": 7,
+    "blocked": 2,
+    "error": 0,
+    "unmonitored": 12
+  },
+  "snapshots": [
+    {
+      "source_id": "tg-mthilyatunnisa",
+      "last_checked_at": "2026-06-02T04:18:33.783Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @mthilyatunnisa"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=6100, last_post=2026-06-02T03:31:35.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T03:31:35.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 6100,
+        "last_post_at": "2026-06-02T03:31:35.000Z",
+        "last_post_age_hours": 0.8
+      }
+    },
+    {
+      "source_id": "tg-kajianustadzafifi",
+      "last_checked_at": "2026-06-02T04:18:42.190Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @KajianustadzAfifi"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=2140, last_post=2026-06-02T02:51:17.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T02:51:17.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 2140,
+        "last_post_at": "2026-06-02T02:51:17.000Z",
+        "last_post_age_hours": 1.5
+      }
+    },
+    {
+      "source_id": "tg-gresikmengaji",
+      "last_checked_at": "2026-06-02T04:18:48.342Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @gresikmengaji"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=550, last_post=2026-06-02T01:07:15.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T01:07:15.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 550,
+        "last_post_at": "2026-06-02T01:07:15.000Z",
+        "last_post_age_hours": 3.2
+      }
+    },
+    {
+      "source_id": "tg-khalidbasalamahofficial",
+      "last_checked_at": "2026-06-02T04:18:54.198Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @khalidbasalamahofficial"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=74300, last_post=2026-06-01T22:08:01.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-01T22:08:01.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 74300,
+        "last_post_at": "2026-06-01T22:08:01.000Z",
+        "last_post_age_hours": 6.2
+      }
+    },
+    {
+      "source_id": "tg-fawaid-kangaswad",
+      "last_checked_at": "2026-06-02T04:19:02.331Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @fawaid_kangaswad"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=13400, last_post=2026-06-01T22:51:48.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-01T22:51:48.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 13400,
+        "last_post_at": "2026-06-01T22:51:48.000Z",
+        "last_post_age_hours": 5.5
+      }
+    },
+    {
+      "source_id": "tg-muflihsafitraofficial",
+      "last_checked_at": "2026-06-02T04:19:08.101Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @muflihsafitraofficial"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=8210, last_post=2026-06-02T04:00:48.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T04:00:48.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 8210,
+        "last_post_at": "2026-06-02T04:00:48.000Z",
+        "last_post_age_hours": 0.3
+      }
+    },
+    {
+      "source_id": "tg-ngangsukawruh",
+      "last_checked_at": "2026-06-02T04:19:14.062Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @NgangsuKawruh"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=3790, last_post=2026-03-07T18:31:19.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-03-07T18:31:19.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 3790,
+        "last_post_at": "2026-03-07T18:31:19.000Z",
+        "last_post_age_hours": 2073.8
+      }
+    },
+    {
+      "source_id": "tg-jadwalkajiankaskus",
+      "last_checked_at": "2026-06-02T04:19:19.927Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @jadwal_kajian_kaskus"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=110, last_post=2026-06-01T15:24:12.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-01T15:24:12.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 110,
+        "last_post_at": "2026-06-01T15:24:12.000Z",
+        "last_post_age_hours": 12.9
+      }
+    },
+    {
+      "source_id": "tg-infokajiansunnahsby",
+      "last_checked_at": "2026-06-02T04:19:25.749Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @infokajiansunnahsby"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=834, last_post=2026-06-02T00:42:21.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T00:42:21.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 834,
+        "last_post_at": "2026-06-02T00:42:21.000Z",
+        "last_post_age_hours": 3.6
+      }
+    },
+    {
+      "source_id": "tg-jadwalkajiansunnah",
+      "last_checked_at": "2026-06-02T04:19:33.904Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @jadwalkajiansunnah"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=2170, last_post=2026-02-09T09:39:36.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-02-09T09:39:36.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 2170,
+        "last_post_at": "2026-02-09T09:39:36.000Z",
+        "last_post_age_hours": 2706.7
+      }
+    },
+    {
+      "source_id": "tg-rodjatv",
+      "last_checked_at": "2026-06-02T04:19:39.839Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @rodjatv"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=10600, last_post=2026-06-02T02:58:00.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T02:58:00.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 10600,
+        "last_post_at": "2026-06-02T02:58:00.000Z",
+        "last_post_age_hours": 1.4
+      }
+    },
+    {
+      "source_id": "tg-yufidtv",
+      "last_checked_at": "2026-06-02T04:19:45.919Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @yufidtv"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=27300, last_post=2026-06-01T14:42:10.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-01T14:42:10.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 27300,
+        "last_post_at": "2026-06-01T14:42:10.000Z",
+        "last_post_age_hours": 13.6
+      }
+    },
+    {
+      "source_id": "tg-muslimorid",
+      "last_checked_at": "2026-06-02T04:19:54.413Z",
+      "platform": "tg",
+      "status": "active",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @muslimorid"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=34200, last_post=2026-06-02T02:51:18.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2026-06-02T02:51:18.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 34200,
+        "last_post_at": "2026-06-02T02:51:18.000Z",
+        "last_post_age_hours": 1.5
+      }
+    },
+    {
+      "source_id": "tg-bbgalilmu",
+      "last_checked_at": "2026-06-02T04:20:00.203Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @bbgalilmu"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=3230, last_post=2025-07-09T12:06:03.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2025-07-09T12:06:03.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 3230,
+        "last_post_at": "2025-07-09T12:06:03.000Z",
+        "last_post_age_hours": 7864.2
+      }
+    },
+    {
+      "source_id": "tg-kajianislampedia",
+      "last_checked_at": "2026-06-02T04:20:08.774Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @kajianislampedia"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=n/a, last_post=2024-01-23T03:31:01.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2024-01-23T03:31:01.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": null,
+        "last_post_at": "2024-01-23T03:31:01.000Z",
+        "last_post_age_hours": 20664.8
+      }
+    },
+    {
+      "source_id": "tg-jadwalkajianid",
+      "last_checked_at": "2026-06-02T04:20:14.444Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @jadwalkajianID"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=4270, last_post=2023-10-30T05:39:00.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2023-10-30T05:39:00.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 4270,
+        "last_post_at": "2023-10-30T05:39:00.000Z",
+        "last_post_age_hours": 22702.7
+      }
+    },
+    {
+      "source_id": "tg-jadwalkajian-id",
+      "last_checked_at": "2026-06-02T04:20:20.332Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @JadwalKajian_id"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=574, last_post=2021-06-16T22:22:10.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2021-06-16T22:22:10.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 574,
+        "last_post_at": "2021-06-16T22:22:10.000Z",
+        "last_post_age_hours": 43470
+      }
+    },
+    {
+      "source_id": "tg-syafiqrizabasalamah",
+      "last_checked_at": "2026-06-02T04:20:32.901Z",
+      "platform": "tg",
+      "status": "dead",
+      "confidence_score": 1,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @syafiqrizabasalamah"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=81, last_post=2017-05-31T02:03:16.000Z)"
+        },
+        {
+          "name": "freshness",
+          "ok": true,
+          "details": "Last post detected at 2017-05-31T02:03:16.000Z"
+        }
+      ],
+      "metrics": {
+        "subscribers": 81,
+        "last_post_at": "2017-05-31T02:03:16.000Z",
+        "last_post_age_hours": 78938.3
+      }
+    },
+    {
+      "source_id": "tg-hsi-abdullahroy",
+      "last_checked_at": "2026-06-02T04:20:38.943Z",
+      "platform": "tg",
+      "status": "blocked",
+      "confidence_score": 0.4,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @hsi_abdullahroy"
+        },
+        {
+          "name": "content_parse",
+          "ok": false,
+          "details": "Public HTML did not expose parsable Telegram metrics"
+        },
+        {
+          "name": "freshness",
+          "ok": false,
+          "details": "No last post timestamp detected in public HTML"
+        }
+      ],
+      "metrics": {
+        "subscribers": null,
+        "last_post_at": null,
+        "last_post_age_hours": null
+      }
+    },
+    {
+      "source_id": "tg-sijadwalkajian",
+      "last_checked_at": "2026-06-02T04:20:47.577Z",
+      "platform": "tg",
+      "status": "blocked",
+      "confidence_score": 0.75,
+      "checks": [
+        {
+          "name": "http_fetch",
+          "ok": true,
+          "details": "Fetched public Telegram preview for @sijadwalkajian"
+        },
+        {
+          "name": "content_parse",
+          "ok": true,
+          "details": "Parsed metrics from public HTML (subs=49, last_post=n/a)"
+        },
+        {
+          "name": "freshness",
+          "ok": false,
+          "details": "No last post timestamp detected. Public Telegram HTML only exposed the group join gate / member count."
+        }
+      ],
+      "metrics": {
+        "subscribers": 49,
+        "last_post_at": null,
+        "last_post_age_hours": null
+      }
+    },
+    {
+      "source_id": "web-portalkajian",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "web",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for web/site in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "web-jadwalkajian-com",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "web",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for web/site in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "web-forumkajian",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "web",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for web/site in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "web-cintasedekah",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "web",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for web/site in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "web-hsi",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "web",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for web/site in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "ig-hsi-abdullahroy",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "ig",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for ig/profile in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "ig-hsiberbagi",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "ig",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for ig/profile in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "ig-bmthsi",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "ig",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for ig/profile in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "ig-majalahhsi",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "ig",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for ig/profile in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "ig-hsikibar",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "ig",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for ig/profile in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "tg-sijadwalkajian-jakarta",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "tg",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for tg/topic in this phase"
+        }
+      ],
+      "metrics": {}
+    },
+    {
+      "source_id": "tg-sijadwalkajian-surabaya",
+      "last_checked_at": "2026-06-02T04:18:33.782Z",
+      "platform": "tg",
+      "status": "unmonitored",
+      "confidence_score": 0,
+      "checks": [
+        {
+          "name": "monitoring",
+          "ok": false,
+          "details": "No active checker strategy for tg/topic in this phase"
+        }
+      ],
+      "metrics": {}
+    }
+  ]
+}
