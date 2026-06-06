@@ -253,3 +253,20 @@ body {
   font-size: 12px;
   margin-bottom: 2px;
 }
+
+/* Keep Leaflet layers below the sticky app navigation (nav z-index: 30). */
+.region-leaflet-shell .leaflet-container {
+  z-index: 0;
+  background: var(--g100);
+}
+.region-leaflet-shell .leaflet-pane { z-index: 1; }
+.region-leaflet-shell .leaflet-tile-pane { z-index: 1; }
+.region-leaflet-shell .leaflet-overlay-pane { z-index: 2; }
+.region-leaflet-shell .leaflet-shadow-pane { z-index: 3; }
+.region-leaflet-shell .leaflet-marker-pane { z-index: 4; }
+.region-leaflet-shell .leaflet-tooltip-pane { z-index: 5; }
+.region-leaflet-shell .leaflet-popup-pane { z-index: 6; }
+.region-leaflet-shell .leaflet-top,
+.region-leaflet-shell .leaflet-bottom {
+  z-index: 10;
+}

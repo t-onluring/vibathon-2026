@@ -655,6 +655,7 @@ function LeafletRegionMap({
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayerRef = useRef<LayerGroup | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [tilesReady, setTilesReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -672,13 +673,17 @@ function LeafletRegionMap({
         scrollWheelZoom: false,
       });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(map);
+      })
+        .on("loading", () => setTilesReady(false))
+        .on("load", () => setTilesReady(true))
+        .addTo(map);
 
       markerLayerRef.current = L.layerGroup().addTo(map);
       mapRef.current = map;
       setMapReady(true);
+      setTilesReady(tileLayer.isLoading ? !tileLayer.isLoading() : true);
     }
 
     initMap();
@@ -744,8 +749,15 @@ function LeafletRegionMap({
   }, [mapReady, summaries, selectedRegion, onSelectRegion, onHoverRegion]);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-[var(--g300)] bg-[var(--g100)]">
+    <div className="region-leaflet-shell relative isolate overflow-hidden rounded-lg border border-[var(--g300)] bg-[var(--g100)]">
       <div ref={containerRef} className="h-[280px] w-full sm:h-[340px]" aria-label="Peta Leaflet health source kajian per region Indonesia" />
+      {(!mapReady || !tilesReady) && (
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-[var(--paper)]/80 backdrop-blur-[1px]">
+          <div className="rounded-full border border-[var(--g300)] bg-[var(--ivory)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--g600)] shadow-sm">
+            Loading map…
+          </div>
+        </div>
+      )}
     </div>
   );
 }
