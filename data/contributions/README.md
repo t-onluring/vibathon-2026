@@ -35,3 +35,41 @@ Untuk topic Telegram, tambahkan:
   "topic_id": "201"
 }
 ```
+
+## Maintainer Workflow
+
+Review semua pending file:
+
+```bash
+npm run review:contributions
+```
+
+Preview promote satu file. Command ini default **dry-run** dan tidak mengubah file:
+
+```bash
+npm run promote:contribution data/contributions/pending/<slug>.json
+```
+
+Apply promote secara eksplisit:
+
+```bash
+npm run promote:contribution data/contributions/pending/<slug>.json -- --apply
+```
+
+Saat apply, script akan:
+
+- menambahkan source ke `data/sources.json`
+- update `updated_at`
+- memindahkan pending file ke `data/contributions/archive/promoted/`
+
+Untuk topic Telegram, generated ID memakai format topic-aware:
+
+```txt
+tg-<parent-without-platform-prefix>-topic-<topic_id>
+```
+
+Contoh:
+
+```txt
+tg-sijadwalkajian-topic-201
+```

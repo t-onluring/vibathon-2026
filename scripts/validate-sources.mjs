@@ -34,8 +34,8 @@ function isValidUrl(value) {
 }
 
 async function main() {
-  const fileUrl = new URL("../data/sources.json", import.meta.url);
-  const raw = await readFile(fileUrl, "utf-8");
+  const filePath = process.env.SOURCES_PATH ?? new URL("../data/sources.json", import.meta.url);
+  const raw = await readFile(filePath, "utf-8");
   const data = JSON.parse(raw);
 
   if (!Array.isArray(data.sources)) {

@@ -82,6 +82,50 @@ Setiap entri source minimal wajib memiliki:
 - `priority` (number)
 - `added_at` (format `YYYY-MM-DD`)
 
+### Maintainer Promote Flow
+
+Gunakan script untuk mengurangi copy-edit manual dari pending contribution ke registry resmi.
+
+1. Review semua pending contribution:
+
+   ```bash
+   npm run review:contributions
+   ```
+
+2. Preview satu file yang akan dipromote. Default mode adalah **dry-run** dan tidak menulis file:
+
+   ```bash
+   npm run promote:contribution data/contributions/pending/<slug>.json
+   ```
+
+3. Jika preview sudah benar, apply promotion secara eksplisit:
+
+   ```bash
+   npm run promote:contribution data/contributions/pending/<slug>.json -- --apply
+   ```
+
+4. Jalankan validasi akhir:
+
+   ```bash
+   npm run validate:contributions
+   npm run validate:sources
+   npm run lint
+   npm run build
+   ```
+
+Saat `--apply`, script akan:
+
+- generate `id` resmi
+- append entry ke `data/sources.json`
+- update top-level `updated_at`
+- memindahkan pending file ke `data/contributions/archive/promoted/`
+
+Untuk Telegram topic, ID dibuat topic-aware, misalnya:
+
+```txt
+tg-sijadwalkajian-topic-201
+```
+
 ### Rules Review
 
 PR akan ditahan bila:
