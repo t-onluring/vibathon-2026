@@ -20,7 +20,9 @@
   --g100:   #F0EEE6;
   --g200:   #E6E3DA;
   --g300:   #D1CFC5;
+  --g400:   #A8A69E;
   --g500:   #87867F;
+  --g600:   #5D5C57;
   --g700:   #3D3D3A;
 
   /* Font stacks */
@@ -48,7 +50,9 @@
   --g100:   #242219;
   --g200:   #2E2B25;
   --g300:   #3D3A32;
+  --g400:   #5C5A54;
   --g500:   #8C8B83;
+  --g600:   #A8A59B;
   --g700:   #C8C5BA;
 }
 
@@ -66,7 +70,9 @@
   --color-g100:      var(--g100);
   --color-g200:      var(--g200);
   --color-g300:      var(--g300);
+  --color-g400:      var(--g400);
   --color-g500:      var(--g500);
+  --color-g600:      var(--g600);
   --color-g700:      var(--g700);
 
   --font-display: var(--font-display-stack);

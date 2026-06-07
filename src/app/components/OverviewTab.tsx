@@ -174,7 +174,7 @@ function DataPipelineCards() {
             </span>
           </div>
           <div className="mb-2 font-mono text-[11px] text-[var(--clay)] break-all">{pipeline.file}</div>
-          <p className="text-[12.5px] leading-relaxed text-[var(--g600)]">{pipeline.desc}</p>
+          <p className="text-[12.5px] leading-relaxed text-[var(--g700)]">{pipeline.desc}</p>
         </div>
       ))}
     </div>
@@ -312,8 +312,8 @@ export function OverviewTab({
           <div className="mt-7 flex flex-wrap gap-6">
               {[
                 { label: "Total Sources", value: total, color: "var(--slate)" },
-                { label: "Active", value: active, color: "var(--olive)" },
-                { label: "Monitored", value: monitored, color: "#5B8FB9" },
+                { label: "Active", value: active, color: "var(--jade)" },
+                { label: "Monitored", value: monitored, color: "var(--g600)" },
             ].map((s) => (
               <div key={s.label}>
                 <span className="font-display text-[40px] leading-none font-medium" style={{ color: s.color }}>

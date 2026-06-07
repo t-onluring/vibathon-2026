@@ -57,8 +57,8 @@ const REGION_GEO_POINTS: Record<string, RegionGeoPoint> = {
 };
 
 const REGION_TONE_STYLES: Record<RegionHealthTone, { fill: string; stroke: string; text: string; label: string }> = {
-  healthy: { fill: "var(--olive)", stroke: "#556B43", text: "Healthy", label: "Healthy" },
-  risk: { fill: "var(--clay)", stroke: "var(--clay-d)", text: "Needs attention", label: "Needs attention" },
+  healthy: { fill: "var(--jade)", stroke: "#3A5E47", text: "Healthy", label: "Healthy" },
+  risk: { fill: "var(--amber)", stroke: "#9A6514", text: "Needs attention", label: "Needs attention" },
   unknown: { fill: "var(--g300)", stroke: "var(--g500)", text: "Unmonitored", label: "Unmonitored" },
 };
 
@@ -103,11 +103,11 @@ function formatRegionScore(summary: RegionHealthSummary): string {
 }
 
 const STATUS_META: Record<HealthStatus, { label: string; bg: string; fg: string; dot: string; ringColor: string }> = {
-  active:      { label: "Active",      bg: "bg-[var(--olive)]/15",  fg: "text-[var(--olive)]",  dot: "bg-[var(--olive)]",  ringColor: "#788C5D" },
-  stale:       { label: "Stale",       bg: "bg-[var(--clay)]/15",   fg: "text-[var(--clay-d)]", dot: "bg-[var(--clay)]",   ringColor: "#D97757" },
-  dead:        { label: "Dead",        bg: "bg-[var(--g300)]/40",   fg: "text-[var(--g700)]",   dot: "bg-[var(--g500)]",   ringColor: "#A0A097" },
-  blocked:     { label: "Blocked",     bg: "bg-[var(--clay)]/15",   fg: "text-[var(--clay-d)]", dot: "bg-[var(--clay-d)]", ringColor: "#B85C3E" },
-  error:       { label: "Error",       bg: "bg-[var(--clay)]/10",   fg: "text-[var(--clay-d)]", dot: "bg-[var(--clay-d)]", ringColor: "#D97757" },
+  active:      { label: "Active",      bg: "bg-[var(--jade)]/15",   fg: "text-[var(--jade)]",   dot: "bg-[var(--jade)]",   ringColor: "#4D7C5F" },
+  stale:       { label: "Stale",       bg: "bg-[var(--amber)]/15",  fg: "text-[var(--amber)]",  dot: "bg-[var(--amber)]",  ringColor: "#C4831A" },
+  dead:        { label: "Dead",        bg: "bg-[var(--rust)]/12",   fg: "text-[var(--rust)]",   dot: "bg-[var(--rust)]",   ringColor: "#B84040" },
+  blocked:     { label: "Blocked",     bg: "bg-[var(--clay)]/12",   fg: "text-[var(--clay-d)]", dot: "bg-[var(--clay-d)]", ringColor: "#B85C3E" },
+  error:       { label: "Error",       bg: "bg-[var(--rust)]/10",   fg: "text-[var(--rust)]",   dot: "bg-[var(--rust)]",   ringColor: "#B84040" },
   unmonitored: { label: "Unmonitored", bg: "bg-[var(--g100)]",      fg: "text-[var(--g500)]",   dot: "bg-[var(--g300)]",   ringColor: "#D1CFC5" },
 };
 
@@ -454,9 +454,9 @@ function TopicDiscoveryPanel({ discovery }: { discovery: TopicDiscovery | null }
         <>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-6">
             <MiniStat label="Topics" value={summary.total_topics} />
-            <MiniStat label="Active" value={summary.active} accent="olive" />
-            <MiniStat label="Stale" value={summary.stale} accent="clay" />
-            <MiniStat label="Dead" value={summary.dead} accent="clay" />
+            <MiniStat label="Active" value={summary.active} accent="jade" />
+            <MiniStat label="Stale" value={summary.stale} accent="amber" />
+            <MiniStat label="Dead" value={summary.dead} accent="rust" />
             <MiniStat label="Ignored" value={ignoredCount} accent="g500" />
             <MiniStat label="Blocked" value={blockedCount} accent="g500" />
           </div>
@@ -518,9 +518,10 @@ function TopicDiscoveryPanel({ discovery }: { discovery: TopicDiscovery | null }
   );
 }
 
-function MiniStat({ label, value, accent }: { label: string; value: number; accent?: "olive" | "clay" | "g500" }) {
-  const color = accent === "olive" ? "text-[var(--olive)]"
-    : accent === "clay" ? "text-[var(--clay-d)]"
+function MiniStat({ label, value, accent }: { label: string; value: number; accent?: "jade" | "amber" | "rust" | "g500" }) {
+  const color = accent === "jade" ? "text-[var(--jade)]"
+    : accent === "amber" ? "text-[var(--amber)]"
+    : accent === "rust" ? "text-[var(--rust)]"
     : accent === "g500" ? "text-[var(--g500)]"
     : "text-[var(--slate)]";
   return (
@@ -946,10 +947,10 @@ function SkeletonChart() {
 // ===== Score explainer ========================================
 
 const SCORE_TIERS = [
-  { range: "≥ 80", label: "Last post < 7 hari", color: "text-[var(--olive)]" },
-  { range: "50–79", label: "Last post 7–14 hari", color: "text-[var(--clay)]" },
-  { range: "1–49", label: "Last post 14–30 hari", color: "text-[var(--clay-d)]" },
-  { range: "0", label: "Last post > 30 hari atau error", color: "text-[var(--g400)]" },
+  { range: "≥ 80", label: "Last post < 7 hari", color: "text-[var(--jade)]" },
+  { range: "50–79", label: "Last post 7–14 hari", color: "text-[var(--amber)]" },
+  { range: "1–49", label: "Last post 14–30 hari", color: "text-[var(--rust)]" },
+  { range: "0", label: "Last post > 30 hari atau error", color: "text-[var(--g500)]" },
 ];
 
 function ScoreExplainer() {
@@ -1025,7 +1026,10 @@ function SourceCard({
         <div className="flex flex-wrap items-center gap-2 mb-1.5">
           <span className="font-semibold text-[15px] text-[var(--slate)] truncate max-w-[200px]">{source.name}</span>
           <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10.5px] font-mono ${meta.bg} ${meta.fg} shrink-0`}>
-            <span className={`size-1.5 rounded-full ${meta.dot} ${status === "active" ? "animate-[pulse-dot_2s_ease_infinite]" : ""}`} />
+            <span className={`size-1.5 rounded-full ${meta.dot} ${
+              status === "active" ? "animate-[pulse-active_2s_ease_infinite]" :
+              status === "stale" ? "animate-[pulse-checking_1.2s_ease_infinite]" : ""
+            }`} />
             {meta.label}
           </span>
           <span className="inline-flex items-center gap-1 text-[var(--g500)] opacity-60 shrink-0">
@@ -1068,9 +1072,10 @@ function SourceCard({
 
 // ===== Stat block in hero =====================================
 
-function Stat({ label, value, accent }: { label: string; value: number; accent?: "olive" | "clay" | "g500" }) {
-  const color = accent === "olive" ? "text-[var(--olive)]"
-    : accent === "clay" ? "text-[var(--clay-d)]"
+function Stat({ label, value, accent }: { label: string; value: number; accent?: "jade" | "amber" | "rust" | "g500" }) {
+  const color = accent === "jade" ? "text-[var(--jade)]"
+    : accent === "amber" ? "text-[var(--amber)]"
+    : accent === "rust" ? "text-[var(--rust)]"
     : accent === "g500" ? "text-[var(--g500)]"
     : "text-[var(--slate)]";
   return (
@@ -1290,8 +1295,8 @@ export function AppTab({
         {latest && (
           <div className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat label="Total" value={latest.total_sources} />
-            <Stat label="Active" value={latest.by_status.active} accent="olive" />
-            <Stat label="Stale + Dead" value={latest.by_status.stale + latest.by_status.dead} accent="clay" />
+            <Stat label="Active" value={latest.by_status.active} accent="jade" />
+            <Stat label="Stale + Dead" value={latest.by_status.stale + latest.by_status.dead} accent="amber" />
             <Stat label="Errors" value={latest.by_status.error} accent="g500" />
           </div>
         )}

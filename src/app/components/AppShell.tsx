@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OverviewTab } from "./OverviewTab";
 import { RoadmapSection } from "./RoadmapSection";
 import { AppTab } from "./AppTab";
@@ -27,6 +27,18 @@ export function AppShell({
 }) {
   const [tab, setTab] = useState<TabKey>("overview");
   const [docsOpen, setDocsOpen] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    setDark(document.documentElement.dataset.theme === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.dataset.theme = next ? "dark" : "";
+    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
+  };
 
   return (
     <div className="flex flex-1 flex-col">
@@ -62,11 +74,29 @@ export function AppShell({
               </TabButton>
             </div>
 
-            {/* Docs button */}
+            {/* Theme + Docs buttons */}
+            <div className="flex items-center gap-1.5 shrink-0 mb-1">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+              className="inline-flex items-center justify-center size-9 rounded-lg border border-[var(--g300)] bg-[var(--paper)] text-[var(--g500)] hover:border-[var(--clay)] hover:text-[var(--clay)] transition-colors"
+            >
+              {dark ? (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="7" r="3" stroke="currentColor" strokeWidth="1.3" />
+                  <path d="M7 1v1M7 12v1M1 7h1M12 7h1M3.05 3.05l.7.7M10.25 10.25l.7.7M10.25 3.75l-.7.7M3.75 10.25l-.7.7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M12 7.5A5 5 0 0 1 6.5 2a5 5 0 1 0 5.5 5.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
             <button
               type="button"
               onClick={() => setDocsOpen(true)}
-              className="mb-1 inline-flex items-center gap-2 rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3.5 py-2 text-[12.5px] font-medium text-[var(--g700)] hover:border-[var(--clay)] hover:text-[var(--clay)] transition-colors shrink-0"
+              className="inline-flex items-center gap-2 rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3.5 py-2 text-[12.5px] font-medium text-[var(--g700)] hover:border-[var(--clay)] hover:text-[var(--clay)] transition-colors"
             >
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                 <path d="M2 1.5h5.5l3.5 3.5v6.5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"
@@ -76,6 +106,7 @@ export function AppShell({
               </svg>
               <span className="hidden sm:inline">Docs</span>
             </button>
+            </div>
           </div>
         </div>
       </nav>

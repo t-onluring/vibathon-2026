@@ -24,8 +24,8 @@ const LAYERS = [
     num: "L2",
     label: "Official Registry",
     desc: "data/sources.json — source of truth curated untuk dashboard, checker, dan static API.",
-    color: "#5B8FB9",
-    colorRaw: "#5B8FB9",
+    color: "var(--slate)",
+    colorRaw: "#141413",
   },
   {
     id: "checker",
@@ -231,7 +231,7 @@ function LayerDetail({ id }: { id: string }) {
         {[
           ["telegram", "Grup & channel kajian", "var(--olive)"],
           ["instagram", "Akun dakwah sunnah", "var(--clay)"],
-          ["website", "Blog & portal kajian", "#5B8FB9"],
+          ["website", "Blog & portal kajian", "var(--olive)"],
           ["youtube", "Channel video — Phase 2", "var(--g400)"],
         ].map(([p, d, c]) => (
           <div key={String(p)} className="flex items-center gap-2">
@@ -253,9 +253,9 @@ function LayerDetail({ id }: { id: string }) {
     ),
     registry: (
       <div className="space-y-1 font-mono text-[11px] text-[var(--g600)]">
-        <div>📄 <span className="text-[#5B8FB9]">sources.json</span> — metadata</div>
-        <div>📊 <span className="text-[#5B8FB9]">latest.json</span> — snapshots</div>
-        <div>🔖 versioned via <span className="text-[#5B8FB9]">git history</span></div>
+        <div>📄 <span className="text-[var(--olive)]">sources.json</span> — metadata</div>
+        <div>📊 <span className="text-[var(--olive)]">latest.json</span> — snapshots</div>
+        <div>🔖 versioned via <span className="text-[var(--olive)]">git history</span></div>
         <div>✅ validated by CI on PR</div>
       </div>
     ),

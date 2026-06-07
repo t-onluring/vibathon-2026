@@ -45,6 +45,10 @@ export default function RootLayout({
       lang="id"
       className={`${fraunces.variable} ${plusJakartaSans.variable} ${sourceSerif4.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {/* Anti-flash: sync theme from localStorage before first paint */}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.dataset.theme='dark';}catch(e){}})();` }} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
