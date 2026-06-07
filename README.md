@@ -6,7 +6,7 @@ Layer-1 infrastructure untuk ekosistem kajian sunnah Indonesia: **open registry 
 
 - App (local/dev): `npm run dev` lalu buka `http://localhost:3000`
 - Repository: [https://github.com/t-onluring/vibathon-2026](https://github.com/t-onluring/vibathon-2026)
-- Netlify URL: _isi URL final deploy di sini_
+- Netlify URL: https://repokajian.netlify.app
 
 ## Fitur yang sudah jalan
 
