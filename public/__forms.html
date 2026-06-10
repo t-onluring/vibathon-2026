@@ -3,7 +3,7 @@
 
   Next.js (App Router) renders forms client-side, so Netlify's build-time crawler
   cannot detect them from the React markup. This static file gives Netlify a form to
-  register at build time. The in-app form (DeliveryButtons.tsx) POSTs to "/" with
+  register at build time. The in-app form (DeliveryButtons.tsx) POSTs to "/__forms.html" with
   matching field names (form-name, name, submitted_by, payload, bot-field).
 -->
 <!doctype html>

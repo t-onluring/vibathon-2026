@@ -80,12 +80,21 @@ export function DeliveryButtons({
         submitted_by: item.submitted_by,
         payload: json,
       });
-      const res = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
-      });
+
+      const submit = (url: string) =>
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString(),
+        });
+
+      // Netlify detects this form from public/__forms.html. Posting directly to
+      // that static stub is more reliable for client-rendered Next.js forms than
+      // posting to the app root, especially when a framework adapter handles `/`.
+      let res = await submit("/__forms.html");
+      if (!res.ok && res.status === 404) res = await submit("/");
       if (!res.ok) throw new Error(`status ${res.status}`);
+
       setNetlify("ok");
       setAnnounce("Terkirim ke maintainer. Review maksimal 48 jam.");
     } catch {
