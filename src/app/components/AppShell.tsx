@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, type KeyboardEvent } from "react";
 import { OverviewTab } from "./OverviewTab";
 import { RoadmapSection } from "./RoadmapSection";
 import { AppTab } from "./AppTab";
@@ -11,6 +11,15 @@ import { FeedbackFAB } from "./FeedbackFAB";
 import type { DocFile, HealthHistoryPoint, LatestSummary, Source, TopicDiscovery } from "../lib/data";
 
 type TabKey = "overview" | "roadmap" | "architecture" | "app" | "contribution";
+
+const TABS: TabKey[] = ["overview", "roadmap", "architecture", "app", "contribution"];
+const TAB_IDS: Record<TabKey, string> = {
+  overview: "tab-overview",
+  roadmap: "tab-roadmap",
+  architecture: "tab-architecture",
+  app: "tab-app",
+  contribution: "tab-contribution",
+};
 
 function subscribeTheme(listener: () => void) {
   window.addEventListener("kajian:themechange", listener);
@@ -49,11 +58,32 @@ export function AppShell({
     window.dispatchEvent(new Event("kajian:themechange"));
   };
 
+  const moveTabFocus = (nextTab: TabKey) => {
+    setTab(nextTab);
+    requestAnimationFrame(() => document.getElementById(TAB_IDS[nextTab])?.focus());
+  };
+
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const currentIndex = TABS.indexOf(tab);
+    if (currentIndex === -1) return;
+
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % TABS.length;
+    if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + TABS.length) % TABS.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = TABS.length - 1;
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      moveTabFocus(TABS[nextIndex]);
+    }
+  };
+
   return (
     <div className="flex flex-1 flex-col">
       <nav className="sticky top-0 z-30 bg-[var(--ivory)]/95 backdrop-blur border-b border-[var(--g300)]">
         <div className="mx-auto max-w-[1180px] px-8">
-          <div className="flex items-end gap-1 justify-between" role="tablist" aria-label="Main sections">
+          <div className="flex items-end gap-1 justify-between" role="tablist" aria-label="Main sections" onKeyDown={handleTabKeyDown}>
             <div className="flex items-end gap-1 overflow-x-auto">
               <TabButton id="tab-overview" controls="panel-overview" active={tab === "overview"} onClick={() => setTab("overview")}>
                 <span className="font-mono text-[10.5px] text-[var(--g500)] mr-2">01</span>
@@ -193,7 +223,7 @@ function TabButton({
       onClick={onClick}
       className={[
         "relative px-4 py-3.5 text-[13.5px] font-medium transition-colors whitespace-nowrap shrink-0",
-        "border-b-2 -mb-[1.5px]",
+        "border-b-2 -mb-[1.5px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/30 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ivory)]",
         active
           ? "border-[var(--clay)] text-[var(--slate)]"
           : "border-transparent text-[var(--g500)] hover:text-[var(--slate)]",

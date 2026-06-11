@@ -1,5 +1,6 @@
 "use client";
 
+import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DivIcon, LayerGroup, Map as LeafletMap } from "leaflet";
 import type { HealthStatus } from "../../lib/data";

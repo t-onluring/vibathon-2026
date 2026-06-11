@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import type { HealthHistoryPoint, HealthStatus, LatestSummary, Platform, Snapshot, Source, TopicDiscovery } from "../lib/data";
 import {
   getRegionLabel,
@@ -12,7 +12,6 @@ import { TrendChart } from "./app/charts";
 import { RegionHealthPanel } from "./app/region-panel";
 import { TopicDiscoveryPanel } from "./app/topic-discovery";
 import { SourceCard } from "./app/source-card";
-import { SkeletonCard, SkeletonChart } from "./app/skeletons";
 import { ScoreExplainer } from "./app/score-explainer";
 import { Stat } from "./app/stat";
 
@@ -52,18 +51,7 @@ export function AppTab({
   const [regionFilter, setRegionFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("score");
-  const [loading, setLoading] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) setTimeout(() => setLoading(false), 900); },
-      { threshold: 0.05 }
-    );
-    if (sectionRef.current) obs.observe(sectionRef.current);
-    return () => obs.disconnect();
-  }, []);
 
   const snapshotMap = useMemo(() => {
     const m = new Map<string, Snapshot>();
@@ -234,7 +222,7 @@ export function AppTab({
       </section>
 
       {/* Dashboard section */}
-      <div ref={sectionRef}>
+      <div>
 
         <RegionHealthPanel
           summaries={regionSummaries}
@@ -244,8 +232,8 @@ export function AppTab({
         />
 
         {/* Trend chart */}
-        <div className="mb-8">
-          {loading ? <SkeletonChart /> : <TrendChart data={aggregateHistory} />}
+        <div className="mb-8 animate-in fade-in duration-500">
+          <TrendChart data={aggregateHistory} />
         </div>
 
         <TopicDiscoveryPanel discovery={topicDiscovery} />
@@ -262,7 +250,7 @@ export function AppTab({
             <input
               type="text" placeholder="Search sources…"
               value={search} onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] py-2.5 pl-9 pr-3 text-[13.5px] text-[var(--slate)] outline-none focus:border-[var(--clay)] transition-colors"
+              className="w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] py-2.5 pl-9 pr-3 text-[13.5px] text-[var(--slate)] transition-colors focus-visible:border-[var(--clay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/20"
             />
           </div>
 
@@ -284,7 +272,7 @@ export function AppTab({
           {/* Sort */}
           <select
             value={sortBy} onChange={(e) => setSortBy(e.target.value as SortKey)}
-            className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2.5 text-[13px] font-mono text-[var(--slate)] outline-none cursor-pointer"
+            className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2.5 text-[13px] font-mono text-[var(--slate)] cursor-pointer focus-visible:border-[var(--clay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/20"
           >
             <option value="score">Sort: Score</option>
             <option value="name">Sort: Name</option>
@@ -362,10 +350,8 @@ export function AppTab({
         )}
 
         {/* Source list */}
-        <div className="flex flex-col gap-2">
-          {loading ? (
-            [...Array(6)].map((_, i) => <SkeletonCard key={i} />)
-          ) : filtered.length > 0 ? (
+        <div className="flex flex-col gap-2 animate-in fade-in duration-500">
+          {filtered.length > 0 ? (
             filtered.map(({ source, snapshot }, i) => (
               <SourceCard
                 key={source.id}
@@ -389,15 +375,13 @@ export function AppTab({
         </div>
 
         {/* Footer note */}
-        {!loading && (
-          <div className="mt-6 flex items-start gap-3 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-4 text-[13px] text-[var(--g700)] leading-relaxed">
-            <span className="text-base shrink-0">💡</span>
-            <span>
-              <strong>confidence_score</strong> saat ini diturunkan dari 3 check dasar: <strong>http_fetch</strong> (40%), <strong>content_parse</strong> (35%), dan <strong>freshness</strong> (25%).
-              Ini masih baseline Phase 1.5 — belum mencerminkan kualitas ekstraksi event penuh.
-            </span>
-          </div>
-        )}
+        <div className="mt-6 flex items-start gap-3 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-4 text-[13px] text-[var(--g700)] leading-relaxed">
+          <span className="text-base shrink-0">💡</span>
+          <span>
+            <strong>confidence_score</strong> saat ini diturunkan dari 3 check dasar: <strong>http_fetch</strong> (40%), <strong>content_parse</strong> (35%), dan <strong>freshness</strong> (25%).
+            Ini masih baseline Phase 1.5 — belum mencerminkan kualitas ekstraksi event penuh.
+          </span>
+        </div>
       </div>
     </div>
   );

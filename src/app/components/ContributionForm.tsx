@@ -270,8 +270,8 @@ function Field({
 
 function inputCls(error?: string): string {
   return [
-    "w-full rounded-lg border bg-[var(--paper)] px-3 py-2.5 text-[13.5px] text-[var(--slate)] outline-none min-h-[44px]",
-    "focus:border-[var(--clay)] focus:ring-2 focus:ring-[var(--clay)]/20",
+    "w-full rounded-lg border bg-[var(--paper)] px-3 py-2.5 text-[13.5px] text-[var(--slate)] min-h-[44px]",
+    "focus-visible:border-[var(--clay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/20",
     error ? "border-[#B4493B]" : "border-[var(--g300)]",
   ].join(" ");
 }
