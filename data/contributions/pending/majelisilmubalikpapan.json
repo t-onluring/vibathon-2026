@@ -1,0 +1,22 @@
+{
+  "name": "Majelis Ilmu Balikpapan",
+  "platform": "tg",
+  "source_type": "channel",
+  "url": "https://t.me/majelisilmubalikpapan",
+  "handle": "@majelisilmubalikpapan",
+  "region": "Balikpapan",
+  "category": [
+    "jadwal",
+    "kajian",
+    "balikpapan",
+    "kalimantan"
+  ],
+  "tags": [
+    "jadwal",
+    "kajian",
+    "balikpapan",
+    "kalimantan"
+  ],
+  "evidence_url": "https://t.me/majelisilmubalikpapan/18240",
+  "submitted_by": "camagenta"
+}
