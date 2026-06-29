@@ -1,0 +1,21 @@
+{
+  "name": "SURABAYA MENGAJI",
+  "platform": "tg",
+  "source_type": "channel",
+  "url": "https://t.me/surabayamengaji",
+  "handle": "@surabayamengaji",
+  "region": "surabaya",
+  "category": [
+    "aggregator",
+    "kajian",
+    "surabaya"
+  ],
+  "tags": [
+    "aggregator",
+    "kajian",
+    "surabaya"
+  ],
+  "evidence_url": "https://t.me/sijadwalkajian/192/7023",
+  "submitted_by": "camagenta",
+  "notes": ""
+}

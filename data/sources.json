@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": "0.1.0",
-  "updated_at": "2026-06-06",
+  "updated_at": "2026-06-29",
   "license": "CC-BY-SA-4.0",
   "sources": [
     {
@@ -808,6 +808,1504 @@
       "verified": true,
       "added_at": "2026-06-02",
       "notes": "Promoted draft from Track B topic discovery. Status: active; last_post_at: 2026-06-01T21:42:34.000Z."
+    },
+    {
+      "id": "tg-madrasahms",
+      "name": "MADRASAH MAR'AH SHALIHAH",
+      "platform": "tg",
+      "url": "https://t.me/madrasahms",
+      "handle": "madrasahms",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-cahayasunnahkarawang",
+      "name": "CAHAYA SUNNAH KARAWANG",
+      "platform": "tg",
+      "url": "https://t.me/CahayaSunnahKarawang",
+      "handle": "cahayasunnahkarawang",
+      "region": "karawang",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "karawang"
+      ],
+      "tags": [
+        "kajian",
+        "karawang"
+      ]
+    },
+    {
+      "id": "tg-kajiangabunganmtnurulhidayah",
+      "name": "KAJIAN GABUNGAN MT NURULHIDAYAH",
+      "platform": "tg",
+      "url": "https://t.me/KajianGabunganMTNurulHidayah",
+      "handle": "kajiangabunganmtnurulhidayah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-mttabiinacc",
+      "name": "MT TABIINA AS SUNNAH AL WAFA (MASJID SHAFA MARWAH CIBUBUR)",
+      "platform": "tg",
+      "url": "https://t.me/MTTabiinaCC",
+      "handle": "mttabiinacc",
+      "region": "cibubur",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "cibubur"
+      ],
+      "tags": [
+        "kajian",
+        "cibubur"
+      ]
+    },
+    {
+      "id": "tg-mt-al-mawaddah",
+      "name": "MT AL MAWADDAH",
+      "platform": "tg",
+      "url": "https://t.me/MT_Al_Mawaddah",
+      "handle": "mt_al_mawaddah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-madinahsalam",
+      "name": "MADINAH SALAM",
+      "platform": "tg",
+      "url": "https://t.me/Madinahsalam",
+      "handle": "madinahsalam",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-rumahdakwahuk",
+      "name": "RUMAH DAKWAH UK",
+      "platform": "tg",
+      "url": "https://t.me/RumahDakwahUK",
+      "handle": "rumahdakwahuk",
+      "region": "united-kingdom",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "luar-negeri"
+      ],
+      "tags": [
+        "kajian",
+        "luar-negeri"
+      ]
+    },
+    {
+      "id": "tg-ahsantvofficial",
+      "name": "AHSAN TV",
+      "platform": "tg",
+      "url": "https://t.me/ahsantvofficial",
+      "handle": "ahsantvofficial",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-akademimuslimah",
+      "name": "MUSLIMAH ACADEMY",
+      "platform": "tg",
+      "url": "https://t.me/akademimuslimah",
+      "handle": "akademimuslimah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-almughnicenter",
+      "name": "AL MUGHNI CENTER YOGYAKARTA",
+      "platform": "tg",
+      "url": "https://t.me/almughnicenter",
+      "handle": "almughnicenter",
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "yogyakarta"
+      ],
+      "tags": [
+        "kajian",
+        "yogyakarta"
+      ]
+    },
+    {
+      "id": "tg-anbofficial",
+      "name": "ANB CHANNEL",
+      "platform": "tg",
+      "url": "https://t.me/anbofficial",
+      "handle": "anbofficial",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-babussalamassunnah",
+      "name": "BAABUSSALAM AS SUNNAH DEPOK",
+      "platform": "tg",
+      "url": "https://t.me/babussalamassunnah",
+      "handle": "babussalamassunnah",
+      "region": "depok",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "depok"
+      ],
+      "tags": [
+        "kajian",
+        "depok"
+      ]
+    },
+    {
+      "id": "tg-bestie-mengaji",
+      "name": "BESTIE MENGAJI",
+      "platform": "tg",
+      "url": "https://t.me/bestie_mengaji",
+      "handle": "bestie_mengaji",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Lebih update di WAG Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-daarunnisaaindonesia",
+      "name": "DAARUNNISA",
+      "platform": "tg",
+      "url": "https://t.me/daarunnisaaindonesia",
+      "handle": "daarunnisaaindonesia",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-dirosahislamiyah",
+      "name": "DIROSAH ISLAMIYAH DEWAN FATWA",
+      "platform": "tg",
+      "url": "https://t.me/dirosahislamiyah",
+      "handle": "dirosahislamiyah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-djazuliruhanbasyir",
+      "name": "DJAZULI RUHAN BASYIR",
+      "platform": "tg",
+      "url": "https://t.me/djazuliruhanbasyir",
+      "handle": "djazuliruhanbasyir",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-dzulqarnainms",
+      "name": "Dzulqarnain Muhammad Sunusi",
+      "platform": "tg",
+      "url": "https://t.me/dzulqarnainms",
+      "handle": "dzulqarnainms",
+      "region": "Sulawesi Selatan",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/dzulqarnainms/13742.",
+      "source_type": "channel",
+      "category": [
+        "jadwal",
+        "kajian",
+        "sulawesi selatan",
+        "sulawesi",
+        "ustadz"
+      ],
+      "tags": [
+        "jadwal",
+        "kajian",
+        "sulawesi selatan",
+        "sulawesi",
+        "ustadz"
+      ]
+    },
+    {
+      "id": "tg-fastabiqulkhayraataustralia",
+      "name": "MT FASTABIQUL KHOYROT AUSTRALIA",
+      "platform": "tg",
+      "url": "https://t.me/fastabiqulkhayraataustralia",
+      "handle": "fastabiqulkhayraataustralia",
+      "region": "australia",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "komunitas",
+        "australia"
+      ],
+      "tags": [
+        "kajian",
+        "komunitas",
+        "australia"
+      ]
+    },
+    {
+      "id": "tg-hsiberbagi",
+      "name": "LAZ HSI BERBAGI",
+      "platform": "tg",
+      "url": "https://t.me/hsiberbagi",
+      "handle": "hsiberbagi",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "sosial",
+        "laz"
+      ],
+      "tags": [
+        "sosial",
+        "laz"
+      ]
+    },
+    {
+      "id": "tg-imammalikbandung",
+      "name": "MAHAD IMAM MALIK BANDUNG",
+      "platform": "tg",
+      "url": "https://t.me/imammalikbandung",
+      "handle": "imammalikbandung",
+      "region": "bandung",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "bandung"
+      ],
+      "tags": [
+        "kajian",
+        "bandung"
+      ]
+    },
+    {
+      "id": "tg-indonesiabertauhid",
+      "name": "INDONESIA BERTAUHID",
+      "platform": "tg",
+      "url": "https://t.me/indonesiabertauhid",
+      "handle": "indonesiabertauhid",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-infokajiansunnahgis",
+      "name": "Dzulqarnain Muhammad Sunusi",
+      "platform": "tg",
+      "url": "https://t.me/InfoKajianSunnahGiS",
+      "handle": "infokajiansunnahgis",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/InfoKajianSunnahGiS/8488.",
+      "source_type": "channel",
+      "category": [
+        "jadwal",
+        "kajian",
+        "komunitas"
+      ],
+      "tags": [
+        "jadwal",
+        "kajian",
+        "komunitas"
+      ]
+    },
+    {
+      "id": "tg-journeymuflihsafitra",
+      "name": "USTADZ MUFLIH SAFITRA",
+      "platform": "tg",
+      "url": "https://t.me/journeymuflihsafitra",
+      "handle": "journeymuflihsafitra",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-kajiansisesa",
+      "name": "MT KAJIAN SISESA",
+      "platform": "tg",
+      "url": "https://t.me/kajianSisesa",
+      "handle": "kajiansisesa",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-kajiankakyogi",
+      "name": "KAJIAN ANAK KAK YOGI",
+      "platform": "tg",
+      "url": "https://t.me/kajiankakyogi",
+      "handle": "kajiankakyogi",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "anak"
+      ],
+      "tags": [
+        "kajian",
+        "anak"
+      ]
+    },
+    {
+      "id": "tg-kajiankhasanah",
+      "name": "KAJIAN MUSLIMAH KHASANAH YOGYAKARTA",
+      "platform": "tg",
+      "url": "https://t.me/kajiankhasanah",
+      "handle": "kajiankhasanah",
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah",
+        "yogyakarta"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah",
+        "yogyakarta"
+      ]
+    },
+    {
+      "id": "tg-kajianmaira",
+      "name": "KAJIAN MUSLIMAH RAKATA CILEGON",
+      "platform": "tg",
+      "url": "https://t.me/kajianmaira",
+      "handle": "kajianmaira",
+      "region": "cilegon",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah",
+        "cilegon"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah",
+        "cilegon"
+      ]
+    },
+    {
+      "id": "tg-kajiantebet",
+      "name": "KAJIAN TEBET",
+      "platform": "tg",
+      "url": "https://t.me/kajiantebet",
+      "handle": "kajiantebet",
+      "region": "jakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "jakarta"
+      ],
+      "tags": [
+        "kajian",
+        "jakarta"
+      ]
+    },
+    {
+      "id": "tg-kajianustadzabduh",
+      "name": "USTADZ MUHAMMAD ABDUL TUASIKAL",
+      "platform": "tg",
+      "url": "https://t.me/kajianustadzabduh",
+      "handle": "kajianustadzabduh",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-kakerlanbercerita",
+      "name": "KAK ERLAN ISKANDAR",
+      "platform": "tg",
+      "url": "https://t.me/kakerlanbercerita",
+      "handle": "kakerlanbercerita",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "anak"
+      ],
+      "tags": [
+        "kajian",
+        "anak"
+      ]
+    },
+    {
+      "id": "tg-majelisilmubalikpapan",
+      "name": "Majelis Ilmu Balikpapan",
+      "platform": "tg",
+      "url": "https://t.me/majelisilmubalikpapan",
+      "handle": "majelisilmubalikpapan",
+      "region": "Balikpapan",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/majelisilmubalikpapan/18240.",
+      "source_type": "channel",
+      "category": [
+        "jadwal",
+        "kajian",
+        "balikpapan",
+        "kalimantan"
+      ],
+      "tags": [
+        "jadwal",
+        "kajian",
+        "balikpapan",
+        "kalimantan"
+      ]
+    },
+    {
+      "id": "tg-majelisimamnawawi",
+      "name": "MAJLIS IMAM NAWAWI CIOMAS BOGOR",
+      "platform": "tg",
+      "url": "https://t.me/majelisimamnawawi",
+      "handle": "majelisimamnawawi",
+      "region": "bogor",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "bogor"
+      ],
+      "tags": [
+        "kajian",
+        "bogor"
+      ]
+    },
+    {
+      "id": "tg-majelistaklim-inammuslimah",
+      "name": "MT IN'AM MUSLIMAH",
+      "platform": "tg",
+      "url": "https://t.me/majelistaklim_inammuslimah",
+      "handle": "majelistaklim_inammuslimah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-masjidalhayah",
+      "name": "MASJID AL HAYAH LAMPUNG",
+      "platform": "tg",
+      "url": "https://t.me/masjidalhayah",
+      "handle": "masjidalhayah",
+      "region": "lampung",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "lampung"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "lampung"
+      ]
+    },
+    {
+      "id": "tg-masjidalkautsarsolo",
+      "name": "MASJID AL KAUTSAR SOLO",
+      "platform": "tg",
+      "url": "https://t.me/masjidalkautsarsolo",
+      "handle": "masjidalkautsarsolo",
+      "region": "solo",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "solo"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "solo"
+      ]
+    },
+    {
+      "id": "tg-masjidhijauofficial",
+      "name": "MASJID HIJAU NURUL IMAN CILANGKAP JAKTIM",
+      "platform": "tg",
+      "url": "https://t.me/masjidhijauofficial",
+      "handle": "masjidhijauofficial",
+      "region": "jakarta-timur",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "jakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "jakarta"
+      ]
+    },
+    {
+      "id": "tg-masjidjamilurrahmanjogja",
+      "name": "MASJID JAMILURRAHMAN YOGYAKARTA",
+      "platform": "tg",
+      "url": "https://t.me/masjidjamilurrahmanjogja",
+      "handle": "masjidjamilurrahmanjogja",
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ]
+    },
+    {
+      "id": "tg-masjidmenaraiman",
+      "name": "MASJID MENARA IMAN KUDUS",
+      "platform": "tg",
+      "url": "https://t.me/masjidmenaraiman",
+      "handle": "masjidmenaraiman",
+      "region": "kudus",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "kudus"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "kudus"
+      ]
+    },
+    {
+      "id": "tg-masjidnurullah",
+      "name": "MASJID NURULLAH KALIBATA JAKSEL",
+      "platform": "tg",
+      "url": "https://t.me/masjidnurullah",
+      "handle": "masjidnurullah",
+      "region": "jakarta-selatan",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "jakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "jakarta"
+      ]
+    },
+    {
+      "id": "tg-masjidpogungdalangan",
+      "name": "MASJID POGUNG DALANGAN",
+      "platform": "tg",
+      "url": "https://t.me/masjidpogungdalangan",
+      "handle": "masjidpogungdalangan",
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ]
+    },
+    {
+      "id": "tg-masjidpogungraya",
+      "name": "MASJID POGUNG RAYA",
+      "platform": "tg",
+      "url": "https://t.me/masjidpogungraya",
+      "handle": "masjidpogungraya",
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ]
+    },
+    {
+      "id": "tg-mnibmsquarelt7",
+      "name": "MASJID NURUL IMAN BLOK M JAKSEL",
+      "platform": "tg",
+      "url": "https://t.me/mnibmsquarelt7",
+      "handle": "mnibmsquarelt7",
+      "region": "jakarta-selatan",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "jakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "jakarta"
+      ]
+    },
+    {
+      "id": "tg-msaalfata",
+      "name": "MASJID SURAU AGENG AL FAATA YOGYAKARTA",
+      "platform": "tg",
+      "url": "https://t.me/msaalfata",
+      "handle": "msaalfata",
+      "region": "yogyakarta",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "yogyakarta"
+      ]
+    },
+    {
+      "id": "tg-mt-awwaabiin",
+      "name": "TAKLIM KOLABORASI",
+      "platform": "tg",
+      "url": "https://t.me/mt_awwaabiin",
+      "handle": "mt_awwaabiin",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-mt-khadiijah",
+      "name": "MT KHADIJAH",
+      "platform": "tg",
+      "url": "https://t.me/mt_khadiijah",
+      "handle": "mt_khadiijah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "muslimah"
+      ],
+      "tags": [
+        "kajian",
+        "muslimah"
+      ]
+    },
+    {
+      "id": "tg-mtalikhlashjbe",
+      "name": "MT AL IKHLAS JBE BEKASI",
+      "platform": "tg",
+      "url": "https://t.me/mtalikhlashjbe",
+      "handle": "mtalikhlashjbe",
+      "region": "bekasi",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "bekasi"
+      ],
+      "tags": [
+        "kajian",
+        "bekasi"
+      ]
+    },
+    {
+      "id": "tg-muadzbinjabal",
+      "name": "MASJID MUADZ BIN JABAL BOGOR",
+      "platform": "tg",
+      "url": "https://t.me/muadzbinjabal",
+      "handle": "muadzbinjabal",
+      "region": "bogor",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "bogor"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "bogor"
+      ]
+    },
+    {
+      "id": "tg-muhammadnuzuldzikri",
+      "name": "MUHAMMAD NUZUL DZIKRI",
+      "platform": "tg",
+      "url": "https://t.me/muhammadnuzuldzikri",
+      "handle": "muhammadnuzuldzikri",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-muniralearningpartner",
+      "name": "MUNIIRA",
+      "platform": "tg",
+      "url": "https://t.me/muniralearningpartner",
+      "handle": "muniralearningpartner",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "belajar"
+      ],
+      "tags": [
+        "kajian",
+        "belajar"
+      ]
+    },
+    {
+      "id": "tg-muslimafiyah",
+      "name": "MUSLIMAFIYAH",
+      "platform": "tg",
+      "url": "https://t.me/muslimafiyah",
+      "handle": "muslimafiyah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-mutiarailmunafi",
+      "name": "MUTIARA ILMU NAAFI",
+      "platform": "tg",
+      "url": "https://t.me/mutiarailmunafi",
+      "handle": "mutiarailmunafi",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-najmiumar",
+      "name": "USTADZ NAJMI UMAR BAKKAR",
+      "platform": "tg",
+      "url": "https://t.me/najmiumar",
+      "handle": "najmiumar",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-penuntutilmubogor",
+      "name": "USTADZ LUTHFI ABDUL JABBAR",
+      "platform": "tg",
+      "url": "https://t.me/penuntutilmubogor",
+      "handle": "penuntutilmubogor",
+      "region": "bogor",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian",
+        "bogor"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian",
+        "bogor"
+      ]
+    },
+    {
+      "id": "tg-pesantrenluluwalmarjan",
+      "name": "PESANTREN LULU WALMARJAN MAGELANG",
+      "platform": "tg",
+      "url": "https://t.me/pesantrenluluwalmarjan",
+      "handle": "pesantrenluluwalmarjan",
+      "region": "magelang",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "magelang"
+      ],
+      "tags": [
+        "kajian",
+        "magelang"
+      ]
+    },
+    {
+      "id": "tg-pomm-id",
+      "name": "POMM ETA",
+      "platform": "tg",
+      "url": "https://t.me/pomm_id",
+      "handle": "pomm_id",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-radiotarbiyahsunnah",
+      "name": "RADIO TARBIYAH SUNNAH",
+      "platform": "tg",
+      "url": "https://t.me/radiotarbiyahsunnah",
+      "handle": "radiotarbiyahsunnah",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "radio",
+        "kajian"
+      ],
+      "tags": [
+        "radio",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-sahabatmuslimtv",
+      "name": "SAHABAT MUSLIM TV (USTADZ FARHAN ABU FURAIHAN)",
+      "platform": "tg",
+      "url": "https://t.me/sahabatmuslimtv",
+      "handle": "sahabatmuslimtv",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-salamtsl",
+      "name": "Tarbiyah Sunnah Learning",
+      "platform": "tg",
+      "url": "https://t.me/salamtsl",
+      "handle": "salamtsl",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "komunitas",
+        "online"
+      ],
+      "tags": [
+        "kajian",
+        "komunitas",
+        "online"
+      ]
+    },
+    {
+      "id": "tg-simamedia",
+      "name": "MASJID AT TAWWAB TANGERANG",
+      "platform": "tg",
+      "url": "https://t.me/simamedia",
+      "handle": "simamedia",
+      "region": "tangerang",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "handle berbeda dari nama channel Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "masjid",
+        "kajian",
+        "tangerang"
+      ],
+      "tags": [
+        "masjid",
+        "kajian",
+        "tangerang"
+      ]
+    },
+    {
+      "id": "tg-stdiis-jember",
+      "name": "STDIIS JEMBER",
+      "platform": "tg",
+      "url": "https://t.me/stdiis_jember",
+      "handle": "stdiis_jember",
+      "region": "jember",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "jember"
+      ],
+      "tags": [
+        "kajian",
+        "jember"
+      ]
+    },
+    {
+      "id": "tg-surabayamengaji",
+      "name": "SURABAYA MENGAJI",
+      "platform": "tg",
+      "url": "https://t.me/surabayamengaji",
+      "handle": "surabayamengaji",
+      "region": "surabaya",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "aggregator",
+        "kajian",
+        "surabaya"
+      ],
+      "tags": [
+        "aggregator",
+        "kajian",
+        "surabaya"
+      ]
+    },
+    {
+      "id": "tg-tunanetraindonesiamengaji",
+      "name": "TUNANETRA INDONESIA MENGAJI",
+      "platform": "tg",
+      "url": "https://t.me/tunanetraindonesiamengaji",
+      "handle": "tunanetraindonesiamengaji",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-ustadnizarsaadjabal",
+      "name": "USTADZ NIZAR SAAD JABAL",
+      "platform": "tg",
+      "url": "https://t.me/ustadnizarsaadjabal",
+      "handle": "ustadnizarsaadjabal",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-ustadzabdullahzaen",
+      "name": "ABDULLAH ZAEN",
+      "platform": "tg",
+      "url": "https://t.me/ustadzabdullahzaen",
+      "handle": "ustadzabdullahzaen",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-ustadziqbalgunawan",
+      "name": "USTADZ IQBAL GUNAWAN",
+      "platform": "tg",
+      "url": "https://t.me/ustadziqbalgunawan",
+      "handle": "ustadziqbalgunawan",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "ustadz",
+        "kajian"
+      ],
+      "tags": [
+        "ustadz",
+        "kajian"
+      ]
+    },
+    {
+      "id": "tg-wlingimengaji",
+      "name": "WLINGI MENGAJI",
+      "platform": "tg",
+      "url": "https://t.me/wlingimengaji",
+      "handle": "wlingimengaji",
+      "region": "wlingi",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian",
+        "wlingi",
+        "blitar",
+        "jawa timur"
+      ],
+      "tags": [
+        "kajian",
+        "wlingi",
+        "blitar",
+        "jawa timur"
+      ]
+    },
+    {
+      "id": "tg-ypia-academy",
+      "name": "YPIA ACADEMY",
+      "platform": "tg",
+      "url": "https://t.me/ypia_academy",
+      "handle": "ypia_academy",
+      "region": "nasional",
+      "language": "id",
+      "priority": 2,
+      "verified": false,
+      "added_at": "2026-06-29",
+      "notes": "Submitted by camagenta. Evidence: https://t.me/sijadwalkajian/192/7023.",
+      "source_type": "channel",
+      "category": [
+        "kajian"
+      ],
+      "tags": [
+        "kajian"
+      ]
     }
   ]
 }
