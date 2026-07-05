@@ -20,6 +20,13 @@ import {
   type RegionHealthTone,
 } from "./region-config";
 
+const INDONESIA_MAP_CENTER: [number, number] = [REGION_GEO_POINTS.nasional.lat, REGION_GEO_POINTS.nasional.lng];
+const INDONESIA_MAP_ZOOM = 5;
+const resetIndonesiaMapView = (map: LeafletMap) => {
+  map.invalidateSize({ pan: false });
+  map.setView(INDONESIA_MAP_CENTER, INDONESIA_MAP_ZOOM, { animate: false });
+};
+
 export function RegionHealthPanel({
   summaries,
   selectedRegion,
@@ -129,12 +136,17 @@ function LeafletRegionMap({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayerRef = useRef<LayerGroup | null>(null);
+  const initialViewAppliedRef = useRef(false);
   const [mapReady, setMapReady] = useState(false);
   const [tilesReady, setTilesReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     let resizeObserver: ResizeObserver | null = null;
+    let refreshFrameId: number | null = null;
+    let defaultViewFrameId: number | null = null;
+    let defaultViewTimerId: number | null = null;
+    let defaultViewTimer2Id: number | null = null;
     let tileFallbackTimer: number | null = null;
 
     async function initMap() {
@@ -143,8 +155,8 @@ function LeafletRegionMap({
 
       const mapContainer = containerRef.current;
       const map = L.map(mapContainer, {
-        center: [-6.9, 110.5],
-        zoom: 7,
+        center: INDONESIA_MAP_CENTER,
+        zoom: INDONESIA_MAP_ZOOM,
         minZoom: 4,
         maxZoom: 10,
         zoomControl: true,
@@ -176,9 +188,24 @@ function LeafletRegionMap({
       const refreshSize = () => {
         map.invalidateSize({ pan: false });
       };
-      requestAnimationFrame(refreshSize);
-      window.setTimeout(refreshSize, 150);
-      resizeObserver = new ResizeObserver(refreshSize);
+      const syncDefaultView = () => {
+        if (!mapRef.current) return;
+        resetIndonesiaMapView(mapRef.current);
+        initialViewAppliedRef.current = true;
+      };
+
+      map.whenReady(() => {
+        defaultViewFrameId = window.requestAnimationFrame(syncDefaultView);
+      });
+      refreshFrameId = window.requestAnimationFrame(refreshSize);
+      defaultViewTimerId = window.setTimeout(syncDefaultView, 150);
+      defaultViewTimer2Id = window.setTimeout(syncDefaultView, 300);
+      resizeObserver = new ResizeObserver(() => {
+        refreshSize();
+        if (!initialViewAppliedRef.current) {
+          window.requestAnimationFrame(syncDefaultView);
+        }
+      });
       resizeObserver.observe(mapContainer);
 
       setMapReady(true);
@@ -189,6 +216,10 @@ function LeafletRegionMap({
 
     return () => {
       cancelled = true;
+      if (refreshFrameId != null) window.cancelAnimationFrame(refreshFrameId);
+      if (defaultViewFrameId != null) window.cancelAnimationFrame(defaultViewFrameId);
+      if (defaultViewTimerId != null) window.clearTimeout(defaultViewTimerId);
+      if (defaultViewTimer2Id != null) window.clearTimeout(defaultViewTimer2Id);
       if (tileFallbackTimer) window.clearTimeout(tileFallbackTimer);
       resizeObserver?.disconnect();
       mapRef.current?.remove();
@@ -242,16 +273,12 @@ function LeafletRegionMap({
         const point = REGION_GEO_POINTS[selectedSummary.regionKey] ?? REGION_GEO_POINTS.unknown;
         window.setTimeout(() => mapRef.current?.flyTo([point.lat, point.lng], 7, { duration: 0.45 }), 0);
       } else if (mapSummaries.length > 0) {
-        const indonesiaSummaries = mapSummaries.filter((summary) => {
-          const point = REGION_GEO_POINTS[summary.regionKey];
-          return point != null && !INTERNATIONAL_REGION_KEYS.has(summary.regionKey) && summary.regionKey !== "unknown";
+        requestAnimationFrame(() => {
+          if (mapRef.current) resetIndonesiaMapView(mapRef.current);
         });
-        const boundsSummaries = indonesiaSummaries.length > 0 ? indonesiaSummaries : mapSummaries;
-        const bounds = L.latLngBounds(boundsSummaries.map((summary) => {
-          const point = REGION_GEO_POINTS[summary.regionKey] ?? REGION_GEO_POINTS.unknown;
-          return [point.lat, point.lng];
-        }));
-        window.setTimeout(() => mapRef.current?.fitBounds(bounds, { padding: [36, 36], maxZoom: 6 }), 0);
+        window.setTimeout(() => {
+          if (mapRef.current) resetIndonesiaMapView(mapRef.current);
+        }, 250);
       }
     }
 
