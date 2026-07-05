@@ -25,7 +25,7 @@ function normalizeHandle(input: string): { handle: string | null; isPrivate: boo
   return { handle: h || null, isPrivate: false };
 }
 
-function getHealthLabel(score: number | undefined, status: HealthStatus) {
+function getHealthLabel(score: number | null | undefined, status: HealthStatus) {
   if (status === "dead" || status === "blocked") return { label: "Tidak Aktif", dot: "bg-red-500" };
   if (status === "stale") return { label: "Jarang Aktif", dot: "bg-yellow-500" };
   if (status === "error") return { label: "Error", dot: "bg-yellow-500" };

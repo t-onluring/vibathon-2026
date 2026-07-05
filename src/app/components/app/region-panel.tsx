@@ -3,8 +3,8 @@
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DivIcon, LayerGroup, Map as LeafletMap } from "leaflet";
-import type { HealthStatus } from "../../lib/data";
-import { STATUS_META } from "./status-config";
+import type { HealthStatus, Tier } from "../../lib/data";
+import { STATUS_META, TIER_META } from "./status-config";
 import {
   buildAllRegionSummary,
   getBubbleRadius,
@@ -47,7 +47,7 @@ export function RegionHealthPanel({
         </div>
         <div className="rounded-lg border border-[var(--g300)] bg-[var(--ivory)] px-3 py-2 text-right">
           <div className="font-display text-[24px] leading-none text-[var(--slate)]">{totalRegions}</div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g500)]">regions</div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g500)]">region</div>
         </div>
       </div>
 
@@ -125,9 +125,13 @@ function LeafletRegionMap({
 
       const mapContainer = containerRef.current;
       const map = L.map(mapContainer, {
-        center: [-5.5, 110.5],
-        zoom: 5,
-        minZoom: 3,
+        // Centered on the Java cluster — most region points sit on/around
+        // Java, so the initial frame already shows the densest cluster
+        // before fitBounds refines it. Tighter than the old [−5.5, 110.5]/z5
+        // view so points read clearly without waiting for fitBounds.
+        center: [-6.9, 110.5],
+        zoom: 6,
+        minZoom: 4,
         maxZoom: 10,
         zoomControl: true,
         scrollWheelZoom: false,
@@ -228,7 +232,11 @@ function LeafletRegionMap({
           const point = REGION_GEO_POINTS[summary.regionKey] ?? REGION_GEO_POINTS.unknown;
           return [point.lat, point.lng];
         }));
-        window.setTimeout(() => mapRef.current?.fitBounds(bounds, { padding: [28, 28], maxZoom: 6 }), 0);
+        // Tighter fit: maxZoom 8 (up from 6) + padding [20,20] (down from
+        // [28,28]) keeps the Java cluster framed so all bubble points stay
+        // visible without being shrunk to dots. minZoom/fitBounds together
+        // ensure the box is filled rather than letterboxed.
+        window.setTimeout(() => mapRef.current?.fitBounds(bounds, { padding: [20, 20], maxZoom: 8 }), 0);
       }
     }
 
@@ -275,11 +283,12 @@ function createRegionDivIcon(
 }
 
 function getRegionTooltipHtml(summary: RegionHealthSummary): string {
+  const m = STATUS_META;
   return `
     <strong>${summary.regionLabel}</strong>
-    <span>${summary.total} sources · ${summary.monitored} monitored</span>
-    <span>Active ${summary.active} · Dead ${summary.dead} · Unmon ${summary.unmonitored}</span>
-    <span>Score ${formatRegionScore(summary)} · ${formatRegionRatio(summary)}</span>
+    <span>${summary.total} source · ${summary.monitored} dipantau</span>
+    <span>${m.active.label} ${summary.active} · ${m.dead.label} ${summary.dead} · ${m.unmonitored.label} ${summary.unmonitored}</span>
+    <span>Skor ${formatRegionScore(summary)} · ${formatRegionRatio(summary)}</span>
   `;
 }
 
@@ -304,40 +313,110 @@ function RegionSummaryPanel({
 }) {
   const tone = getRegionHealthTone(summary);
   const style = REGION_TONE_STYLES[tone];
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  // Operational status — always visible. Order = priority for the reader:
+  // aktif → kurang → tidak aktif → terbatas → gagal dicek.
+  const operationalRows: Array<{ status: HealthStatus; value: number }> = [
+    { status: "active", value: summary.active },
+    { status: "stale", value: summary.stale },
+    { status: "dead", value: summary.dead },
+    { status: "blocked", value: summary.blocked },
+    { status: "error", value: summary.error },
+  ];
+
+  // Coverage — the "Belum dipantau" row. Kept separate from operational
+  // because unmonitored ≠ failure: it means no checker exists yet for that
+  // platform. Showing it under operational status would imply the source
+  // is broken, when really we just haven't measured it.
+  const coverageRows: Array<{ status: HealthStatus; value: number }> = [
+    { status: "unmonitored", value: summary.unmonitored },
+  ];
+
+  // Confidence tier — the graded-quality dimension. Parallel to status
+  // but answers a different question ("seberapa andal sinyal datanya?")
+  const tierRows: Array<{ tier: Tier; value: number }> = [
+    { tier: "high", value: summary.tierHigh },
+    { tier: "mid", value: summary.tierMid },
+    { tier: "low", value: summary.tierLow },
+    { tier: "no-data", value: summary.tierNoData },
+  ];
 
   return (
     <aside className="rounded-xl border border-[var(--g300)] bg-[var(--ivory)] p-4">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="eyebrow mb-2">{selected ? "Selected region" : "All regions"}</p>
+          <p className="eyebrow mb-2">{selected ? "Region terpilih" : "Semua region"}</p>
           <h4 className="font-semibold text-[17px] text-[var(--slate)]">{summary.regionLabel}</h4>
           <p className="mt-1 font-mono text-[11px] text-[var(--g500)]">
-            {summary.total} sources · {summary.monitored} monitored
+            {summary.total} source · {summary.monitored} dipantau
           </p>
         </div>
         <span className="shrink-0 whitespace-nowrap rounded-full px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-white" style={{ background: style.fill }}>
-          {tone === "risk" ? "Attention" : style.label}
+          {tone === "risk" ? "Perlu perhatian" : style.label}
         </span>
       </div>
 
       <div className="mb-4 grid grid-cols-2 gap-2">
         <div className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2">
-          <div className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--g500)]">Avg score</div>
+          <div className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--g500)]">Skor rata-rata</div>
           <div className="mt-1 font-display text-[26px] leading-none text-[var(--slate)]">{formatRegionScore(summary)}</div>
         </div>
         <div className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2">
-          <div className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--g500)]">Active ratio</div>
-          <div className="mt-1 font-display text-[26px] leading-none text-[var(--slate)]">{formatRegionRatio(summary).replace(" active", "")}</div>
+          <div className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--g500)]">Rasio aktif</div>
+          <div className="mt-1 font-display text-[26px] leading-none text-[var(--slate)]">{formatRegionRatio(summary).replace(" aktif", "")}</div>
         </div>
       </div>
 
-      <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
-        <StatusCount label="Active" value={summary.active} status="active" />
-        <StatusCount label="Stale" value={summary.stale} status="stale" />
-        <StatusCount label="Dead" value={summary.dead} status="dead" />
-        <StatusCount label="Blocked" value={summary.blocked} status="blocked" />
-        <StatusCount label="Error" value={summary.error} status="error" />
-        <StatusCount label="Unmonitored" value={summary.unmonitored} status="unmonitored" />
+      {/* Status operasional — primary hierarchy, always visible */}
+      <div className="mb-3">
+        <p className="eyebrow mb-2 !text-[9.5px]">Status operasional</p>
+        <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
+          {operationalRows.map((row) => (
+            <StatusCount key={row.status} status={row.status} value={row.value} />
+          ))}
+        </div>
+      </div>
+
+      {/* Coverage + Tier — secondary. On mobile they collapse into an
+          accordion so the panel stays compact; on ≥sm they stay open. */}
+      <div className="border-t border-[var(--g300)] pt-3">
+        <button
+          type="button"
+          onClick={() => setDetailsOpen((v) => !v)}
+          aria-expanded={detailsOpen}
+          className="sm:hidden flex w-full items-center justify-between rounded-md px-1 py-1 text-left font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g600)] hover:bg-[var(--g100)]"
+        >
+          <span>Cakupan & tier konfidensial</span>
+          <span className={`transition-transform duration-200 ${detailsOpen ? "rotate-180" : ""}`} aria-hidden>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        </button>
+
+        <div className={`${detailsOpen ? "block" : "hidden"} sm:block`}>
+          <div className="mb-3 mt-2 sm:mt-0">
+            <p className="eyebrow mb-2 !text-[9.5px]">Cakupan platform</p>
+            <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
+              {coverageRows.map((row) => (
+                <StatusCount key={row.status} status={row.status} value={row.value} />
+              ))}
+            </div>
+            <p className="mt-2 text-[10.5px] leading-relaxed text-[var(--g500)]">
+              &ldquo;Belum dipantau&rdquo; berarti platform ini belum punya checker, bukan berarti sumbernya rusak.
+            </p>
+          </div>
+
+          <div>
+            <p className="eyebrow mb-2 !text-[9.5px]">Tier konfidensial</p>
+            <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
+              {tierRows.map((row) => (
+                <TierCount key={row.tier} tier={row.tier} value={row.value} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {selected ? (
@@ -346,7 +425,7 @@ function RegionSummaryPanel({
           onClick={onClear}
           className="mt-4 w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2 text-[12px] font-medium text-[var(--slate)] transition-colors hover:border-[var(--g500)]"
         >
-          Clear region filter
+          Hapus filter region
         </button>
       ) : (
         <p className="mt-4 rounded-lg border border-dashed border-[var(--g300)] bg-[var(--paper)] px-3 py-2 text-[12px] leading-relaxed text-[var(--g600)]">
@@ -357,13 +436,26 @@ function RegionSummaryPanel({
   );
 }
 
-function StatusCount({ label, value, status }: { label: string; value: number; status: HealthStatus }) {
+function StatusCount({ status, value }: { status: HealthStatus; value: number }) {
   const meta = STATUS_META[status];
   return (
     <div className="flex items-center justify-between gap-2">
       <span className="inline-flex items-center gap-1.5">
         <span className={`size-1.5 rounded-full ${meta.dot}`} />
-        {label}
+        {meta.label}
+      </span>
+      <span className="font-semibold text-[var(--slate)]">{value}</span>
+    </div>
+  );
+}
+
+function TierCount({ tier, value }: { tier: Tier; value: number }) {
+  const meta = TIER_META[tier];
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <span className="inline-flex items-center gap-1.5">
+        <span className="h-1.5 w-3 rounded-full" style={{ background: meta.bar }} />
+        {meta.label}
       </span>
       <span className="font-semibold text-[var(--slate)]">{value}</span>
     </div>

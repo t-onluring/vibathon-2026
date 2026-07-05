@@ -1,6 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
-import type { Platform, HealthStatus, Source } from "../../shared/types";
+import type { Platform, HealthStatus, Tier, Source } from "../../shared/types";
+import { confidenceTier } from "../../shared/confidence";
 import { confidenceToPercent } from "./format";
 
 const ROOT = process.cwd();
@@ -18,14 +19,15 @@ async function readJsonFile<T>(path: string): Promise<T> {
   return JSON.parse(raw) as T;
 }
 
-export type { Platform, HealthStatus, Priority, Source } from "../../shared/types";
+export type { Platform, HealthStatus, Tier, Priority, Source } from "../../shared/types";
+export { confidenceTier } from "../../shared/confidence";
 
 export interface Snapshot {
   source_id: string;
   last_checked_at: string;
   platform: Platform;
   status: HealthStatus;
-  confidence_score?: number;
+  confidence_score?: number | null;
   reliability_score?: number;
   checks: {
     name: string;
@@ -46,7 +48,28 @@ export interface LatestSummary {
   total_sources: number;
   monitored_sources: number;
   by_status: Record<HealthStatus, number>;
+  /** Confidence-tier counts. Absent on legacy snapshots; use `computeByTier`. */
+  by_tier?: Record<Tier, number>;
   snapshots: Snapshot[];
+}
+
+/** Empty tier counts (used as fallback base for legacy snapshots). */
+export const EMPTY_BY_TIER: Record<Tier, number> = {
+  high: 0,
+  mid: 0,
+  low: 0,
+  "no-data": 0,
+};
+
+/**
+ * Compute `by_tier` from a snapshot list. Used as a fallback when reading
+ * legacy `data/health/*.json` written before `by_tier` existed, and for
+ * per-region tier counts (which aren't pre-aggregated server-side).
+ */
+export function computeByTier(snapshots: Snapshot[]): Record<Tier, number> {
+  const counts: Record<Tier, number> = { ...EMPTY_BY_TIER };
+  for (const s of snapshots) counts[confidenceTier(s.confidence_score ?? null)]++;
+  return counts;
 }
 
 export interface HealthHistoryPoint {

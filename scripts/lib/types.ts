@@ -1,5 +1,5 @@
-export type { Platform, Priority, HealthStatus, Source } from "../../src/shared/types.js";
-import type { Platform, HealthStatus, Source } from "../../src/shared/types.js";
+export type { Platform, Priority, HealthStatus, Source, Tier } from "../../src/shared/types.js";
+import type { Platform, HealthStatus, Source, Tier } from "../../src/shared/types.js";
 export type { ConfidenceSignals } from "./score.js";
 
 export interface SourcesFile {
@@ -32,7 +32,12 @@ export interface SnapshotItem {
   last_checked_at: string;
   platform: Platform;
   status: HealthStatus;
-  confidence_score: number;
+  /**
+   * Confidence score in [0.0, 1.0]. `null` means the source was not
+   * checked (unmonitored) — distinct from a checked-but-low score.
+   * The `confidenceTier` helper relies on this distinction.
+   */
+  confidence_score: number | null;
   checks: CheckItem[];
   metrics: TelegramMetrics | Record<string, unknown>;
   error?: string;
@@ -57,5 +62,11 @@ export interface LatestSummary {
   total_sources: number;
   monitored_sources: number;
   by_status: Record<HealthStatus, number>;
+  /**
+   * Confidence-tier counts, parallel to `by_status`. Optional so legacy
+   * snapshots serialized before this field existed still parse; clients
+   * fall back to computing from `snapshots[]` when absent.
+   */
+  by_tier?: Record<Tier, number>;
   snapshots: SnapshotItem[];
 }

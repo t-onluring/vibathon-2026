@@ -1,12 +1,25 @@
-import type { HealthStatus } from "../../lib/data";
+import type { HealthStatus, Tier } from "../../lib/data";
 
+// Operational status — "apakah channel hidup & dipantau?".
+// Label Indonesia (disepakati 2026-07-05). Enum `HealthStatus` tak berubah.
 export const STATUS_META: Record<HealthStatus, { label: string; bg: string; fg: string; dot: string; ringColor: string }> = {
-  active:      { label: "Active",      bg: "bg-[var(--jade)]/15",   fg: "text-[var(--jade)]",   dot: "bg-[var(--jade)]",   ringColor: "#4D7C5F" },
-  stale:       { label: "Stale",       bg: "bg-[var(--amber)]/15",  fg: "text-[var(--amber)]",  dot: "bg-[var(--amber)]",  ringColor: "#C4831A" },
-  dead:        { label: "Dead",        bg: "bg-[var(--rust)]/12",   fg: "text-[var(--rust)]",   dot: "bg-[var(--rust)]",   ringColor: "#B84040" },
-  blocked:     { label: "Blocked",     bg: "bg-[var(--clay)]/12",   fg: "text-[var(--clay-d)]", dot: "bg-[var(--clay-d)]", ringColor: "#B85C3E" },
-  error:       { label: "Error",       bg: "bg-[var(--rust)]/10",   fg: "text-[var(--rust)]",   dot: "bg-[var(--rust)]",   ringColor: "#B84040" },
-  unmonitored: { label: "Unmonitored", bg: "bg-[var(--g100)]",      fg: "text-[var(--g500)]",   dot: "bg-[var(--g300)]",   ringColor: "#D1CFC5" },
+  active:      { label: "Aktif",          bg: "bg-[var(--jade)]/15",   fg: "text-[var(--jade)]",   dot: "bg-[var(--jade)]",   ringColor: "#4D7C5F" },
+  stale:       { label: "Kurang aktif",   bg: "bg-[var(--amber)]/15",  fg: "text-[var(--amber)]",  dot: "bg-[var(--amber)]",  ringColor: "#C4831A" },
+  dead:        { label: "Tidak aktif",    bg: "bg-[var(--rust)]/12",   fg: "text-[var(--rust)]",   dot: "bg-[var(--rust)]",   ringColor: "#B84040" },
+  blocked:     { label: "Terbatas",       bg: "bg-[var(--clay)]/12",   fg: "text-[var(--clay-d)]", dot: "bg-[var(--clay-d)]", ringColor: "#B85C3E" },
+  error:       { label: "Gagal dicek",    bg: "bg-[var(--rust)]/10",   fg: "text-[var(--rust)]",   dot: "bg-[var(--rust)]",   ringColor: "#B84040" },
+  unmonitored: { label: "Belum dipantau", bg: "bg-[var(--g100)]",      fg: "text-[var(--g500)]",   dot: "bg-[var(--g300)]",   ringColor: "#D1CFC5" },
+};
+
+// Confidence tier — "seberapa andal sumber sebagai pemberi data?".
+// Sinyal bergradien, konsisten dgn `confidence_score`. Berbeda dari status:
+// sebuah channel bisa `active` (operasional) tapi `low` (reach/parse lemah).
+// `no-data` = tidak pernah dicek (unmonitored) — jangan dicampur dgn `low`.
+export const TIER_META: Record<Tier, { label: string; bar: string; ringColor: string; threshold: string }> = {
+  high:     { label: "Tinggi",      bar: "var(--olive)", ringColor: "#788C5D", threshold: "≥ 0.7" },
+  mid:      { label: "Sedang",      bar: "var(--amber)", ringColor: "#C4831A", threshold: "0.4–0.69" },
+  low:      { label: "Rendah",      bar: "var(--rust)",  ringColor: "#B84040", threshold: "< 0.4" },
+  "no-data": { label: "Tanpa data", bar: "var(--g300)",  ringColor: "#D1CFC5", threshold: "belum dicek" },
 };
 
 export const PLATFORM_ICONS: Record<string, React.ReactNode> = {

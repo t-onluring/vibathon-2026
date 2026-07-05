@@ -76,7 +76,12 @@ export const telegramChecker: PlatformChecker = {
         last_checked_at,
         platform: source.platform,
         status: "error",
-        confidence_score: 0,
+        // `null` (not 0): the fetch failed, so we have no real signal to
+        // score. `confidenceTier(null) === "no-data"` keeps error out of the
+        // "Rendah" bucket — error means "we couldn't measure", not "low".
+        // Same sentinel as unmonitored; the `status` field still tells them
+        // apart (error vs unmonitored).
+        confidence_score: null,
         checks: [
           {
             name: "http_fetch",

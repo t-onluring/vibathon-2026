@@ -109,3 +109,22 @@ export function computeConfidenceScore(signals: ConfidenceSignals): number {
 
   return Number(raw.toFixed(2));
 }
+
+/**
+ * Confidence tier — the graded-quality dimension shown alongside the
+ * operational `HealthStatus`. Distinct from status: a source can be
+ * `active` (operational) yet `low` (poor reach/parse), or `blocked`
+ * (no last_post detected) yet `mid` (channel reachable, modest signals).
+ *
+ * `null`/`undefined`/`NaN` → `"no-data"`: the source was not checked
+ * (unmonitored) so it carries no real score. This is the sentinel that
+ * keeps unmonitored out of the `low` bucket — without it, the 15
+ * unmonitored sources would pollute AVG SCORE and the "Rendah" count.
+ *
+ * Thresholds (decided 2026-07-05):
+ *   - high:    score >= 0.7
+ *   - mid:     0.4–0.699
+ *   - low:     < 0.4   (only sources that were actually checked)
+ *   - no-data: null/undefined/NaN (never checked)
+ */
+export { confidenceTier } from "../../src/shared/confidence.js";
