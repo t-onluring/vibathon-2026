@@ -36,10 +36,11 @@ Form intake dengan validasi real-time → generate JSON → pilih delivery (GitH
 
 ## Health Monitoring
 
-Formula confidence score Telegram:
+Formula confidence score (semua platform, Phase 2 prep):
 ```
-score = 0.40 × http_fetch + 0.35 × content_parse + 0.25 × freshness
+score = 0.25 × keterjangkauan + 0.40 × keterbacaan + 0.35 × kesegaran_berjenjang
 ```
+Sinyal ke-4 — `extraction_quality` (+20%, rebalanced ke 20/30/30/20) — menyusul di Phase 2.
 
 Status threshold:
 - **active** — last post < 7 hari

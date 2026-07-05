@@ -1,4 +1,4 @@
-import type { HealthStatus, TelegramMetrics } from "./types.js";
+import type { HealthStatus } from "./types.js";
 
 const HOURS = {
   THREE_DAYS: 72,
@@ -33,19 +33,79 @@ export function statusFromAge(lastPostAgeHours: number | null): HealthStatus {
 }
 
 /**
- * MVP score = freshness only (40% weight in full formula, but we use 100% here
- * since other signals — consistency, volume, engagement, diversity — need
- * historical data we don't have on first run).
+ * Platform-agnostic confidence signals. Each platform checker fills the
+ * signals it can actually measure — no adapter writes an ad-hoc formula.
+ *
+ * `freshness_score` is always normalized to 0.0–1.0 (i.e. `freshnessScore(age) / 100`).
+ * `extraction_quality` is optional and only populated in Phase 2 once
+ * `scripts/extract/text-extractor.ts` exists; until then it carries no weight.
+ *
+ * Semantics: passing `extraction_quality: 0` means extraction ran and produced
+ * no valid events (weights rebalance to 20/30/30/20, lowering the score vs the
+ * base 25/40/35); omitting the field means extraction wasn't attempted yet
+ * (base weights apply). Don't conflate the two.
+ *
+ * Canonical check names that map to these signals: "http_fetch",
+ * "content_parse", "freshness", and (Phase 2) "extraction_quality".
  */
-export function reliabilityScore(metrics: TelegramMetrics): number {
-  const fresh = freshnessScore(metrics.last_post_age_hours);
-  return Math.round(fresh);
+export interface ConfidenceSignals {
+  http_reachable: boolean;
+  content_parseable: boolean;
+  freshness_score: number; // 0.0–1.0
+  extraction_quality?: number; // 0.0–1.0 (Phase 2)
 }
 
-export function confidenceScoreFromMetrics(metrics: Pick<TelegramMetrics, "subscribers" | "last_post_at">): number {
-  const httpFetch = 1;
-  const contentParse = metrics.last_post_at !== null || metrics.subscribers !== null ? 1 : 0;
-  const freshness = metrics.last_post_at !== null ? 1 : 0;
+const WEIGHTS_BASE = { http: 0.25, content: 0.4, freshness: 0.35 } as const;
+const WEIGHTS_WITH_EXTRACTION = {
+  http: 0.2,
+  content: 0.3,
+  freshness: 0.3,
+  extraction: 0.2,
+} as const;
 
-  return Number((0.4 * httpFetch + 0.35 * contentParse + 0.25 * freshness).toFixed(2));
+function clamp01(n: number): number {
+  // NaN is rejected upstream in computeConfidenceScore; this only handles
+  // out-of-range drift from callers that forget the /100 normalization.
+  if (n <= 0) return 0;
+  if (n >= 1) return 1;
+  return n;
+}
+
+/**
+ * Compute `confidence_score` from normalized signals. Replaces the
+ * Telegram-only `confidenceScoreFromMetrics` (Phase 1.5) so every platform
+ * checker shares one contract.
+ *
+ * Weights:
+ *   - without extraction: http 25% / content 40% / freshness 35%
+ *   - with extraction:    http 20% / content 30% / freshness 30% / extraction 20%
+ *
+ * The score is always in [0.0, 1.0]. NaN inputs for `freshness_score` or
+ * `extraction_quality` are rejected defensively (callers must normalize);
+ * out-of-range values are clamped.
+ */
+export function computeConfidenceScore(signals: ConfidenceSignals): number {
+  if (Number.isNaN(signals.freshness_score)) {
+    throw new RangeError(
+      "ConfidenceSignals.freshness_score must be a normalized 0.0–1.0 number, got NaN",
+    );
+  }
+  if (signals.extraction_quality !== undefined && Number.isNaN(signals.extraction_quality)) {
+    throw new RangeError("ConfidenceSignals.extraction_quality must be 0.0–1.0, got NaN");
+  }
+
+  const hasExtraction = signals.extraction_quality !== undefined;
+  const fresh = clamp01(signals.freshness_score);
+  const extraction = hasExtraction ? clamp01(signals.extraction_quality as number) : 0;
+
+  const raw = hasExtraction
+    ? WEIGHTS_WITH_EXTRACTION.http * (signals.http_reachable ? 1 : 0) +
+      WEIGHTS_WITH_EXTRACTION.content * (signals.content_parseable ? 1 : 0) +
+      WEIGHTS_WITH_EXTRACTION.freshness * fresh +
+      WEIGHTS_WITH_EXTRACTION.extraction * extraction
+    : WEIGHTS_BASE.http * (signals.http_reachable ? 1 : 0) +
+      WEIGHTS_BASE.content * (signals.content_parseable ? 1 : 0) +
+      WEIGHTS_BASE.freshness * fresh;
+
+  return Number(raw.toFixed(2));
 }

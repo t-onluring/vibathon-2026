@@ -81,8 +81,9 @@ Dashboard registry dan monitoring sumber kajian Islam Sunnah Indonesia. Prinsip 
 
 **Formula confidence score:**
 ```
-score = 0.40 × http_fetch + 0.35 × content_parse + 0.25 × freshness
+score = 0.25 × keterjangkauan + 0.40 × keterbacaan + 0.35 × kesegaran_berjenjang
 ```
+Sinyal ke-4 (`extraction_quality`, +20% rebalanced ke 20/30/30/20) menyusul di Phase 2.
 
 **Status threshold:**
 - `active` — last post < 7 hari, semua check OK

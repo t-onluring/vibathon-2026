@@ -378,8 +378,7 @@ export function AppTab({
         <div className="mt-6 flex items-start gap-3 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-4 text-[13px] text-[var(--g700)] leading-relaxed">
           <span className="text-base shrink-0">💡</span>
           <span>
-            <strong>confidence_score</strong> saat ini diturunkan dari 3 check dasar: <strong>http_fetch</strong> (40%), <strong>content_parse</strong> (35%), dan <strong>freshness</strong> (25%).
-            Ini masih baseline Phase 1.5 — belum mencerminkan kualitas ekstraksi event penuh.
+            <strong>confidence_score</strong> diturunkan dari 3 sinyal: <strong>keterjangkauan</strong> (25%), <strong>keterbacaan</strong> (40%), dan <strong>kesegaran</strong> berjenjang (35%). Sinyal ke-4 — <strong>kualitas ekstraksi</strong> (+20%) — menyusul di Phase 2.
           </span>
         </div>
       </div>
