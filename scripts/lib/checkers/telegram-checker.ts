@@ -1,6 +1,6 @@
 import { fetchTelegramChannel } from "../fetch-telegram.js";
-import { confidenceScoreFromMetrics, statusFromAge } from "../score.js";
-import type { CheckItem, PlatformChecker, SnapshotItem, Source } from "../types.js";
+import { computeConfidenceScore, freshnessScore, statusFromAge } from "../score.js";
+import type { CheckItem, ConfidenceSignals, PlatformChecker, SnapshotItem, Source } from "../types.js";
 
 function makeChecks(source: Source, metrics: { subscribers: number | null; last_post_at: string | null }): CheckItem[] {
   const hasParsedSignal = metrics.last_post_at !== null || metrics.subscribers !== null;
@@ -52,7 +52,13 @@ export const telegramChecker: PlatformChecker = {
       const metrics = await fetchTelegramChannel(source.handle);
       const checks = makeChecks(source, metrics);
       const status = classifyTelegramStatus(metrics);
-      const confidence_score = confidenceScoreFromMetrics(metrics);
+      const signals: ConfidenceSignals = {
+        http_reachable: true, // we only reach here when fetch succeeded
+        content_parseable: metrics.last_post_at !== null || metrics.subscribers !== null,
+        freshness_score:
+          metrics.last_post_age_hours !== null ? freshnessScore(metrics.last_post_age_hours) / 100 : 0,
+      };
+      const confidence_score = computeConfidenceScore(signals);
 
       return {
         source_id: source.id,

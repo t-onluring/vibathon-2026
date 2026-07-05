@@ -69,11 +69,12 @@ Ringkasan health terbaru untuk dashboard + consumer app.
   - `>= 0.85` = high trust
   - `0.60..0.84` = medium trust
   - `< 0.60` = low trust
-- Rumus baseline v1 (weighted):
-  - `http_fetch` = 0.40
-  - `content_parse` = 0.35
-  - `freshness` = 0.25
-  - Formula: `confidence_score = Σ(weight_i * pass_i)` dengan `pass_i` = 1 jika check `ok=true`, 0 jika `ok=false`.
+- Rumus baseline v1 (weighted, Phase 2 prep):
+  - `http_reachable` = 0.25
+  - `content_parseable` = 0.40
+  - `freshness_score` = 0.35 (tiered 0.0–1.0 dari `freshnessScore()/100`, bukan binary)
+  - Formula: `confidence_score = 0.25*http_reachable + 0.40*content_parseable + 0.35*freshness_score`.
+  - Phase 2: tambah `extraction_quality` (opsional) → rebalanced ke `0.20/0.30/0.30/0.20`.
 - Catatan: rumus internal boleh berkembang, tapi range + interpretasi ini harus stabil untuk consumer.
 
 ### `checks[]` item minimal

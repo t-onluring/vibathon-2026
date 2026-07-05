@@ -88,9 +88,12 @@ Representasi status terbaru per source.
 - `confidence_score: number` (0..1, derived)
 - `checks: CheckItem[]`
 
-### Confidence score baseline derivation (v1)
-- `confidence_score = 0.40*http_fetch + 0.35*content_parse + 0.25*freshness`
-- Setiap komponen bernilai `1` jika check `ok=true`, `0` jika `ok=false`.
+### Confidence score baseline derivation (v1 → Phase 2 prep)
+- `confidence_score = 0.25*http_reachable + 0.40*content_parseable + 0.35*freshness_score`
+- `http_reachable`, `content_parseable` bernilai `1` jika check `ok=true`, `0` jika `ok=false`.
+- `freshness_score` adalah 0.0–1.0 (tiered: `<3h=1.0`, `3–7h=0.8`, `7–14h=0.5`, `14–30h=0.2`, `>30h/null=0`), dari `freshnessScore()/100`.
+- Floor `0.25` ketika hanya `http_reachable` yang ok (parse fail) — konsisten lintas platform.
+- Phase 2: tambah `extraction_quality` (opsional) yang merebobot ke `0.20/0.30/0.30/0.20`.
 
 ### `CheckItem`
 - `name: string`

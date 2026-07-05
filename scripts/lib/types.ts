@@ -1,5 +1,6 @@
 export type { Platform, Priority, HealthStatus, Source } from "../../src/shared/types.js";
 import type { Platform, HealthStatus, Source } from "../../src/shared/types.js";
+export type { ConfidenceSignals } from "./score.js";
 
 export interface SourcesFile {
   $schema?: string;
@@ -16,6 +17,11 @@ export interface TelegramMetrics {
 }
 
 export interface CheckItem {
+  /**
+   * Canonical check names: "http_fetch", "content_parse", "freshness",
+   * and (Phase 2) "extraction_quality". Kept as a loose string so new
+   * checkers can introduce names without a breaking enum change.
+   */
   name: string;
   ok: boolean;
   details: string;
