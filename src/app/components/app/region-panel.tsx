@@ -11,8 +11,11 @@ import {
   getRegionHealthTone,
   formatRegionRatio,
   formatRegionScore,
+  getRegionLabel,
+  INTERNATIONAL_REGION_KEYS,
   REGION_GEO_POINTS,
   REGION_TONE_STYLES,
+  warnMissingGeoPoints,
   type RegionHealthSummary,
   type RegionHealthTone,
 } from "./region-config";
@@ -30,10 +33,18 @@ export function RegionHealthPanel({
 }) {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const totalRegions = summaries.length;
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    warnMissingGeoPoints(summaries.map((s) => s.regionKey));
+  }, [summaries]);
   const selectedSummary = summaries.find((summary) => summary.regionKey === selectedRegion) ?? null;
   const activeSummary = selectedSummary ?? summaries.find((summary) => summary.regionKey === hoveredRegion) ?? null;
   const allSummary = useMemo(() => buildAllRegionSummary(summaries), [summaries]);
   const detailSummary = activeSummary ?? allSummary;
+  const internationalRegionLabels = summaries
+    .filter((summary) => INTERNATIONAL_REGION_KEYS.has(summary.regionKey))
+    .map((summary) => getRegionLabel(summary.regionKey));
 
   return (
     <section className="mb-8 rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-5">
@@ -62,7 +73,8 @@ export function RegionHealthPanel({
           Belum ada source untuk dirangkum.
         </div>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <div className="space-y-4">
+          {/* Map: full width */}
           <div className="rounded-xl border border-[var(--g300)] bg-[var(--ivory)] p-4">
             <LeafletRegionMap
               summaries={summaries}
@@ -84,8 +96,14 @@ export function RegionHealthPanel({
                 <span className="inline-block size-7 rounded-full bg-[var(--g300)]" />
               </div>
             </div>
+            {internationalRegionLabels.length > 0 && (
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g500)]">
+                Default peta fokus Indonesia. Region internasional: {internationalRegionLabels.join(", ")}.
+              </p>
+            )}
           </div>
 
+          {/* Legend panel: below map, full width, 3 blocks */}
           <RegionSummaryPanel
             summary={detailSummary}
             selected={Boolean(selectedSummary)}
@@ -125,12 +143,8 @@ function LeafletRegionMap({
 
       const mapContainer = containerRef.current;
       const map = L.map(mapContainer, {
-        // Centered on the Java cluster — most region points sit on/around
-        // Java, so the initial frame already shows the densest cluster
-        // before fitBounds refines it. Tighter than the old [−5.5, 110.5]/z5
-        // view so points read clearly without waiting for fitBounds.
         center: [-6.9, 110.5],
-        zoom: 6,
+        zoom: 7,
         minZoom: 4,
         maxZoom: 10,
         zoomControl: true,
@@ -226,17 +240,18 @@ function LeafletRegionMap({
       const selectedSummary = mapSummaries.find((summary) => summary.regionKey === selectedRegion);
       if (selectedSummary) {
         const point = REGION_GEO_POINTS[selectedSummary.regionKey] ?? REGION_GEO_POINTS.unknown;
-        window.setTimeout(() => mapRef.current?.flyTo([point.lat, point.lng], 8, { duration: 0.45 }), 0);
+        window.setTimeout(() => mapRef.current?.flyTo([point.lat, point.lng], 7, { duration: 0.45 }), 0);
       } else if (mapSummaries.length > 0) {
-        const bounds = L.latLngBounds(mapSummaries.map((summary) => {
+        const indonesiaSummaries = mapSummaries.filter((summary) => {
+          const point = REGION_GEO_POINTS[summary.regionKey];
+          return point != null && !INTERNATIONAL_REGION_KEYS.has(summary.regionKey) && summary.regionKey !== "unknown";
+        });
+        const boundsSummaries = indonesiaSummaries.length > 0 ? indonesiaSummaries : mapSummaries;
+        const bounds = L.latLngBounds(boundsSummaries.map((summary) => {
           const point = REGION_GEO_POINTS[summary.regionKey] ?? REGION_GEO_POINTS.unknown;
           return [point.lat, point.lng];
         }));
-        // Tighter fit: maxZoom 8 (up from 6) + padding [20,20] (down from
-        // [28,28]) keeps the Java cluster framed so all bubble points stay
-        // visible without being shrunk to dots. minZoom/fitBounds together
-        // ensure the box is filled rather than letterboxed.
-        window.setTimeout(() => mapRef.current?.fitBounds(bounds, { padding: [20, 20], maxZoom: 8 }), 0);
+        window.setTimeout(() => mapRef.current?.fitBounds(bounds, { padding: [36, 36], maxZoom: 6 }), 0);
       }
     }
 
@@ -313,10 +328,7 @@ function RegionSummaryPanel({
 }) {
   const tone = getRegionHealthTone(summary);
   const style = REGION_TONE_STYLES[tone];
-  const [detailsOpen, setDetailsOpen] = useState(false);
 
-  // Operational status — always visible. Order = priority for the reader:
-  // aktif → kurang → tidak aktif → terbatas → gagal dicek.
   const operationalRows: Array<{ status: HealthStatus; value: number }> = [
     { status: "active", value: summary.active },
     { status: "stale", value: summary.stale },
@@ -325,16 +337,6 @@ function RegionSummaryPanel({
     { status: "error", value: summary.error },
   ];
 
-  // Coverage — the "Belum dipantau" row. Kept separate from operational
-  // because unmonitored ≠ failure: it means no checker exists yet for that
-  // platform. Showing it under operational status would imply the source
-  // is broken, when really we just haven't measured it.
-  const coverageRows: Array<{ status: HealthStatus; value: number }> = [
-    { status: "unmonitored", value: summary.unmonitored },
-  ];
-
-  // Confidence tier — the graded-quality dimension. Parallel to status
-  // but answers a different question ("seberapa andal sinyal datanya?")
   const tierRows: Array<{ tier: Tier; value: number }> = [
     { tier: "high", value: summary.tierHigh },
     { tier: "mid", value: summary.tierMid },
@@ -343,78 +345,95 @@ function RegionSummaryPanel({
   ];
 
   return (
-    <aside className="rounded-xl border border-[var(--g300)] bg-[var(--ivory)] p-4">
-      <div className="mb-4 flex items-start justify-between gap-3">
+    <div className="rounded-xl border border-[var(--g300)] bg-[var(--paper)] p-5">
+      {/* Header */}
+      <div className="flex flex-wrap items-baseline justify-between gap-3 pb-4 border-b border-[var(--g200)]">
         <div>
-          <p className="eyebrow mb-2">{selected ? "Region terpilih" : "Semua region"}</p>
+          <p className="eyebrow mb-1">{selected ? "Region terpilih" : "Semua region"}</p>
           <h4 className="font-semibold text-[17px] text-[var(--slate)]">{summary.regionLabel}</h4>
-          <p className="mt-1 font-mono text-[11px] text-[var(--g500)]">
+          <p className="mt-0.5 font-mono text-[11px] text-[var(--g500)]">
             {summary.total} source · {summary.monitored} dipantau
           </p>
         </div>
-        <span className="shrink-0 whitespace-nowrap rounded-full px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-white" style={{ background: style.fill }}>
+        <span
+          className="shrink-0 whitespace-nowrap rounded-full px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-white"
+          style={{ background: style.fill }}
+        >
           {tone === "risk" ? "Perlu perhatian" : style.label}
         </span>
       </div>
 
-      <div className="mb-4 grid grid-cols-2 gap-2">
-        <div className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2">
+      {/* Metrics */}
+      <div className="flex flex-wrap gap-7 py-4 border-b border-[var(--g200)]">
+        <div>
           <div className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--g500)]">Skor rata-rata</div>
-          <div className="mt-1 font-display text-[26px] leading-none text-[var(--slate)]">{formatRegionScore(summary)}</div>
+          <div className="mt-1 font-display text-[28px] leading-none text-[var(--slate)]">{formatRegionScore(summary)}</div>
         </div>
-        <div className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2">
+        <div>
           <div className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--g500)]">Rasio aktif</div>
-          <div className="mt-1 font-display text-[26px] leading-none text-[var(--slate)]">{formatRegionRatio(summary).replace(" aktif", "")}</div>
+          <div className="mt-1 font-display text-[28px] leading-none text-[var(--slate)]">{formatRegionRatio(summary).replace(" aktif", "")}</div>
         </div>
       </div>
 
-      {/* Status operasional — primary hierarchy, always visible */}
-      <div className="mb-3">
-        <p className="eyebrow mb-2 !text-[9.5px]">Status operasional</p>
-        <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
-          {operationalRows.map((row) => (
-            <StatusCount key={row.status} status={row.status} value={row.value} />
-          ))}
-        </div>
-      </div>
+      {/* 3 legend blocks: horizontal grid matching legend-redesign.html */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-[var(--g200)] pt-4">
 
-      {/* Coverage + Tier — secondary. On mobile they collapse into an
-          accordion so the panel stays compact; on ≥sm they stay open. */}
-      <div className="border-t border-[var(--g300)] pt-3">
-        <button
-          type="button"
-          onClick={() => setDetailsOpen((v) => !v)}
-          aria-expanded={detailsOpen}
-          className="sm:hidden flex w-full items-center justify-between rounded-md px-1 py-1 text-left font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g600)] hover:bg-[var(--g100)]"
-        >
-          <span>Cakupan & tier konfidensial</span>
-          <span className={`transition-transform duration-200 ${detailsOpen ? "rotate-180" : ""}`} aria-hidden>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-        </button>
-
-        <div className={`${detailsOpen ? "block" : "hidden"} sm:block`}>
-          <div className="mb-3 mt-2 sm:mt-0">
-            <p className="eyebrow mb-2 !text-[9.5px]">Cakupan platform</p>
-            <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
-              {coverageRows.map((row) => (
-                <StatusCount key={row.status} status={row.status} value={row.value} />
-              ))}
-            </div>
-            <p className="mt-2 text-[10.5px] leading-relaxed text-[var(--g500)]">
-              &ldquo;Belum dipantau&rdquo; berarti platform ini belum punya checker, bukan berarti sumbernya rusak.
-            </p>
+        {/* Block 1: Status Operasional */}
+        <div className="pb-4 sm:pb-0 sm:pr-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g500)] mb-3 flex flex-wrap items-center gap-2">
+            Status operasional
+            <span className="font-mono text-[10px] text-[var(--clay)]">- hanya yang termonitor</span>
+          </p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {operationalRows.map((row) => (
+              <LegendStatusItem key={row.status} status={row.status} value={row.value} />
+            ))}
           </div>
+        </div>
 
-          <div>
-            <p className="eyebrow mb-2 !text-[9.5px]">Tier konfidensial</p>
-            <div className="space-y-2 font-mono text-[11px] text-[var(--g600)]">
-              {tierRows.map((row) => (
-                <TierCount key={row.tier} tier={row.tier} value={row.value} />
+        {/* Block 2: Cakupan Platform */}
+        <div className="py-4 sm:py-0 sm:px-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g500)] mb-3 flex flex-wrap items-center gap-2">
+            Cakupan platform
+            <span className="font-mono text-[10px] text-[var(--clay)]">- siapa yang punya checker</span>
+          </p>
+          <div className="flex flex-wrap items-center gap-3 text-[13px] text-[var(--g700)]">
+            <span className="inline-flex items-center gap-2">
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-[var(--jade)] border border-[var(--jade)] rounded px-2 py-0.5 bg-[var(--ivory)]">
+                tg
+              </span>
+              <span className="font-mono text-[12.5px] font-semibold text-[var(--slate)]">{summary.monitored}</span>
+              <span>dipantau</span>
+            </span>
+            <span className="text-[var(--g300)]">|</span>
+            <span className="inline-flex flex-wrap items-center gap-1.5">
+              {["wa", "ig", "yt", "web"].map((p) => (
+                <span
+                  key={p}
+                  className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-[var(--g500)] border border-[var(--g300)] rounded px-2 py-0.5 bg-[var(--ivory)]"
+                >
+                  {p}
+                </span>
               ))}
-            </div>
+              <span className="font-mono text-[12.5px] font-semibold text-[var(--slate)] ml-0.5">{summary.unmonitored}</span>
+              <span>belum dipantau</span>
+            </span>
+          </div>
+          <p className="mt-2 text-[10.5px] leading-relaxed text-[var(--g500)]">
+            &ldquo;Belum dipantau&rdquo; berarti platform ini belum punya checker, bukan berarti sumbernya rusak.
+          </p>
+        </div>
+
+        {/* Block 3: Tier Konfidensial */}
+        <div className="pt-4 sm:pt-0 sm:pl-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--g500)] mb-3 flex flex-wrap items-center gap-2">
+            Tier konfidensial
+            <span className="font-mono text-[10px] text-[var(--clay)]">- konsisten dgn confidence_score</span>
+          </p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {tierRows.map((row) => (
+              <LegendTierItem key={row.tier} tier={row.tier} value={row.value} />
+            ))}
           </div>
         </div>
       </div>
@@ -423,41 +442,38 @@ function RegionSummaryPanel({
         <button
           type="button"
           onClick={onClear}
-          className="mt-4 w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2 text-[12px] font-medium text-[var(--slate)] transition-colors hover:border-[var(--g500)]"
+          className="mt-5 w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2 text-[12px] font-medium text-[var(--slate)] transition-colors hover:border-[var(--g500)]"
         >
           Hapus filter region
         </button>
       ) : (
-        <p className="mt-4 rounded-lg border border-dashed border-[var(--g300)] bg-[var(--paper)] px-3 py-2 text-[12px] leading-relaxed text-[var(--g600)]">
+        <p className="mt-5 rounded-lg border border-dashed border-[var(--g300)] bg-[var(--paper)] px-3 py-2 text-[12px] leading-relaxed text-[var(--g600)]">
           Pilih bubble kota/region untuk memfilter daftar source. Detail ini tetap muncul di mobile tanpa bergantung pada hover.
         </p>
       )}
-    </aside>
+    </div>
   );
 }
 
-function StatusCount({ status, value }: { status: HealthStatus; value: number }) {
+function LegendStatusItem({ status, value }: { status: HealthStatus; value: number }) {
   const meta = STATUS_META[status];
   return (
-    <div className="flex items-center justify-between gap-2">
-      <span className="inline-flex items-center gap-1.5">
-        <span className={`size-1.5 rounded-full ${meta.dot}`} />
-        {meta.label}
-      </span>
-      <span className="font-semibold text-[var(--slate)]">{value}</span>
-    </div>
+    <span className="inline-flex items-center gap-1.5 text-[13.5px] text-[var(--g700)]">
+      <span className={`size-2.5 shrink-0 rounded-full ${meta.dot}`} />
+      {meta.label}
+      <span className="font-mono text-[12.5px] font-semibold text-[var(--slate)] ml-0.5">{value}</span>
+    </span>
   );
 }
 
-function TierCount({ tier, value }: { tier: Tier; value: number }) {
+function LegendTierItem({ tier, value }: { tier: Tier; value: number }) {
   const meta = TIER_META[tier];
   return (
-    <div className="flex items-center justify-between gap-2">
-      <span className="inline-flex items-center gap-1.5">
-        <span className="h-1.5 w-3 rounded-full" style={{ background: meta.bar }} />
-        {meta.label}
-      </span>
-      <span className="font-semibold text-[var(--slate)]">{value}</span>
-    </div>
+    <span className="inline-flex items-center gap-2 text-[13.5px] text-[var(--g700)]">
+      <span className="w-1 h-[22px] shrink-0 rounded-sm" style={{ background: meta.bar }} />
+      <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-[var(--g700)]">{meta.label}</span>
+      <span className="font-mono text-[10.5px] text-[var(--g500)]">{meta.threshold}</span>
+      <span className="font-mono text-[13px] font-semibold text-[var(--slate)] ml-1">{value}</span>
+    </span>
   );
 }
