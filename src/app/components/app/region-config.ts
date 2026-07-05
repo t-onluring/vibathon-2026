@@ -1,4 +1,8 @@
 // Region types, constants, and pure helpers shared across the dashboard.
+// Tier counts live alongside status counts so the legend can show the
+// confidence dimension separately from the operational one.
+
+import type { Tier } from "../../lib/data";
 
 export type RegionHealthTone = "healthy" | "risk" | "unknown";
 
@@ -20,6 +24,12 @@ export type RegionHealthSummary = {
   unmonitored: number;
   avgScore: number | null;
   activeRatio: number | null;
+  // Confidence-tier counts, parallel to the status counts above. Lets the
+  // legend separate "status operasional" from "tier konfidensial".
+  tierHigh: number;
+  tierMid: number;
+  tierLow: number;
+  tierNoData: number;
 };
 
 export const REGION_LABELS: Record<string, string> = {
@@ -49,9 +59,9 @@ export const REGION_GEO_POINTS: Record<string, RegionGeoPoint> = {
 };
 
 export const REGION_TONE_STYLES: Record<RegionHealthTone, { fill: string; stroke: string; text: string; label: string }> = {
-  healthy: { fill: "var(--jade)", stroke: "#3A5E47", text: "Healthy", label: "Healthy" },
-  risk: { fill: "var(--amber)", stroke: "#9A6514", text: "Needs attention", label: "Needs attention" },
-  unknown: { fill: "var(--g300)", stroke: "var(--g500)", text: "Unmonitored", label: "Unmonitored" },
+  healthy: { fill: "var(--jade)", stroke: "#3A5E47", text: "Sehat", label: "Sehat" },
+  risk: { fill: "var(--amber)", stroke: "#9A6514", text: "Perlu perhatian", label: "Perlu perhatian" },
+  unknown: { fill: "var(--g300)", stroke: "var(--g500)", text: "Belum dipantau", label: "Belum dipantau" },
 };
 
 export function normalizeRegionKey(value: string | null | undefined): string {
@@ -87,11 +97,39 @@ export function getRegionHealthTone(summary: RegionHealthSummary): RegionHealthT
 }
 
 export function formatRegionRatio(summary: RegionHealthSummary): string {
-  return summary.activeRatio != null ? `${Math.round(summary.activeRatio * 100)}% active` : "n/a";
+  return summary.activeRatio != null ? `${Math.round(summary.activeRatio * 100)}% aktif` : "n/a";
 }
 
 export function formatRegionScore(summary: RegionHealthSummary): string {
   return summary.avgScore != null ? String(Math.round(summary.avgScore * 100)) : "—";
+}
+
+/**
+ * Empty tier-count shape, used as a base for accumulation and as a fallback
+ * when no snapshots exist. Mirrors `EMPTY_BY_TIER` in `data.ts`.
+ */
+export const EMPTY_REGION_TIER_COUNTS = {
+  tierHigh: 0,
+  tierMid: 0,
+  tierLow: 0,
+  tierNoData: 0,
+} as const;
+
+export type RegionTierCounts = {
+  tierHigh: number;
+  tierMid: number;
+  tierLow: number;
+  tierNoData: number;
+};
+
+/** Map a `Tier` enum to its field name on `RegionHealthSummary`. */
+export function tierFieldFor(tier: Tier): keyof RegionTierCounts {
+  switch (tier) {
+    case "high": return "tierHigh";
+    case "mid": return "tierMid";
+    case "low": return "tierLow";
+    case "no-data": return "tierNoData";
+  }
 }
 
 export function buildAllRegionSummary(summaries: RegionHealthSummary[]): RegionHealthSummary {
@@ -104,10 +142,14 @@ export function buildAllRegionSummary(summaries: RegionHealthSummary[]): RegionH
   const error = summaries.reduce((sum, summary) => sum + summary.error, 0);
   const unmonitored = summaries.reduce((sum, summary) => sum + summary.unmonitored, 0);
   const scoreWeight = summaries.reduce((sum, summary) => sum + (summary.avgScore ?? 0) * summary.monitored, 0);
+  const tierHigh = summaries.reduce((sum, s) => sum + s.tierHigh, 0);
+  const tierMid = summaries.reduce((sum, s) => sum + s.tierMid, 0);
+  const tierLow = summaries.reduce((sum, s) => sum + s.tierLow, 0);
+  const tierNoData = summaries.reduce((sum, s) => sum + s.tierNoData, 0);
 
   return {
     regionKey: "all",
-    regionLabel: "All regions",
+    regionLabel: "Semua region",
     total,
     monitored,
     active,
@@ -118,5 +160,9 @@ export function buildAllRegionSummary(summaries: RegionHealthSummary[]): RegionH
     unmonitored,
     avgScore: monitored > 0 ? scoreWeight / monitored : null,
     activeRatio: monitored > 0 ? active / monitored : null,
+    tierHigh,
+    tierMid,
+    tierLow,
+    tierNoData,
   };
 }

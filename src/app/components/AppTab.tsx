@@ -1,10 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { HealthHistoryPoint, HealthStatus, LatestSummary, Platform, Snapshot, Source, TopicDiscovery } from "../lib/data";
+import type { HealthHistoryPoint, HealthStatus, LatestSummary, Platform, Snapshot, Source, Tier, TopicDiscovery } from "../lib/data";
+// Value import goes to the fs-free shared module, NOT data.ts — data.ts
+// uses node:fs and would break the client bundle under Turbopack.
+import { confidenceTier } from "../../shared/confidence";
 import {
   getRegionLabel,
   normalizeRegionKey,
+  tierFieldFor,
   type RegionHealthSummary,
 } from "./app/region-config";
 import { formatDateTime } from "../lib/format";
@@ -18,16 +22,17 @@ import { Stat } from "./app/stat";
 type SortKey = "score" | "name" | "subs";
 
 const STATUS_FILTER_KEYS: Array<{ key: "all" | HealthStatus; label: string }> = [
-  { key: "all", label: "All" },
-  { key: "active", label: "Active" },
-  { key: "stale", label: "Stale" },
-  { key: "dead", label: "Dead" },
-  { key: "error", label: "Error" },
-  { key: "unmonitored", label: "Unmonitored" },
+  { key: "all", label: "Semua" },
+  { key: "active", label: "Aktif" },
+  { key: "stale", label: "Kurang aktif" },
+  { key: "dead", label: "Tidak aktif" },
+  { key: "blocked", label: "Terbatas" },
+  { key: "error", label: "Gagal dicek" },
+  { key: "unmonitored", label: "Belum dipantau" },
 ];
 
 const PLATFORM_FILTER_KEYS: Array<{ key: "all" | Platform; label: string }> = [
-  { key: "all", label: "All" },
+  { key: "all", label: "Semua" },
   { key: "tg", label: "Telegram" },
   { key: "web", label: "Website" },
   { key: "ig", label: "Instagram" },
@@ -114,6 +119,10 @@ export function AppTab({
         unmonitored: 0,
         avgScore: null,
         activeRatio: null,
+        tierHigh: 0,
+        tierMid: 0,
+        tierLow: 0,
+        tierNoData: 0,
         scoreSum: 0,
         scoreCount: 0,
       };
@@ -125,6 +134,10 @@ export function AppTab({
         existing.scoreSum += snapshot.confidence_score;
         existing.scoreCount += 1;
       }
+      // Tier from confidence_score (null/undefined → no-data). Kept separate
+      // from status so an "active" source can still be "low" tier.
+      const tier: Tier = confidenceTier(snapshot?.confidence_score ?? null);
+      existing[tierFieldFor(tier)] += 1;
       byRegion.set(regionKey, existing);
     }
 
@@ -144,7 +157,7 @@ export function AppTab({
   }, [rows]);
 
   const regionFilterKeys = useMemo(() => [
-    { key: "all", label: "All" },
+    { key: "all", label: "Semua" },
     ...regionSummaries.map((summary) => ({ key: summary.regionKey, label: summary.regionLabel })),
   ], [regionSummaries]);
 
@@ -213,9 +226,9 @@ export function AppTab({
         {latest && (
           <div className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat label="Total" value={latest.total_sources} />
-            <Stat label="Active" value={latest.by_status.active} accent="jade" />
-            <Stat label="Stale + Dead" value={latest.by_status.stale + latest.by_status.dead} accent="amber" />
-            <Stat label="Errors" value={latest.by_status.error} accent="g500" />
+            <Stat label="Aktif" value={latest.by_status.active} accent="jade" />
+            <Stat label="Kurang + Tidak aktif" value={latest.by_status.stale + latest.by_status.dead} accent="amber" />
+            <Stat label="Gagal dicek" value={latest.by_status.error} accent="g500" />
           </div>
         )}
         <ScoreExplainer />
@@ -248,7 +261,7 @@ export function AppTab({
               <path d="M10 10l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
             </svg>
             <input
-              type="text" placeholder="Search sources…"
+              type="text" placeholder="Cari source…"
               value={search} onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-lg border border-[var(--g300)] bg-[var(--paper)] py-2.5 pl-9 pr-3 text-[13.5px] text-[var(--slate)] transition-colors focus-visible:border-[var(--clay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/20"
             />
@@ -263,7 +276,7 @@ export function AppTab({
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-            Filters
+            Filter
             {hasActiveFilters && (
               <span className="absolute -top-1 -right-1 size-2 rounded-full bg-[var(--clay)]" />
             )}
@@ -274,9 +287,9 @@ export function AppTab({
             value={sortBy} onChange={(e) => setSortBy(e.target.value as SortKey)}
             className="rounded-lg border border-[var(--g300)] bg-[var(--paper)] px-3 py-2.5 text-[13px] font-mono text-[var(--slate)] cursor-pointer focus-visible:border-[var(--clay)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--clay)]/20"
           >
-            <option value="score">Sort: Score</option>
-            <option value="name">Sort: Name</option>
-            <option value="subs">Sort: Subscribers</option>
+            <option value="score">Urut: Skor</option>
+            <option value="name">Urut: Nama</option>
+            <option value="subs">Urut: Subscribers</option>
           </select>
         </div>
 
@@ -341,10 +354,10 @@ export function AppTab({
         {/* Active filters summary */}
         {hasActiveFilters && (
           <div className="mb-4 flex items-center gap-3 font-mono text-[12px] text-[var(--g500)]">
-            <span>Showing {filtered.length} of {rows.length}</span>
+            <span>Menampilkan {filtered.length} dari {rows.length}</span>
             <button type="button" onClick={() => { setStatusFilter("all"); setPlatformFilter("all"); setRegionFilter("all"); setSearch(""); }}
               className="text-[var(--clay)] underline underline-offset-2 hover:opacity-70 transition-opacity">
-              Clear filters
+              Hapus filter
             </button>
           </div>
         )}
@@ -365,10 +378,10 @@ export function AppTab({
           ) : (
             <div className="rounded-xl border border-dashed border-[var(--g300)] bg-[var(--g100)] p-12 text-center">
               <div className="text-3xl mb-3 opacity-30">🔍</div>
-              <p className="text-[14px] text-[var(--g500)]">No sources match your filters.</p>
+              <p className="text-[14px] text-[var(--g500)]">Tidak ada source yang cocok dengan filter.</p>
               <button type="button" onClick={() => { setStatusFilter("all"); setPlatformFilter("all"); setRegionFilter("all"); setSearch(""); }}
                 className="mt-3 text-[12.5px] text-[var(--clay)] underline underline-offset-2">
-                Clear all filters
+                Hapus semua filter
               </button>
             </div>
           )}

@@ -2,12 +2,14 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { CHECKERS } from "./lib/checkers/index.js";
+import { confidenceTier } from "./lib/score.js";
 import type {
   LatestSummary,
   PlatformChecker,
   SnapshotItem,
   Source,
   SourcesFile,
+  Tier,
 } from "./lib/types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -35,7 +37,10 @@ function unmonitoredSnapshot(source: Source, last_checked_at: string): SnapshotI
     last_checked_at,
     platform: source.platform,
     status: "unmonitored",
-    confidence_score: 0,
+    // `null` (not 0) — this source was never checked, so it has no real
+    // score. `confidenceTier(null) === "no-data"` keeps it out of the
+    // "Rendah" bucket and out of AVG SCORE. See score.ts confidenceTier.
+    confidence_score: null,
     checks: [
       {
         name: "monitoring",
@@ -57,7 +62,17 @@ function summarize(snapshots: SnapshotItem[], totalSources: number): LatestSumma
     unmonitored: 0,
   } as LatestSummary["by_status"];
 
-  for (const s of snapshots) by_status[s.status]++;
+  const by_tier = {
+    high: 0,
+    mid: 0,
+    low: 0,
+    "no-data": 0,
+  } as Record<Tier, number>;
+
+  for (const s of snapshots) {
+    by_status[s.status]++;
+    by_tier[confidenceTier(s.confidence_score)]++;
+  }
 
   return {
     generated_at: new Date().toISOString(),
@@ -65,6 +80,7 @@ function summarize(snapshots: SnapshotItem[], totalSources: number): LatestSumma
     total_sources: totalSources,
     monitored_sources: snapshots.filter((s) => s.status !== "unmonitored").length,
     by_status,
+    by_tier,
     snapshots,
   };
 }
