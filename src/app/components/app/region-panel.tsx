@@ -22,9 +22,26 @@ import {
 
 const INDONESIA_MAP_CENTER: [number, number] = [REGION_GEO_POINTS.nasional.lat, REGION_GEO_POINTS.nasional.lng];
 const INDONESIA_MAP_ZOOM = 5;
-const resetIndonesiaMapView = (map: LeafletMap) => {
+// Fixed focus on Indonesia. We use setView (not fitBounds) because the map
+// mounts while its tab is hidden, so the container has 0×0 size at init —
+// fitBounds computes a degenerate view against the empty container and the
+// result drifts off-center (Banda Sea / eastern Indonesia). setView is
+// container-size-independent: it always centers [-2.5, 118] at zoom 5,
+// which frames the full archipelago (Sabang ~95°E → Papua ~141°E) on a
+// typical desktop panel. Returns false when the container has no real size
+// so callers can defer the "initial view applied" latch until a real fit.
+const resetIndonesiaMapView = (map: LeafletMap): boolean => {
+  const container = map.getContainer();
+  if (container.clientWidth === 0 || container.clientHeight === 0) {
+    // Hidden tab: invalidateSize is a no-op here, but we still skip the view
+    // set so the latch stays open and the ResizeObserver re-fits when the
+    // container becomes visible.
+    map.invalidateSize({ pan: false });
+    return false;
+  }
   map.invalidateSize({ pan: false });
   map.setView(INDONESIA_MAP_CENTER, INDONESIA_MAP_ZOOM, { animate: false });
+  return true;
 };
 
 export function RegionHealthPanel({
@@ -190,8 +207,12 @@ function LeafletRegionMap({
       };
       const syncDefaultView = () => {
         if (!mapRef.current) return;
-        resetIndonesiaMapView(mapRef.current);
-        initialViewAppliedRef.current = true;
+        // Only latch once the container has a real size, so a hidden-tab
+        // mount (0×0) doesn't lock in a degenerate view and block the
+        // ResizeObserver from re-fitting when the tab becomes visible.
+        if (resetIndonesiaMapView(mapRef.current)) {
+          initialViewAppliedRef.current = true;
+        }
       };
 
       map.whenReady(() => {
